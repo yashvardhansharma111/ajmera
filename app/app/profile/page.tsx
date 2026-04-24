@@ -5,17 +5,7 @@ import { FiBookOpen, FiChevronRight, FiDollarSign, FiEdit3, FiMail, FiUser } fro
 import { useAppData } from "@/components/app/AppDataContext";
 import { formatINR } from "@/components/app/format";
 
-const SUPPORT_EMAIL = "support@ajmeraexchange.com";
-const SUPPORT_PHONE = "+911800123456";
-
-function formatPhone(p: string) {
-  if (!p) return "";
-  const clean = p.replace(/\D/g, "");
-  if (clean.length === 12 && clean.startsWith("91")) {
-    return `+91 ${clean.slice(2, 6)} ${clean.slice(6, 9)} ${clean.slice(9)}`;
-  }
-  return p;
-}
+const SUPPORT_EMAIL = "support@ajmeraexchange.in";
 
 const ROWS = [
   {
@@ -173,13 +163,6 @@ export default function ProfilePage() {
           style={{ color: "var(--ax-primary)" }}
         >
           {SUPPORT_EMAIL}
-        </a>
-        <a
-          href={`tel:${SUPPORT_PHONE}`}
-          className="mt-1 block text-sm font-medium"
-          style={{ color: "var(--ax-primary)" }}
-        >
-          {formatPhone(SUPPORT_PHONE)}
         </a>
       </div>
 
