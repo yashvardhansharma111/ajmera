@@ -1,6 +1,7 @@
 import { apiErrorResponse } from "@/lib/api-error";
 import { getDb } from "@/lib/mongodb";
 import { NextResponse } from "next/server";
+import { clearVerification, isVerified } from "@/lib/otp-store";
 
 /** Accept only HTTPS URLs from UploadThing / UFS CDNs (not arbitrary user-supplied hosts). */
 function isUploadThingHttpsUrl(url: string): boolean {
@@ -49,6 +50,19 @@ export async function POST(request: Request) {
     if (!accountNo || !ifscCode) {
       return NextResponse.json(
         { message: "Account details are required" },
+        { status: 400 },
+      );
+    }
+
+    if (!isVerified("email", email)) {
+      return NextResponse.json(
+        { message: "Please verify your email with the OTP before submitting." },
+        { status: 400 },
+      );
+    }
+    if (!isVerified("phone", phone)) {
+      return NextResponse.json(
+        { message: "Please verify your phone number with the OTP before submitting." },
         { status: 400 },
       );
     }
@@ -125,6 +139,8 @@ export async function POST(request: Request) {
       passwordHash: null,
       tradingBalance: 0,
       margin: 0,
+      emailVerified: true,
+      phoneVerified: true,
       documents: {
         photo: documents.photo,
         signature: documents.signature,
@@ -133,6 +149,10 @@ export async function POST(request: Request) {
         signatureUploadThingUrl,
       },
     });
+
+    // Consume the OTP marks so they can't be reused.
+    clearVerification("email", email);
+    clearVerification("phone", phone);
 
     return NextResponse.json(
       {

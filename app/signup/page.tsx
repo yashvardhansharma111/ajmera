@@ -1,8 +1,12 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
-import { FiArrowLeft, FiUploadCloud } from "react-icons/fi";
+import {
+  FiArrowLeft,
+  FiCheckCircle,
+  FiUploadCloud,
+} from "react-icons/fi";
 
 const DOCUMENT_OPTIONS = [
   "Bank Statement (6Month)",
@@ -42,9 +46,13 @@ export default function SignupPage() {
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
+  const [emailVerified, setEmailVerified] = useState(false);
+  const [phoneVerified, setPhoneVerified] = useState(false);
 
   function update<K extends keyof FormState>(key: K, value: FormState[K]) {
     setForm((prev) => ({ ...prev, [key]: value }));
+    if (key === "email" && emailVerified) setEmailVerified(false);
+    if (key === "phone" && phoneVerified) setPhoneVerified(false);
   }
 
   async function onSubmit(e: React.FormEvent) {
@@ -54,6 +62,14 @@ export default function SignupPage() {
 
     if (!form.fullName.trim() || !form.email.trim() || !form.phone.trim()) {
       setError("Enter your full name, email, and phone number");
+      return;
+    }
+    if (!emailVerified) {
+      setError("Please verify your email with the OTP first.");
+      return;
+    }
+    if (!phoneVerified) {
+      setError("Please verify your phone number with the OTP first.");
       return;
     }
     if (!form.accountNo.trim() || !form.ifscCode.trim()) {
@@ -151,19 +167,25 @@ export default function SignupPage() {
               onChange={(v) => update("fullName", v)}
               disabled={busy}
             />
-            <Field
+            <VerifyField
               label="Email"
+              target="email"
               type="email"
               value={form.email}
               onChange={(v) => update("email", v)}
               disabled={busy}
+              verified={emailVerified}
+              onVerified={() => setEmailVerified(true)}
             />
-            <Field
+            <VerifyField
               label="Phone"
+              target="phone"
               type="tel"
               value={form.phone}
               onChange={(v) => update("phone", v)}
               disabled={busy}
+              verified={phoneVerified}
+              onVerified={() => setPhoneVerified(true)}
             />
             <Field
               label="PAN Number"
@@ -290,6 +312,226 @@ export default function SignupPage() {
           </form>
         </div>
       </div>
+    </div>
+  );
+}
+
+function VerifyField({
+  label,
+  target,
+  type = "text",
+  value,
+  onChange,
+  disabled,
+  verified,
+  onVerified,
+}: {
+  label: string;
+  target: "phone" | "email";
+  type?: string;
+  value: string;
+  onChange: (v: string) => void;
+  disabled?: boolean;
+  verified: boolean;
+  onVerified: () => void;
+}) {
+  const [sending, setSending] = useState(false);
+  const [sent, setSent] = useState(false);
+  const [otp, setOtp] = useState("");
+  const [verifying, setVerifying] = useState(false);
+  const [msg, setMsg] = useState<string | null>(null);
+  const [err, setErr] = useState<string | null>(null);
+  const [cooldown, setCooldown] = useState(0);
+  const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  useEffect(() => {
+    if (cooldown <= 0) return;
+    timerRef.current = setTimeout(
+      () => setCooldown((c) => Math.max(0, c - 1)),
+      1000,
+    );
+    return () => {
+      if (timerRef.current) clearTimeout(timerRef.current);
+    };
+  }, [cooldown]);
+
+  useEffect(() => {
+    // Upstream value changed — invalidate any pending OTP UI.
+    setSent(false);
+    setOtp("");
+    setErr(null);
+    setMsg(null);
+  }, [value]);
+
+  async function handleSend() {
+    setErr(null);
+    setMsg(null);
+    if (!value.trim()) {
+      setErr(
+        target === "email"
+          ? "Enter your email first"
+          : "Enter your phone number first",
+      );
+      return;
+    }
+    if (target === "email" && !/^\S+@\S+\.\S+$/.test(value.trim())) {
+      setErr("Enter a valid email address");
+      return;
+    }
+    if (target === "phone" && value.replace(/\D/g, "").length < 10) {
+      setErr("Enter a valid 10-digit phone number");
+      return;
+    }
+    setSending(true);
+    try {
+      const res = await fetch("/api/auth/otp/send", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ target, value: value.trim() }),
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data?.message || "Could not send OTP");
+      setMsg(data?.message || `OTP sent to your ${target}.`);
+      setSent(true);
+      setOtp("");
+      setCooldown(30);
+    } catch (e) {
+      setErr(e instanceof Error ? e.message : "Could not send OTP");
+    } finally {
+      setSending(false);
+    }
+  }
+
+  async function handleVerify() {
+    setErr(null);
+    setMsg(null);
+    if (!/^\d{6}$/.test(otp)) {
+      setErr("Enter the 6-digit code");
+      return;
+    }
+    setVerifying(true);
+    try {
+      const res = await fetch("/api/auth/otp/verify", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ target, value: value.trim(), otp }),
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data?.message || "Could not verify");
+      setMsg("Verified");
+      setSent(false);
+      setOtp("");
+      onVerified();
+    } catch (e) {
+      setErr(e instanceof Error ? e.message : "Could not verify");
+    } finally {
+      setVerifying(false);
+    }
+  }
+
+  return (
+    <div>
+      <div className="mb-1 flex items-center justify-between">
+        <p
+          className="text-xs font-medium"
+          style={{ color: "var(--ax-text-secondary)" }}
+        >
+          {label}
+        </p>
+        {verified ? (
+          <span
+            className="inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[10px] font-bold tracking-wider"
+            style={{
+              backgroundColor: "rgba(0,179,134,0.12)",
+              color: "var(--ax-positive)",
+            }}
+          >
+            <FiCheckCircle className="h-3 w-3" />
+            VERIFIED
+          </span>
+        ) : null}
+      </div>
+      <div className="flex gap-2">
+        <input
+          type={type}
+          value={value}
+          disabled={disabled || verified}
+          onChange={(e) => onChange(e.target.value)}
+          className="flex-1 rounded-xl border px-4 py-3 text-sm outline-none transition focus:border-[var(--ax-primary)] focus:ring-4 disabled:opacity-70"
+          style={{
+            borderColor: "var(--ax-border)",
+            backgroundColor: "var(--ax-card-muted)",
+            color: "var(--ax-text-primary)",
+          }}
+        />
+        {verified ? null : (
+          <button
+            type="button"
+            onClick={() => void handleSend()}
+            disabled={sending || cooldown > 0 || !value.trim()}
+            className="whitespace-nowrap rounded-xl border px-3 text-xs font-bold transition disabled:opacity-60"
+            style={{
+              borderColor: "var(--ax-primary)",
+              backgroundColor: "var(--ax-primary-muted)",
+              color: "var(--ax-primary)",
+            }}
+          >
+            {sending
+              ? "Sending…"
+              : cooldown > 0
+                ? `${cooldown}s`
+                : sent
+                  ? "Resend"
+                  : "Send OTP"}
+          </button>
+        )}
+      </div>
+      {sent && !verified ? (
+        <div className="mt-2 flex gap-2">
+          <input
+            type="text"
+            inputMode="numeric"
+            maxLength={6}
+            value={otp}
+            onChange={(e) =>
+              setOtp(e.target.value.replace(/\D/g, "").slice(0, 6))
+            }
+            placeholder="6-digit OTP"
+            className="flex-1 rounded-xl border px-4 py-3 text-center text-base font-bold tracking-[0.4em] outline-none transition focus:border-[var(--ax-primary)] focus:ring-4"
+            style={{
+              borderColor: "var(--ax-border)",
+              backgroundColor: "var(--ax-card-muted)",
+              color: "var(--ax-text-primary)",
+              fontFamily: "monospace",
+            }}
+          />
+          <button
+            type="button"
+            onClick={() => void handleVerify()}
+            disabled={otp.length !== 6 || verifying}
+            className="whitespace-nowrap rounded-xl px-4 text-xs font-bold text-white transition disabled:opacity-60"
+            style={{ backgroundColor: "var(--ax-primary)" }}
+          >
+            {verifying ? "Verifying…" : "Verify"}
+          </button>
+        </div>
+      ) : null}
+      {msg ? (
+        <p
+          className="mt-2 text-xs"
+          style={{ color: "var(--ax-positive)" }}
+        >
+          {msg}
+        </p>
+      ) : null}
+      {err ? (
+        <p
+          className="mt-2 text-xs"
+          style={{ color: "var(--ax-negative)" }}
+        >
+          {err}
+        </p>
+      ) : null}
     </div>
   );
 }

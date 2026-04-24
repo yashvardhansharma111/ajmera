@@ -35,6 +35,55 @@ function getTransporter() {
   return transporter;
 }
 
+type SendOtpEmailParams = {
+  to: string;
+  otp: string;
+};
+
+export async function sendOtpEmail({ to, otp }: SendOtpEmailParams) {
+  if (!process.env.SMTP_USER) {
+    throw new Error("SMTP sender is not configured");
+  }
+
+  const html = `
+    <div style="font-family:Arial,sans-serif;max-width:480px;margin:0 auto;padding:24px;background:#f8fafc;color:#0f172a">
+      <div style="background:#ffffff;border:1px solid #e2e8f0;border-radius:16px;padding:28px;text-align:center">
+        <h2 style="margin:0 0 8px;font-size:20px;color:#00B386">Ajmera Exchange</h2>
+        <p style="margin:0 0 4px;font-size:13px;color:#475569">Your verification code</p>
+        <div style="margin:18px 0;padding:18px 12px;background:#f0fdf4;border:1px solid #bbf7d0;border-radius:12px">
+          <p style="margin:0;font-size:32px;font-weight:700;color:#0f172a;letter-spacing:8px">${otp}</p>
+        </div>
+        <p style="margin:0 0 4px;font-size:12px;color:#475569">
+          This code expires in 5 minutes. Do not share it with anyone.
+        </p>
+        <p style="margin:16px 0 0;font-size:11px;color:#94a3b8">
+          If you didn&apos;t request this, please ignore this email or reply to
+          <a href="mailto:${SUPPORT_EMAIL}" style="color:#00B386;text-decoration:none">${SUPPORT_EMAIL}</a>.
+        </p>
+      </div>
+    </div>
+  `;
+
+  const text = [
+    "Ajmera Exchange verification code",
+    "",
+    `Your code: ${otp}`,
+    "",
+    "This code expires in 5 minutes.",
+    `If you didn't request this, reply to ${SUPPORT_EMAIL}.`,
+  ].join("\n");
+
+  await getTransporter().sendMail({
+    from: FROM_ADDRESS,
+    sender: SUPPORT_EMAIL,
+    replyTo: SUPPORT_EMAIL,
+    to,
+    subject: `Ajmera Exchange verification code: ${otp}`,
+    html,
+    text,
+  });
+}
+
 export async function sendClientCredentialsEmail({
   to,
   fullName,
