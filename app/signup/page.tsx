@@ -64,8 +64,14 @@ export default function SignupPage() {
       setError("Enter your full name, email, and phone number");
       return;
     }
+    if (!emailVerified && !phoneVerified) {
+      setError(
+        "Please verify your email and phone number with the OTP before submitting.",
+      );
+      return;
+    }
     if (!emailVerified) {
-      setError("Please verify your email with the OTP first.");
+      setError("Please verify your email address with the OTP first.");
       return;
     }
     if (!phoneVerified) {
@@ -270,6 +276,49 @@ export default function SignupPage() {
               disabled={busy}
             />
 
+            {!emailVerified || !phoneVerified ? (
+              <div
+                className="rounded-xl border p-4 text-sm"
+                style={{
+                  borderColor: "rgba(245,158,11,0.35)",
+                  backgroundColor: "rgba(245,158,11,0.08)",
+                }}
+              >
+                <p
+                  className="text-sm font-bold"
+                  style={{ color: "#B45309" }}
+                >
+                  Verify your email and phone first
+                </p>
+                <p
+                  className="mt-1 text-xs leading-relaxed"
+                  style={{ color: "#92400E" }}
+                >
+                  Tap <strong>Send OTP</strong> next to {" "}
+                  {!emailVerified ? "Email" : ""}
+                  {!emailVerified && !phoneVerified ? " and " : ""}
+                  {!phoneVerified ? "Phone" : ""}, enter the 6-digit code, then
+                  tap <strong>Verify</strong>. Submit is blocked until both
+                  show a green <strong>Verified</strong> badge.
+                </p>
+                <div className="mt-3 flex flex-wrap gap-2">
+                  <StatusChip done={emailVerified} label="Email" />
+                  <StatusChip done={phoneVerified} label="Phone" />
+                </div>
+              </div>
+            ) : (
+              <div
+                className="rounded-xl border px-4 py-2 text-xs font-semibold"
+                style={{
+                  borderColor: "rgba(0,179,134,0.30)",
+                  backgroundColor: "rgba(0,179,134,0.08)",
+                  color: "var(--ax-positive)",
+                }}
+              >
+                ✓ Email and phone verified — you can submit the form.
+              </div>
+            )}
+
             {error ? (
               <p
                 className="rounded-lg px-4 py-2 text-sm"
@@ -295,11 +344,15 @@ export default function SignupPage() {
 
             <button
               type="submit"
-              disabled={busy}
-              className="w-full rounded-xl py-3 text-sm font-semibold text-white shadow-sm transition disabled:opacity-60"
+              disabled={busy || !emailVerified || !phoneVerified}
+              className="w-full rounded-xl py-3 text-sm font-semibold text-white shadow-sm transition disabled:cursor-not-allowed disabled:opacity-60"
               style={{ backgroundColor: "var(--ax-primary)" }}
             >
-              {busy ? "Submitting…" : "Submit request"}
+              {busy
+                ? "Submitting…"
+                : !emailVerified || !phoneVerified
+                  ? "Verify email & phone first"
+                  : "Submit request"}
             </button>
 
             <Link
@@ -313,6 +366,29 @@ export default function SignupPage() {
         </div>
       </div>
     </div>
+  );
+}
+
+function StatusChip({ done, label }: { done: boolean; label: string }) {
+  return (
+    <span
+      className="rounded-full border px-2.5 py-0.5 text-[11px] font-bold tracking-wider"
+      style={
+        done
+          ? {
+              backgroundColor: "rgba(0,179,134,0.10)",
+              borderColor: "rgba(0,179,134,0.35)",
+              color: "var(--ax-positive)",
+            }
+          : {
+              backgroundColor: "#fff",
+              borderColor: "rgba(245,158,11,0.35)",
+              color: "#B45309",
+            }
+      }
+    >
+      {done ? `✓ ${label} verified` : `• ${label} pending`}
+    </span>
   );
 }
 
