@@ -1,0 +1,55 @@
+@import "tailwindcss";
+
+:root {
+  --background: #ffffff;
+  --foreground: #1f1f1f;
+
+  /* Ajmera Exchange palette — mirrors stock-app/constants/theme.js */
+  --ax-primary: #00d09c;
+  --ax-primary-muted: rgba(0, 208, 156, 0.12);
+  --ax-text-primary: #1f1f1f;
+  --ax-text-secondary: #6e6e6e;
+  --ax-card: #f7f9fa;
+  --ax-card-muted: #f8f8f8;
+  --ax-border: #e8eced;
+  --ax-border-light: #e0e0e0;
+  --ax-positive: #00b386;
+  --ax-negative: #e55461;
+  --ax-tab-inactive: #9ca3a8;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+
+  --color-ax-primary: var(--ax-primary);
+  --color-ax-primary-muted: var(--ax-primary-muted);
+  --color-ax-text: var(--ax-text-primary);
+  --color-ax-muted: var(--ax-text-secondary);
+  --color-ax-card: var(--ax-card);
+  --color-ax-cardmuted: var(--ax-card-muted);
+  --color-ax-border: var(--ax-border);
+  --color-ax-borderlight: var(--ax-border-light);
+  --color-ax-positive: var(--ax-positive);
+  --color-ax-negative: var(--ax-negative);
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: Inter, Arial, Helvetica, sans-serif;
+}
+
+.ax-card {
+  background: #ffffff;
+  border: 1px solid var(--ax-border-light);
+  border-radius: 16px;
+  box-shadow: 0 2px 8px rgba(15, 23, 42, 0.06);
+}
+.ax-card-muted {
+  background: var(--ax-card);
+  border: 1px solid var(--ax-border-light);
+  border-radius: 16px;
+}
