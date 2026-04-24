@@ -28,8 +28,8 @@ import {
   FiZap,
 } from "react-icons/fi";
 
-// TODO: replace with the real EAS APK URL when it's ready.
-const APK_URL = "#apk-coming-soon";
+const APK_URL: string =
+  "https://expo.dev/artifacts/eas/vBjRETwRwgKATGJWrwoaN3.apk";
 const SUPPORT_EMAIL = "support@ajmeraexchange.in";
 
 const TICKER = [
