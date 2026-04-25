@@ -1,10 +1,5 @@
 {
   "expo": {
-    "extra": {
-      "eas": {
-        "projectId": "d3c3749a-ce19-499c-906d-4666a7fa0f08"
-      }
-    },
     "android": {
       "package": "com.bensharma.fakestock"
     }
