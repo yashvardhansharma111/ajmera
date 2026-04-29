@@ -6,6 +6,10 @@ import { ObjectId } from "mongodb";
 import { getDb } from "./mongodb";
 import { angelPost } from "./angelone/session";
 import { findBySymbol, INDEX_TOKENS, resolveTradable } from "./angelone/instruments";
+import {
+  getEffectiveOrdersConfigForUser,
+  type OrderRowEffective,
+} from "./effective-orders-config";
 
 export interface Trade {
   _id?: ObjectId;
@@ -417,8 +421,105 @@ async function updatePosition(userId: ObjectId, trade: Trade) {
   }
 }
 
-/** Get user's open positions with live P&L. */
-export async function getPositions(userId: string) {
+/**
+ * Translate admin "Orders & positions" panel productType (Delivery/Intraday/F&O)
+ * into the trade engine's enum (CNC/MIS/NRML). Pass-through for already-correct values.
+ */
+function mapAdminProductType(p?: string): string {
+  if (!p) return "CNC";
+  const upper = p.toUpperCase();
+  if (upper === "DELIVERY") return "CNC";
+  if (upper === "INTRADAY") return "MIS";
+  if (upper === "F&O" || upper === "FNO") return "NRML";
+  return upper;
+}
+
+function computeAdminPnl(row: OrderRowEffective): number {
+  if (row.pnlManual && Number.isFinite(row.pnl)) return Number(row.pnl);
+  const lots = Number(row.lots ?? row.qty ?? 0);
+  const buy = Number(row.buyPrice ?? row.avgPrice ?? 0);
+  const sell = Number(row.sellPrice ?? row.ltp ?? 0);
+  return row.side === "SELL" ? (buy - sell) * lots : (sell - buy) * lots;
+}
+
+/** Map an admin scoped-config row into the position/holding view shape. */
+function mapAdminRowToPositionView(row: OrderRowEffective) {
+  const qty = Number(row.qty ?? row.lots ?? 0);
+  const avgPrice = Number(row.avgPrice ?? row.buyPrice ?? row.orderPrice ?? 0);
+  const ltp = Number(row.ltp ?? avgPrice);
+  const pnl = computeAdminPnl(row);
+  const investedValue = avgPrice * qty;
+  const currentValue = ltp * qty;
+  const pnlPct =
+    investedValue > 0 ? (pnl / investedValue) * 100 : Number(row.pnlPct ?? 0);
+  return {
+    id: `admin:${row.id}`,
+    symbol: row.symbol,
+    exchange: row.exchange || row.market || "NSE",
+    side: row.side,
+    qty,
+    avgPrice,
+    ltp,
+    pnl,
+    pnlPct,
+    currentValue,
+    investedValue,
+    productType: mapAdminProductType(row.productType),
+    lotSize: 1,
+    optionType: row.optionType,
+    strikePrice: row.strikePrice,
+    expiry: row.expiryDate,
+  };
+}
+
+/** Map an admin scoped-config row into a trade-history view shape. */
+function mapAdminRowToTradeView(row: OrderRowEffective) {
+  const qty = Number(row.qty ?? row.lots ?? 0);
+  const price = Number(
+    row.side === "SELL"
+      ? row.sellPrice ?? row.avgPrice ?? row.ltp ?? 0
+      : row.buyPrice ?? row.avgPrice ?? row.ltp ?? 0,
+  );
+  const totalValue = price * qty;
+  let createdAt: Date | undefined;
+  if (row.time) {
+    const d = new Date(row.time);
+    if (!isNaN(d.getTime())) createdAt = d;
+  }
+  return {
+    id: `admin:${row.id}`,
+    symbol: row.symbol,
+    exchange: row.exchange || row.market || "NSE",
+    side: row.side,
+    qty,
+    price,
+    orderType: "MARKET" as const,
+    status: row.status === "OPEN" ? ("PENDING" as const) : ("EXECUTED" as const),
+    productType: mapAdminProductType(row.productType),
+    totalValue,
+    pnl: computeAdminPnl(row),
+    optionType: row.optionType,
+    strikePrice: row.strikePrice,
+    expiry: row.expiryDate,
+    createdAt,
+    executedAt: row.status === "OPEN" ? undefined : createdAt,
+  };
+}
+
+async function loadAdminRowsForUser(
+  userId: string,
+): Promise<OrderRowEffective[]> {
+  try {
+    const effective = await getEffectiveOrdersConfigForUser(userId);
+    return Array.isArray(effective.orders) ? effective.orders : [];
+  } catch (err) {
+    console.error("[trades] loadAdminRowsForUser failed:", err);
+    return [];
+  }
+}
+
+/** Real positions only (no admin overlay). Used by the admin panel GET. */
+export async function getRealPositions(userId: string) {
   const positions = await positionsCol();
   const docs = await positions
     .find({ userId: new ObjectId(userId) })
@@ -427,7 +528,6 @@ export async function getPositions(userId: string) {
 
   if (!docs.length) return [];
 
-  // Single batched LTP call for all positions
   const ltpMap = await fetchLTPsBatch(
     docs.map((p) => ({ symbol: p.symbol, exchange: p.exchange })),
   );
@@ -438,6 +538,7 @@ export async function getPositions(userId: string) {
     const pnlPct = pos.avgPrice > 0 ? (pnl / (pos.avgPrice * pos.qty)) * 100 : 0;
     return {
       ...pos,
+      id: pos._id?.toString(),
       ltp,
       pnl,
       pnlPct,
@@ -447,17 +548,33 @@ export async function getPositions(userId: string) {
   });
 }
 
-/** Get user's trade history. */
+/** Get user's open positions with live P&L (real + admin scoped-config rows). */
+export async function getPositions(userId: string) {
+  const real = await getRealPositions(userId);
+  const adminRows = await loadAdminRowsForUser(userId);
+  const adminPositions = adminRows
+    .filter((r) => (r.segmentKey || "positions") === "positions")
+    .map(mapAdminRowToPositionView);
+  return [...real, ...adminPositions];
+}
+
+/** Get user's trade history (real + admin scoped-config rows). */
 export async function getTradeHistory(userId: string, limit = 50) {
   const trades = await tradesCol();
-  return trades
+  const realDocs = await trades
     .find({ userId: new ObjectId(userId) })
     .sort({ createdAt: -1 })
     .limit(limit)
     .toArray();
+  const real = realDocs.map((t) => ({ ...t, id: t._id?.toString() }));
+
+  const adminRows = await loadAdminRowsForUser(userId);
+  const adminTrades = adminRows.map(mapAdminRowToTradeView);
+
+  return [...real, ...adminTrades];
 }
 
-/** Get holdings (long positions in CNC). */
+/** Get holdings (long positions in CNC) — real + admin "Delivery/CNC BUY" rows. */
 export async function getHoldings(userId: string) {
   const positions = await positionsCol();
   const docs = await positions
@@ -469,18 +586,19 @@ export async function getHoldings(userId: string) {
     .sort({ updatedAt: -1 })
     .toArray();
 
-  if (!docs.length) return [];
+  const ltpMap = docs.length
+    ? await fetchLTPsBatch(
+        docs.map((p) => ({ symbol: p.symbol, exchange: p.exchange })),
+      )
+    : new Map<string, number>();
 
-  const ltpMap = await fetchLTPsBatch(
-    docs.map((p) => ({ symbol: p.symbol, exchange: p.exchange })),
-  );
-
-  return docs.map((pos) => {
+  const real = docs.map((pos) => {
     const ltp = ltpMap.get(`${pos.exchange}:${pos.symbol}`) ?? pos.avgPrice;
     const pnl = (ltp - pos.avgPrice) * pos.qty;
     const pnlPct = pos.avgPrice > 0 ? (pnl / (pos.avgPrice * pos.qty)) * 100 : 0;
     return {
       ...pos,
+      id: pos._id?.toString(),
       ltp,
       pnl,
       pnlPct,
@@ -488,4 +606,14 @@ export async function getHoldings(userId: string) {
       investedValue: pos.avgPrice * pos.qty,
     };
   });
+
+  const adminRows = await loadAdminRowsForUser(userId);
+  const adminHoldings = adminRows
+    .filter(
+      (r) =>
+        r.side === "BUY" && mapAdminProductType(r.productType) === "CNC",
+    )
+    .map(mapAdminRowToPositionView);
+
+  return [...real, ...adminHoldings];
 }

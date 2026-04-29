@@ -21,7 +21,7 @@ export async function GET(request: NextRequest) {
 
     return NextResponse.json({
       positions: positions.map((p) => ({
-        id: p._id?.toString(),
+        id: p.id,
         symbol: p.symbol,
         exchange: p.exchange,
         side: p.side,

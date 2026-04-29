@@ -21,7 +21,7 @@ export async function GET(request: NextRequest) {
 
     return NextResponse.json({
       holdings: holdings.map((h) => ({
-        id: h._id?.toString(),
+        id: h.id,
         symbol: h.symbol,
         exchange: h.exchange,
         qty: h.qty,

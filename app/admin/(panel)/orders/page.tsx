@@ -81,6 +81,11 @@ function patchRow(r: OrderRow, patch: Partial<OrderRow>): OrderRow {
   return next;
 }
 
+const LIVE_ROW_PREFIX = "live-";
+function isLiveRow(row: OrderRow) {
+  return typeof row.id === "string" && row.id.startsWith(LIVE_ROW_PREFIX);
+}
+
 type UserOpt = { _id: string; clientId?: string; email?: string; fullName?: string };
 
 const inp =
@@ -395,6 +400,16 @@ export default function AdminOrdersPage() {
             Add order
           </button>
         </div>
+        {scopeUserId.trim() ? (
+          <p className="mb-3 text-xs text-slate-500">
+            Rows tagged{" "}
+            <span className="rounded bg-sky-600 px-1 py-0.5 text-[9px] font-bold uppercase tracking-wider text-white">
+              Live
+            </span>{" "}
+            are real positions placed from the user&apos;s app. They&apos;re shown read-only —
+            edits or removals on these rows are <strong>not saved</strong>.
+          </p>
+        ) : null}
         <div className="overflow-x-auto">
           <table className="w-full border-collapse text-left text-[11px]">
             <thead>
@@ -432,20 +447,35 @@ export default function AdminOrdersPage() {
                   </td>
                 </tr>
               ) : (
-                rows.map((row, idx) => (
-                  <tr key={`${row.id}-${idx}`} className="border-b border-slate-100 hover:bg-slate-50/80">
+                rows.map((row, idx) => {
+                  const live = isLiveRow(row);
+                  return (
+                  <tr
+                    key={`${row.id}-${idx}`}
+                    className={`border-b border-slate-100 ${
+                      live ? "bg-sky-50/60" : "hover:bg-slate-50/80"
+                    }`}
+                    title={live ? "Live position from the user's app — read-only (changes won't be saved)" : undefined}
+                  >
                     <td className="px-1.5 py-1 align-top">
-                      <select
-                        className={inp}
-                        value={row.segmentKey || "positions"}
-                        onChange={(e) => updateRow(idx, { segmentKey: e.target.value })}
-                      >
-                        {segments.map((seg) => (
-                          <option key={seg.key} value={seg.key}>
-                            {seg.label}
-                          </option>
-                        ))}
-                      </select>
+                      <div className="flex items-center gap-1">
+                        <select
+                          className={inp}
+                          value={row.segmentKey || "positions"}
+                          onChange={(e) => updateRow(idx, { segmentKey: e.target.value })}
+                        >
+                          {segments.map((seg) => (
+                            <option key={seg.key} value={seg.key}>
+                              {seg.label}
+                            </option>
+                          ))}
+                        </select>
+                        {live ? (
+                          <span className="rounded bg-sky-600 px-1 py-0.5 text-[9px] font-bold uppercase tracking-wider text-white">
+                            Live
+                          </span>
+                        ) : null}
+                      </div>
                     </td>
                     <td className="px-1.5 py-1 align-top">
                       <input
@@ -683,7 +713,8 @@ export default function AdminOrdersPage() {
                       </button>
                     </td>
                   </tr>
-                ))
+                  );
+                })
               )}
             </tbody>
           </table>

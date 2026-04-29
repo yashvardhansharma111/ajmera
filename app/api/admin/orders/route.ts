@@ -4,6 +4,55 @@ import { NextResponse } from "next/server";
 import { deleteScopedConfig, readScopedConfig, upsertScopedConfig } from "@/lib/scoped-config";
 import { getEffectiveOrdersConfigForUser } from "@/lib/effective-orders-config";
 import { broadcastEvent } from "@/lib/event-bus";
+import { getRealPositions } from "@/lib/trades";
+
+const LIVE_ROW_PREFIX = "live-";
+
+function adminProductTypeFromEngine(p?: string): string {
+  if (!p) return "Delivery";
+  const upper = p.toUpperCase();
+  if (upper === "CNC") return "Delivery";
+  if (upper === "MIS") return "Intraday";
+  if (upper === "NRML") return "F&O";
+  return p;
+}
+
+async function buildLiveRows(scopeUserId: string): Promise<OrderRow[]> {
+  try {
+    const real = await getRealPositions(scopeUserId);
+    return real.map((p) => {
+      const qty = Number(p.qty ?? 0);
+      const avgPrice = Number(p.avgPrice ?? 0);
+      const ltp = Number(p.ltp ?? avgPrice);
+      const pnl = Number(p.pnl ?? 0);
+      const pnlPct = Number(p.pnlPct ?? 0);
+      return {
+        id: `${LIVE_ROW_PREFIX}pos:${p.id ?? p._id?.toString() ?? ""}`,
+        segmentKey: "positions",
+        market: p.exchange,
+        symbol: p.symbol,
+        side: p.side as "BUY" | "SELL",
+        productType: adminProductTypeFromEngine(p.productType),
+        optionType: p.optionType,
+        strikePrice: p.strikePrice,
+        exchange: p.exchange,
+        qty,
+        avgPrice,
+        ltp,
+        buyPrice: p.side === "BUY" ? avgPrice : 0,
+        sellPrice: p.side === "SELL" ? avgPrice : 0,
+        lots: qty,
+        pnl,
+        pnlPct,
+        pnlManual: true,
+        status: "OPEN",
+      } satisfies OrderRow;
+    });
+  } catch (err) {
+    console.error("[admin/orders] buildLiveRows failed:", err);
+    return [];
+  }
+}
 
 type OrderSegment = {
   key: string;
@@ -75,7 +124,9 @@ export async function GET(request: Request) {
     // so admin sees exactly what the user sees in the app.
     if (scopeUserId) {
       const effective = await getEffectiveOrdersConfigForUser(scopeUserId);
-      const orders: OrderRow[] = (effective.orders ?? []) as OrderRow[];
+      const configured: OrderRow[] = (effective.orders ?? []) as OrderRow[];
+      const live = await buildLiveRows(scopeUserId);
+      const orders: OrderRow[] = [...configured, ...live];
 
       function computePnl(o: OrderRow) {
         if (o.pnlManual && typeof o.pnl === "number" && Number.isFinite(o.pnl)) return o.pnl;
@@ -147,6 +198,14 @@ export async function POST(request: Request) {
       return NextResponse.json(
         { message: "config is required" },
         { status: 400 },
+      );
+    }
+
+    // Strip read-only "live-*" rows (real positions surfaced for display) so they
+    // don't get baked into the scoped config and double-counted on next load.
+    if (Array.isArray(config.orders)) {
+      config.orders = config.orders.filter(
+        (r) => typeof r.id !== "string" || !r.id.startsWith(LIVE_ROW_PREFIX),
       );
     }
 

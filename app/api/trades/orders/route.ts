@@ -17,7 +17,7 @@ export async function GET(request: NextRequest) {
 
     return NextResponse.json({
       orders: trades.map((t) => ({
-        id: t._id?.toString(),
+        id: t.id,
         symbol: t.symbol,
         exchange: t.exchange,
         side: t.side,
