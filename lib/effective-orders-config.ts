@@ -64,12 +64,25 @@ export async function getEffectiveOrdersConfigForUser(
       key: KEY,
       userId: null,
     });
-    if (doc?.value) return normalize(doc.value);
+    if (doc?.value) {
+      console.log(
+        "[effective-orders] loadGlobal hit (userId:null)",
+        JSON.stringify({ rowCount: doc.value.orders?.length ?? 0 }),
+      );
+      return normalize(doc.value);
+    }
     const legacy = await settings.findOne<{ value?: OrdersConfigEffective }>({
       key: KEY,
       userId: { $exists: false },
     });
-    if (legacy?.value) return normalize(legacy.value);
+    if (legacy?.value) {
+      console.log(
+        "[effective-orders] loadGlobal hit (legacy missing userId)",
+        JSON.stringify({ rowCount: legacy.value.orders?.length ?? 0 }),
+      );
+      return normalize(legacy.value);
+    }
+    console.log("[effective-orders] loadGlobal MISS — no global doc found");
     return { ...empty };
   }
 
@@ -86,6 +99,10 @@ export async function getEffectiveOrdersConfigForUser(
   const global = await loadGlobal();
 
   if (!userId || !ObjectId.isValid(userId)) {
+    console.log(
+      "[effective-orders] returning global only — invalid/missing userId",
+      JSON.stringify({ userId, globalRowCount: global.orders.length }),
+    );
     return global;
   }
 
@@ -95,8 +112,20 @@ export async function getEffectiveOrdersConfigForUser(
   });
 
   if (!userDoc?.value) {
+    console.log(
+      "[effective-orders] no per-user override — returning global",
+      JSON.stringify({ userId, globalRowCount: global.orders.length }),
+    );
     return global;
   }
+  console.log(
+    "[effective-orders] merging per-user override with global",
+    JSON.stringify({
+      userId,
+      globalRowCount: global.orders.length,
+      userRowCount: userDoc.value.orders?.length ?? 0,
+    }),
+  );
 
   const u = normalize(userDoc.value);
   const gOrders = global.orders;

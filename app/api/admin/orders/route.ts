@@ -209,6 +209,25 @@ export async function POST(request: Request) {
       );
     }
 
+    console.log(
+      "[admin/orders POST] saving",
+      JSON.stringify({
+        scopeUserId: body.scopeUserId || null,
+        rowCount: config.orders?.length ?? 0,
+        rows: (config.orders ?? []).map((r) => ({
+          id: r.id,
+          segmentKey: r.segmentKey,
+          symbol: r.symbol,
+          side: r.side,
+          qty: r.qty,
+          lots: r.lots,
+          avgPrice: r.avgPrice,
+          buyPrice: r.buyPrice,
+          ltp: r.ltp,
+        })),
+      }),
+    );
+
     await upsertScopedConfig<OrdersConfig>({
       key: "dashboard_orders",
       userId: body.scopeUserId || null,

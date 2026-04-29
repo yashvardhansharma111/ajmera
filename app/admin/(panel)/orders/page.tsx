@@ -4,6 +4,7 @@ import { useCallback, useEffect, useMemo, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import { adminJson } from "@/components/admin/adminFetch";
 import { ScopeUserBar } from "@/components/admin/ScopeUserBar";
+import { RealPositionsPanel } from "@/components/admin/RealPositionsPanel";
 import { computeOrderPnl } from "@/lib/admin-orders-pnl";
 
 type OrderSegment = { key: string; label: string };
@@ -275,6 +276,8 @@ export default function AdminOrdersPage() {
           {totalPnl.toLocaleString(undefined, { maximumFractionDigits: 2 })}
         </span>
       </div>
+
+      <RealPositionsPanel scopeUserId={scopeUserId} />
 
       <div className="mb-4 flex flex-wrap gap-2">
         <button

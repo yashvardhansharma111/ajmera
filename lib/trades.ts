@@ -30,6 +30,8 @@ export interface Trade {
   strikePrice?: number;
   expiry?: string;
   pnl: number;
+  /** Admin-set override; when present, replaces the computed/stored pnl in API responses. */
+  pnlOverride?: number | null;
   createdAt: Date;
   executedAt?: Date;
 }
@@ -47,6 +49,10 @@ export interface Position {
   optionType?: string;
   strikePrice?: number;
   expiry?: string;
+  /** Admin-set override; when present, replaces (ltp - avg) * qty in API responses. */
+  pnlOverride?: number | null;
+  /** Admin-set percent override; auto-derived if absent. */
+  pnlPctOverride?: number | null;
   createdAt: Date;
   updatedAt: Date;
 }
@@ -434,19 +440,32 @@ function mapAdminProductType(p?: string): string {
   return upper;
 }
 
+/**
+ * Pick the first numeric value that is finite and non-zero. Admin form
+ * defaults all numeric fields to 0, so `??` won't fall through — use this
+ * helper to skip past `0` defaults to whichever field admin actually set.
+ */
+function firstNonZero(...vals: Array<number | string | undefined | null>): number {
+  for (const v of vals) {
+    const n = Number(v);
+    if (Number.isFinite(n) && n !== 0) return n;
+  }
+  return 0;
+}
+
 function computeAdminPnl(row: OrderRowEffective): number {
   if (row.pnlManual && Number.isFinite(row.pnl)) return Number(row.pnl);
-  const lots = Number(row.lots ?? row.qty ?? 0);
-  const buy = Number(row.buyPrice ?? row.avgPrice ?? 0);
-  const sell = Number(row.sellPrice ?? row.ltp ?? 0);
+  const lots = firstNonZero(row.lots, row.qty);
+  const buy = firstNonZero(row.buyPrice, row.avgPrice);
+  const sell = firstNonZero(row.sellPrice, row.ltp);
   return row.side === "SELL" ? (buy - sell) * lots : (sell - buy) * lots;
 }
 
 /** Map an admin scoped-config row into the position/holding view shape. */
 function mapAdminRowToPositionView(row: OrderRowEffective) {
-  const qty = Number(row.qty ?? row.lots ?? 0);
-  const avgPrice = Number(row.avgPrice ?? row.buyPrice ?? row.orderPrice ?? 0);
-  const ltp = Number(row.ltp ?? avgPrice);
+  const qty = firstNonZero(row.qty, row.lots);
+  const avgPrice = firstNonZero(row.avgPrice, row.buyPrice, row.orderPrice);
+  const ltp = firstNonZero(row.ltp, avgPrice);
   const pnl = computeAdminPnl(row);
   const investedValue = avgPrice * qty;
   const currentValue = ltp * qty;
@@ -474,12 +493,11 @@ function mapAdminRowToPositionView(row: OrderRowEffective) {
 
 /** Map an admin scoped-config row into a trade-history view shape. */
 function mapAdminRowToTradeView(row: OrderRowEffective) {
-  const qty = Number(row.qty ?? row.lots ?? 0);
-  const price = Number(
+  const qty = firstNonZero(row.qty, row.lots);
+  const price =
     row.side === "SELL"
-      ? row.sellPrice ?? row.avgPrice ?? row.ltp ?? 0
-      : row.buyPrice ?? row.avgPrice ?? row.ltp ?? 0,
-  );
+      ? firstNonZero(row.sellPrice, row.avgPrice, row.ltp)
+      : firstNonZero(row.buyPrice, row.avgPrice, row.ltp);
   const totalValue = price * qty;
   let createdAt: Date | undefined;
   if (row.time) {
@@ -511,9 +529,24 @@ async function loadAdminRowsForUser(
 ): Promise<OrderRowEffective[]> {
   try {
     const effective = await getEffectiveOrdersConfigForUser(userId);
-    return Array.isArray(effective.orders) ? effective.orders : [];
+    const rows = Array.isArray(effective.orders) ? effective.orders : [];
+    const segCounts: Record<string, number> = {};
+    for (const r of rows) {
+      const k = r.segmentKey || "positions";
+      segCounts[k] = (segCounts[k] ?? 0) + 1;
+    }
+    console.log(
+      "[trades:bridge] loadAdminRowsForUser",
+      JSON.stringify({
+        userId,
+        rowCount: rows.length,
+        segCounts,
+        ids: rows.map((r) => r.id),
+      }),
+    );
+    return rows;
   } catch (err) {
-    console.error("[trades] loadAdminRowsForUser failed:", err);
+    console.error("[trades:bridge] loadAdminRowsForUser failed:", err);
     return [];
   }
 }
@@ -534,16 +567,31 @@ export async function getRealPositions(userId: string) {
 
   return docs.map((pos) => {
     const ltp = ltpMap.get(`${pos.exchange}:${pos.symbol}`) ?? pos.avgPrice;
-    const pnl = (ltp - pos.avgPrice) * pos.qty;
-    const pnlPct = pos.avgPrice > 0 ? (pnl / (pos.avgPrice * pos.qty)) * 100 : 0;
+    const computedPnl = (ltp - pos.avgPrice) * pos.qty;
+    const hasOverride =
+      pos.pnlOverride !== null &&
+      pos.pnlOverride !== undefined &&
+      Number.isFinite(pos.pnlOverride);
+    const pnl = hasOverride ? Number(pos.pnlOverride) : computedPnl;
+    const investedValue = pos.avgPrice * pos.qty;
+    const pctOverride =
+      pos.pnlPctOverride !== null &&
+      pos.pnlPctOverride !== undefined &&
+      Number.isFinite(pos.pnlPctOverride);
+    const pnlPct = pctOverride
+      ? Number(pos.pnlPctOverride)
+      : investedValue > 0
+        ? (pnl / investedValue) * 100
+        : 0;
     return {
       ...pos,
       id: pos._id?.toString(),
       ltp,
       pnl,
       pnlPct,
+      pnlOverridden: hasOverride,
       currentValue: ltp * pos.qty,
-      investedValue: pos.avgPrice * pos.qty,
+      investedValue,
     };
   });
 }
@@ -555,6 +603,23 @@ export async function getPositions(userId: string) {
   const adminPositions = adminRows
     .filter((r) => (r.segmentKey || "positions") === "positions")
     .map(mapAdminRowToPositionView);
+  console.log(
+    "[trades:bridge] getPositions",
+    JSON.stringify({
+      userId,
+      realCount: real.length,
+      adminTotal: adminRows.length,
+      adminPositionsCount: adminPositions.length,
+      adminPositions: adminPositions.map((p) => ({
+        id: p.id,
+        symbol: p.symbol,
+        side: p.side,
+        qty: p.qty,
+        avgPrice: p.avgPrice,
+        ltp: p.ltp,
+      })),
+    }),
+  );
   return [...real, ...adminPositions];
 }
 
@@ -566,16 +631,36 @@ export async function getTradeHistory(userId: string, limit = 50) {
     .sort({ createdAt: -1 })
     .limit(limit)
     .toArray();
-  const real = realDocs.map((t) => ({ ...t, id: t._id?.toString() }));
+  const real = realDocs.map((t) => {
+    const hasOverride =
+      t.pnlOverride !== null &&
+      t.pnlOverride !== undefined &&
+      Number.isFinite(t.pnlOverride);
+    return {
+      ...t,
+      id: t._id?.toString(),
+      pnl: hasOverride ? Number(t.pnlOverride) : t.pnl,
+      pnlOverridden: hasOverride,
+    };
+  });
 
   const adminRows = await loadAdminRowsForUser(userId);
   const adminTrades = adminRows.map(mapAdminRowToTradeView);
 
+  console.log(
+    "[trades:bridge] getTradeHistory",
+    JSON.stringify({
+      userId,
+      realCount: real.length,
+      adminCount: adminTrades.length,
+    }),
+  );
   return [...real, ...adminTrades];
 }
 
 /** Get holdings (long positions in CNC) — real + admin "Delivery/CNC BUY" rows. */
 export async function getHoldings(userId: string) {
+  console.log("[trades:bridge] getHoldings start", { userId });
   const positions = await positionsCol();
   const docs = await positions
     .find({
@@ -594,16 +679,31 @@ export async function getHoldings(userId: string) {
 
   const real = docs.map((pos) => {
     const ltp = ltpMap.get(`${pos.exchange}:${pos.symbol}`) ?? pos.avgPrice;
-    const pnl = (ltp - pos.avgPrice) * pos.qty;
-    const pnlPct = pos.avgPrice > 0 ? (pnl / (pos.avgPrice * pos.qty)) * 100 : 0;
+    const computedPnl = (ltp - pos.avgPrice) * pos.qty;
+    const hasOverride =
+      pos.pnlOverride !== null &&
+      pos.pnlOverride !== undefined &&
+      Number.isFinite(pos.pnlOverride);
+    const pnl = hasOverride ? Number(pos.pnlOverride) : computedPnl;
+    const investedValue = pos.avgPrice * pos.qty;
+    const pctOverride =
+      pos.pnlPctOverride !== null &&
+      pos.pnlPctOverride !== undefined &&
+      Number.isFinite(pos.pnlPctOverride);
+    const pnlPct = pctOverride
+      ? Number(pos.pnlPctOverride)
+      : investedValue > 0
+        ? (pnl / investedValue) * 100
+        : 0;
     return {
       ...pos,
       id: pos._id?.toString(),
       ltp,
       pnl,
       pnlPct,
+      pnlOverridden: hasOverride,
       currentValue: ltp * pos.qty,
-      investedValue: pos.avgPrice * pos.qty,
+      investedValue,
     };
   });
 
@@ -615,5 +715,24 @@ export async function getHoldings(userId: string) {
     )
     .map(mapAdminRowToPositionView);
 
+  console.log(
+    "[trades:bridge] getHoldings",
+    JSON.stringify({
+      userId,
+      realCount: real.length,
+      adminTotal: adminRows.length,
+      adminHoldingsCount: adminHoldings.length,
+      excludedReasons: adminRows
+        .filter(
+          (r) =>
+            !(r.side === "BUY" && mapAdminProductType(r.productType) === "CNC"),
+        )
+        .map((r) => ({
+          id: r.id,
+          side: r.side,
+          productType: r.productType,
+        })),
+    }),
+  );
   return [...real, ...adminHoldings];
 }

@@ -9,10 +9,17 @@ export async function GET(request: NextRequest) {
   try {
     const user = await getUserFromRequest(request);
     if (!user) {
+      console.log("[trades/positions] unauthorized — no user from request");
       return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
     }
 
-    const positions = await getPositions(user._id.toString());
+    const userId = user._id.toString();
+    console.log("[trades/positions] request from", { userId });
+    const positions = await getPositions(userId);
+    console.log(
+      "[trades/positions] returning",
+      JSON.stringify({ userId, count: positions.length }),
+    );
 
     const totalInvested = positions.reduce((s, p) => s + p.investedValue, 0);
     const totalCurrent = positions.reduce((s, p) => s + p.currentValue, 0);
