@@ -16,7 +16,7 @@ export async function GET(request: NextRequest) {
 
     const totalInvested = holdings.reduce((s, h) => s + h.investedValue, 0);
     const totalCurrent = holdings.reduce((s, h) => s + h.currentValue, 0);
-    const totalPnl = totalCurrent - totalInvested;
+    const totalPnl = holdings.reduce((s, h) => s + (h.pnl || 0), 0);
     const totalPnlPct = totalInvested > 0 ? (totalPnl / totalInvested) * 100 : 0;
 
     return NextResponse.json({

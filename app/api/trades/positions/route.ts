@@ -23,7 +23,10 @@ export async function GET(request: NextRequest) {
 
     const totalInvested = positions.reduce((s, p) => s + p.investedValue, 0);
     const totalCurrent = positions.reduce((s, p) => s + p.currentValue, 0);
-    const totalPnl = totalCurrent - totalInvested;
+    // Sum per-row P&L. Admin-config rows compute pnl from buy/sell deltas (not
+    // ltp − avg), so deriving the total from currentValue − investedValue would
+    // miss their contribution. Real positions still match either way.
+    const totalPnl = positions.reduce((s, p) => s + (p.pnl || 0), 0);
     const totalPnlPct = totalInvested > 0 ? (totalPnl / totalInvested) * 100 : 0;
 
     return NextResponse.json({

@@ -3,8 +3,15 @@
 import { useCallback, useEffect, useState } from "react";
 import { adminJson } from "./adminFetch";
 
-type RealPosition = {
+type RowKind =
+  | "real-position"
+  | "real-trade"
+  | "admin-position"
+  | "admin-trade";
+
+type Position = {
   id: string;
+  kind: RowKind;
   symbol: string;
   exchange: string;
   side: "BUY" | "SELL";
@@ -18,8 +25,9 @@ type RealPosition = {
   pnlOverridden: boolean;
 };
 
-type RealTrade = {
+type Trade = {
   id: string;
+  kind: RowKind;
   symbol: string;
   exchange: string;
   side: string;
@@ -34,8 +42,8 @@ type RealTrade = {
 };
 
 type LoadedData = {
-  positions: RealPosition[];
-  trades: RealTrade[];
+  positions: Position[];
+  trades: Trade[];
 };
 
 export function RealPositionsPanel({ scopeUserId }: { scopeUserId: string }) {
@@ -71,7 +79,7 @@ export function RealPositionsPanel({ scopeUserId }: { scopeUserId: string }) {
     void load();
   }, [load]);
 
-  async function save(kind: "position" | "trade", id: string, raw: string) {
+  async function save(kind: RowKind, id: string, raw: string) {
     setMsg(null);
     setErr(null);
     const trimmed = raw.trim();
@@ -86,11 +94,18 @@ export function RealPositionsPanel({ scopeUserId }: { scopeUserId: string }) {
       }
       pnlOverride = n;
     }
-    setSavingId(`${kind}:${id}`);
+    const draftKey = `${kind}:${id}`;
+    setSavingId(draftKey);
     try {
+      const isAdmin = kind === "admin-position" || kind === "admin-trade";
       await adminJson("/api/admin/real-positions", {
         method: "PATCH",
-        body: JSON.stringify({ kind, id, pnlOverride }),
+        body: JSON.stringify({
+          kind,
+          id,
+          pnlOverride,
+          ...(isAdmin ? { scopeUserId } : {}),
+        }),
       });
       setMsg(
         pnlOverride === null
@@ -99,7 +114,7 @@ export function RealPositionsPanel({ scopeUserId }: { scopeUserId: string }) {
       );
       setDrafts((prev) => {
         const next = { ...prev };
-        delete next[`${kind}:${id}`];
+        delete next[draftKey];
         return next;
       });
       await load();
@@ -128,12 +143,13 @@ export function RealPositionsPanel({ scopeUserId }: { scopeUserId: string }) {
       <div className="flex flex-wrap items-center justify-between gap-3">
         <div>
           <h3 className="text-sm font-semibold text-slate-900">
-            Real positions (user-placed)
+            P&amp;L override (positions &amp; trades the user sees)
           </h3>
           <p className="mt-1 text-xs text-slate-500">
-            P&amp;L is computed live from LTP. Type a number and click{" "}
-            <strong>Save</strong> to override what the user sees on mobile.
-            Empty + Save clears the override.
+            Includes both <strong>real</strong> positions placed from the
+            mobile app and <strong>admin-config</strong> rows from the editor
+            below. Type a number and click <strong>Save</strong> to override
+            what the user sees on mobile. Empty + Save clears the override.
           </p>
         </div>
         <button
@@ -182,12 +198,12 @@ export function RealPositionsPanel({ scopeUserId }: { scopeUserId: string }) {
             ) : data.positions.length === 0 ? (
               <tr>
                 <td colSpan={8} className="px-3 py-6 text-center text-slate-500">
-                  No real positions for this user.
+                  No positions for this user.
                 </td>
               </tr>
             ) : (
               data.positions.map((p) => {
-                const draftKey = `position:${p.id}`;
+                const draftKey = `${p.kind}:${p.id}`;
                 const draft =
                   drafts[draftKey] !== undefined
                     ? drafts[draftKey]
@@ -195,12 +211,24 @@ export function RealPositionsPanel({ scopeUserId }: { scopeUserId: string }) {
                       ? String(p.pnl)
                       : "";
                 const busy = savingId === draftKey;
+                const isAdmin = p.kind === "admin-position";
                 return (
                   <tr key={p.id} className="border-b border-slate-100">
                     <td className="px-2 py-2 font-medium text-slate-900">
-                      {p.symbol}
-                      <span className="ml-1 text-[10px] text-slate-400">
-                        {p.exchange}
+                      <span className="flex flex-wrap items-center gap-1">
+                        {p.symbol}
+                        <span className="text-[10px] text-slate-400">
+                          {p.exchange}
+                        </span>
+                        <span
+                          className={`rounded px-1.5 py-0.5 text-[9px] font-bold ${
+                            isAdmin
+                              ? "bg-violet-100 text-violet-700"
+                              : "bg-sky-100 text-sky-700"
+                          }`}
+                        >
+                          {isAdmin ? "ADMIN" : "REAL"}
+                        </span>
                       </span>
                     </td>
                     <td className="px-2 py-2">
@@ -251,7 +279,7 @@ export function RealPositionsPanel({ scopeUserId }: { scopeUserId: string }) {
                       <button
                         type="button"
                         disabled={busy}
-                        onClick={() => void save("position", p.id, draft)}
+                        onClick={() => void save(p.kind, p.id, draft)}
                         className="rounded bg-emerald-600 px-2 py-1 text-[11px] font-medium text-white hover:bg-emerald-700 disabled:opacity-50"
                       >
                         {busy ? "…" : "Save"}
@@ -290,12 +318,12 @@ export function RealPositionsPanel({ scopeUserId }: { scopeUserId: string }) {
             {!data ? null : data.trades.length === 0 ? (
               <tr>
                 <td colSpan={8} className="px-3 py-6 text-center text-slate-500">
-                  No real trades for this user.
+                  No trades for this user.
                 </td>
               </tr>
             ) : (
               data.trades.map((t) => {
-                const draftKey = `trade:${t.id}`;
+                const draftKey = `${t.kind}:${t.id}`;
                 const draft =
                   drafts[draftKey] !== undefined
                     ? drafts[draftKey]
@@ -303,12 +331,24 @@ export function RealPositionsPanel({ scopeUserId }: { scopeUserId: string }) {
                       ? String(t.pnl)
                       : "";
                 const busy = savingId === draftKey;
+                const isAdmin = t.kind === "admin-trade";
                 return (
                   <tr key={t.id} className="border-b border-slate-100">
                     <td className="px-2 py-2 font-medium text-slate-900">
-                      {t.symbol}
-                      <span className="ml-1 text-[10px] text-slate-400">
-                        {t.exchange}
+                      <span className="flex flex-wrap items-center gap-1">
+                        {t.symbol}
+                        <span className="text-[10px] text-slate-400">
+                          {t.exchange}
+                        </span>
+                        <span
+                          className={`rounded px-1.5 py-0.5 text-[9px] font-bold ${
+                            isAdmin
+                              ? "bg-violet-100 text-violet-700"
+                              : "bg-sky-100 text-sky-700"
+                          }`}
+                        >
+                          {isAdmin ? "ADMIN" : "REAL"}
+                        </span>
                       </span>
                     </td>
                     <td className="px-2 py-2">
@@ -361,7 +401,7 @@ export function RealPositionsPanel({ scopeUserId }: { scopeUserId: string }) {
                       <button
                         type="button"
                         disabled={busy}
-                        onClick={() => void save("trade", t.id, draft)}
+                        onClick={() => void save(t.kind, t.id, draft)}
                         className="rounded bg-emerald-600 px-2 py-1 text-[11px] font-medium text-white hover:bg-emerald-700 disabled:opacity-50"
                       >
                         {busy ? "…" : "Save"}
