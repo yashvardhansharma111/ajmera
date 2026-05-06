@@ -29,7 +29,7 @@ import {
 } from "react-icons/fi";
 
 const APK_URL: string =
-  "https://expo.dev/artifacts/eas/bLPM6QUJYGFL4kPmDYDZ9N.apk";
+  "https://expo.dev/artifacts/eas/wbMr3zgf1UykbrsD2XRXot.apk";
 const SUPPORT_EMAIL = "support@ajmeraexchange.in";
 
 const TICKER = [
