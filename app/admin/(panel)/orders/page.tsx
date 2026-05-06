@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { useSearchParams } from "next/navigation";
@@ -90,7 +90,7 @@ function isLiveRow(row: OrderRow) {
 type UserOpt = { _id: string; clientId?: string; email?: string; fullName?: string };
 
 const inp =
-  "min-w-[4rem] rounded border border-slate-200 bg-white px-1.5 py-1 text-xs text-slate-900 outline-none focus:border-emerald-500";
+  "min-w-[4rem] rounded border border-slate-200 bg-white px-1.5 py-1 text-xs text-slate-900 outline-none focus:border-sky-500";
 const inpNum = `${inp} text-right`;
 
 export default function AdminOrdersPage() {
@@ -235,7 +235,7 @@ export default function AdminOrdersPage() {
       </p>
       {source ? <p className="mt-2 text-xs text-slate-500">Source: {source}</p> : null}
       {msg ? (
-        <p className="mt-4 rounded-lg bg-emerald-50 px-4 py-2 text-sm text-emerald-900">{msg}</p>
+        <p className="mt-4 rounded-lg bg-sky-50 px-4 py-2 text-sm text-sky-900">{msg}</p>
       ) : null}
       {err ? (
         <p className="mt-4 rounded-lg bg-rose-50 px-4 py-2 text-sm text-rose-900">{err}</p>
@@ -259,13 +259,13 @@ export default function AdminOrdersPage() {
       >
         {scopeUserId.trim() ? (
           <>
-            <strong>Editing this user only</strong> — paste/save the MongoDB <code className="rounded bg-white/80 px-1">_id</code>{" "}
+            <strong>Editing this user only</strong> â€” paste/save the MongoDB <code className="rounded bg-white/80 px-1">_id</code>{" "}
             above. The app merges these rows with <strong>global</strong> trades (per-user replaces same{" "}
             <code className="rounded bg-white/80 px-1">id</code>).
           </>
         ) : (
           <>
-            <strong>Global scope</strong> — these trades show for every account unless a user has their own scoped list.
+            <strong>Global scope</strong> â€” these trades show for every account unless a user has their own scoped list.
           </>
         )}
       </div>
@@ -284,9 +284,9 @@ export default function AdminOrdersPage() {
           type="button"
           onClick={() => void save()}
           disabled={saving}
-          className="rounded-lg bg-emerald-600 px-4 py-2 text-sm font-medium text-white hover:bg-emerald-700 disabled:opacity-50"
+          className="rounded-lg bg-sky-600 px-4 py-2 text-sm font-medium text-white hover:bg-sky-700 disabled:opacity-50"
         >
-          {saving ? "Saving…" : "Save"}
+          {saving ? "Savingâ€¦" : "Save"}
         </button>
         <button
           type="button"
@@ -376,7 +376,7 @@ export default function AdminOrdersPage() {
               type="checkbox"
               checked={showOptionType}
               onChange={(e) => setShowOptionType(e.target.checked)}
-              className="h-4 w-4 rounded border-slate-300 accent-emerald-600"
+              className="h-4 w-4 rounded border-slate-300 accent-sky-600"
             />
             Show CE / PE (Option Type)
           </label>
@@ -385,7 +385,7 @@ export default function AdminOrdersPage() {
               type="checkbox"
               checked={showSide}
               onChange={(e) => setShowSide(e.target.checked)}
-              className="h-4 w-4 rounded border-slate-300 accent-emerald-600"
+              className="h-4 w-4 rounded border-slate-300 accent-sky-600"
             />
             Show BUY / SELL (Side)
           </label>
@@ -397,7 +397,7 @@ export default function AdminOrdersPage() {
           <h3 className="text-sm font-semibold text-slate-900">Order rows</h3>
           <button
             type="button"
-            className="rounded-lg bg-emerald-600 px-3 py-1.5 text-xs font-medium text-white"
+            className="rounded-lg bg-sky-600 px-3 py-1.5 text-xs font-medium text-white"
             onClick={() => setRows((prev) => [...prev, emptyRow()])}
           >
             Add order
@@ -409,7 +409,7 @@ export default function AdminOrdersPage() {
             <span className="rounded bg-sky-600 px-1 py-0.5 text-[9px] font-bold uppercase tracking-wider text-white">
               Live
             </span>{" "}
-            are real positions placed from the user&apos;s app. They&apos;re shown read-only —
+            are real positions placed from the user&apos;s app. They&apos;re shown read-only â€”
             edits or removals on these rows are <strong>not saved</strong>.
           </p>
         ) : null}
@@ -458,7 +458,7 @@ export default function AdminOrdersPage() {
                     className={`border-b border-slate-100 ${
                       live ? "bg-sky-50/60" : "hover:bg-slate-50/80"
                     }`}
-                    title={live ? "Live position from the user's app — read-only (changes won't be saved)" : undefined}
+                    title={live ? "Live position from the user's app â€” read-only (changes won't be saved)" : undefined}
                   >
                     <td className="px-1.5 py-1 align-top">
                       <div className="flex items-center gap-1">

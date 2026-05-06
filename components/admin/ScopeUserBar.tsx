@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useCallback, useEffect, useMemo, useState } from "react";
 
@@ -76,14 +76,14 @@ export function ScopeUserBar({
           <span className="font-semibold text-slate-900">
             {selected?.fullName || selected?.clientId || "User"}{" "}
             <span className="font-normal text-slate-500">
-              {selected?.email ? `· ${selected.email}` : null}
+              {selected?.email ? `Â· ${selected.email}` : null}
             </span>
             <code className="ml-2 rounded bg-slate-100 px-1.5 py-0.5 text-xs text-slate-700">
               {scopeUserId}
             </code>
           </span>
         ) : (
-          <span className="font-semibold text-emerald-800">Global — all users</span>
+          <span className="font-semibold text-sky-800">Global â€” all users</span>
         )}
       </div>
 
@@ -94,14 +94,14 @@ export function ScopeUserBar({
         type="search"
         value={search}
         onChange={(e) => setSearch(e.target.value)}
-        className="mt-1 block w-full max-w-xl rounded-lg border border-slate-200 px-3 py-2 text-sm text-slate-900 placeholder:text-slate-400 focus:border-emerald-500 focus:outline-none focus:ring-1 focus:ring-emerald-500"
-        placeholder="Name, email, client ID, or paste MongoDB _id…"
+        className="mt-1 block w-full max-w-xl rounded-lg border border-slate-200 px-3 py-2 text-sm text-slate-900 placeholder:text-slate-400 focus:border-sky-500 focus:outline-none focus:ring-1 focus:ring-sky-500"
+        placeholder="Name, email, client ID, or paste MongoDB _idâ€¦"
         autoComplete="off"
       />
       <p className="mt-1 text-[11px] text-slate-400">
         {debouncedSearch.trim()
           ? `Showing ${filtered.length} match(es)${users.length > LIST_CAP ? " (refine if list is long)" : ""}.`
-          : `Showing up to ${LIST_CAP} users — type to narrow.`}
+          : `Showing up to ${LIST_CAP} users â€” type to narrow.`}
       </p>
 
       <ul className="mt-3 max-h-64 overflow-y-auto rounded-lg border border-slate-200 bg-slate-50/80">
@@ -110,7 +110,7 @@ export function ScopeUserBar({
             type="button"
             onClick={selectGlobal}
             className={`flex w-full items-center px-3 py-2.5 text-left text-sm transition hover:bg-white ${
-              !scopeUserId ? "bg-emerald-50 font-medium text-emerald-900" : "text-slate-800"
+              !scopeUserId ? "bg-sky-50 font-medium text-sky-900" : "text-slate-800"
             }`}
           >
             <span className="rounded bg-slate-200 px-2 py-0.5 text-xs font-semibold text-slate-700">
@@ -131,16 +131,16 @@ export function ScopeUserBar({
                   type="button"
                   onClick={() => selectUser(u._id)}
                   className={`flex w-full flex-col items-start px-3 py-2.5 text-left text-sm transition hover:bg-white ${
-                    active ? "bg-emerald-50" : ""
+                    active ? "bg-sky-50" : ""
                   }`}
                 >
                   <span
-                    className={`font-medium ${active ? "text-emerald-900" : "text-slate-900"}`}
+                    className={`font-medium ${active ? "text-sky-900" : "text-slate-900"}`}
                   >
                     {title}
                   </span>
                   <span className="mt-0.5 text-xs text-slate-500">
-                    {[u.clientId, u.email].filter(Boolean).join(" · ") || "—"}
+                    {[u.clientId, u.email].filter(Boolean).join(" Â· ") || "â€”"}
                   </span>
                   <code className="mt-1 text-[10px] text-slate-400">{u._id}</code>
                 </button>

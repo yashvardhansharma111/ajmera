@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
@@ -37,7 +37,7 @@ export default function AdminLoginPage() {
   return (
     <div className="flex min-h-screen items-center justify-center p-6">
       <div className="w-full max-w-md rounded-2xl border border-slate-200 bg-white p-8 shadow-xl shadow-slate-200/50">
-        <div className="mb-6 flex h-12 w-12 items-center justify-center rounded-xl bg-emerald-100 text-emerald-700">
+        <div className="mb-6 flex h-12 w-12 items-center justify-center rounded-xl bg-sky-100 text-sky-700">
           <FiLock className="h-6 w-6" />
         </div>
         <h1 className="text-2xl font-bold text-slate-900">Admin sign in</h1>
@@ -54,8 +54,8 @@ export default function AdminLoginPage() {
                 type={show ? "text" : "password"}
                 value={pin}
                 onChange={(e) => setPin(e.target.value)}
-                className="w-full rounded-xl border border-slate-200 px-4 py-3 text-slate-900 outline-none ring-emerald-500/30 focus:border-emerald-500 focus:ring-4"
-                placeholder="••••••••"
+                className="w-full rounded-xl border border-slate-200 px-4 py-3 text-slate-900 outline-none ring-sky-500/30 focus:border-sky-500 focus:ring-4"
+                placeholder="â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢"
                 autoComplete="off"
               />
               <button
@@ -73,9 +73,9 @@ export default function AdminLoginPage() {
           <button
             type="submit"
             disabled={loading || !pin}
-            className="w-full rounded-xl bg-emerald-600 py-3 text-sm font-semibold text-white shadow-sm transition hover:bg-emerald-700 disabled:opacity-50"
+            className="w-full rounded-xl bg-sky-600 py-3 text-sm font-semibold text-white shadow-sm transition hover:bg-sky-700 disabled:opacity-50"
           >
-            {loading ? "Signing in…" : "Continue"}
+            {loading ? "Signing inâ€¦" : "Continue"}
           </button>
         </form>
       </div>

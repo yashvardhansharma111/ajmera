@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useCallback, useEffect, useState } from "react";
 import { adminJson } from "@/components/admin/adminFetch";
@@ -73,7 +73,7 @@ export default function AdminFundsPage() {
       <h2 className="text-lg font-semibold text-slate-900">Fund requests</h2>
       <p className="mt-1 text-sm text-slate-600">Review add-fund and withdraw requests.</p>
       {msg ? (
-        <p className="mt-4 rounded-lg bg-emerald-50 px-4 py-2 text-sm text-emerald-900">{msg}</p>
+        <p className="mt-4 rounded-lg bg-sky-50 px-4 py-2 text-sm text-sky-900">{msg}</p>
       ) : null}
       {err ? (
         <p className="mt-4 rounded-lg bg-rose-50 px-4 py-2 text-sm text-rose-900">{err}</p>
@@ -97,7 +97,7 @@ export default function AdminFundsPage() {
               {loading ? (
                 <tr>
                   <td colSpan={7} className="px-3 py-8 text-center text-slate-500">
-                    Loading…
+                    Loadingâ€¦
                   </td>
                 </tr>
               ) : requests.length === 0 ? (
@@ -115,16 +115,16 @@ export default function AdminFundsPage() {
                     </td>
                     <td className="px-3 py-3 capitalize text-slate-700">{r.type || "add"}</td>
                     <td className="px-3 py-3 text-right tabular-nums font-medium text-slate-900">
-                      ₹{r.amount?.toLocaleString("en-IN")}
+                      â‚¹{r.amount?.toLocaleString("en-IN")}
                     </td>
                     <td className="px-3 py-3 max-w-[180px] truncate text-slate-600">
-                      {r.reference || "—"}
+                      {r.reference || "â€”"}
                     </td>
                     <td className="px-3 py-3">
                       <span
                         className={`rounded-full px-2 py-0.5 text-xs font-medium ${
                           r.status === "approved"
-                            ? "bg-emerald-100 text-emerald-800"
+                            ? "bg-sky-100 text-sky-800"
                             : r.status === "rejected"
                               ? "bg-rose-100 text-rose-800"
                               : "bg-amber-100 text-amber-800"
@@ -136,7 +136,7 @@ export default function AdminFundsPage() {
                     <td className="px-3 py-3 text-xs text-slate-500">
                       {r.createdAt
                         ? new Date(r.createdAt).toLocaleString()
-                        : "—"}
+                        : "â€”"}
                     </td>
                     <td className="px-3 py-3">
                       {r.status === "pending" ? (
@@ -144,7 +144,7 @@ export default function AdminFundsPage() {
                           <button
                             type="button"
                             onClick={() => void approve(r._id)}
-                            className="rounded bg-emerald-600 px-3 py-1 text-xs font-medium text-white hover:bg-emerald-700"
+                            className="rounded bg-sky-600 px-3 py-1 text-xs font-medium text-white hover:bg-sky-700"
                           >
                             Approve
                           </button>
@@ -157,7 +157,7 @@ export default function AdminFundsPage() {
                           </button>
                         </div>
                       ) : (
-                        <span className="text-xs text-slate-400">—</span>
+                        <span className="text-xs text-slate-400">â€”</span>
                       )}
                     </td>
                   </tr>

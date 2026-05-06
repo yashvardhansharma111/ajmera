@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useCallback, useEffect, useState } from "react";
 import Link from "next/link";
@@ -42,7 +42,7 @@ function formatDate(value?: string) {
     minute: "2-digit",
     hour12: false,
   });
-  return `${day} ${month} ${d.getFullYear()} · ${time}`;
+  return `${day} ${month} ${d.getFullYear()} Â· ${time}`;
 }
 
 export default function LedgerPage() {
@@ -155,11 +155,11 @@ export default function LedgerPage() {
       {loading ? (
         <div className="ax-card px-4 py-12 text-center text-sm"
           style={{ color: "var(--ax-text-secondary)" }}>
-          Loading your ledger…
+          Loading your ledgerâ€¦
         </div>
       ) : orders.length === 0 ? (
         <div className="ax-card flex flex-col items-center gap-2 px-4 py-12 text-center">
-          <span className="text-4xl">📒</span>
+          <span className="text-4xl">ðŸ“’</span>
           <p
             className="text-sm font-bold"
             style={{ color: "var(--ax-text-primary)" }}
@@ -192,21 +192,21 @@ export default function LedgerPage() {
                       className="text-sm font-bold"
                       style={{ color: "var(--ax-text-primary)" }}
                     >
-                      {o.symbol || "—"}
+                      {o.symbol || "â€”"}
                     </p>
                     <p
                       className="mt-0.5 text-xs"
                       style={{ color: "var(--ax-text-secondary)" }}
                     >
                       {o.exchange || "NSE"}
-                      {o.productType ? ` · ${o.productType}` : ""}
+                      {o.productType ? ` Â· ${o.productType}` : ""}
                     </p>
                   </div>
                   <span
                     className="rounded px-2 py-0.5 text-[10px] font-bold tracking-wider"
                     style={{
                       backgroundColor: sidePos
-                        ? "rgba(0,179,134,0.12)"
+                        ? "rgba(6, 182, 212,0.12)"
                         : "rgba(229,84,97,0.12)",
                       color: sidePos
                         ? "var(--ax-positive)"
@@ -267,7 +267,7 @@ export default function LedgerPage() {
         style={{ color: "var(--ax-text-secondary)" }}
       >
         <FiDownload className="h-4 w-4" />
-        {downloading ? "Exporting…" : "Download Ledger CSV"}
+        {downloading ? "Exportingâ€¦" : "Download Ledger CSV"}
       </button>
     </div>
   );

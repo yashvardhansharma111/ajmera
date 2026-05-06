@@ -2,8 +2,8 @@ import type { Metadata } from "next";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "Ajmera Exchange",
-  description: "Ajmera Exchange — web access and admin panel",
+  title: "Capstocks — Trade smarter",
+  description: "Capstocks — your gateway to India's financial markets. Web access and admin panel.",
 };
 
 export default function RootLayout({

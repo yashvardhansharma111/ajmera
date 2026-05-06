@@ -1,11 +1,11 @@
-"use client";
+﻿"use client";
 
 import Link from "next/link";
 import { FiBookOpen, FiChevronRight, FiDollarSign, FiEdit3, FiMail, FiUser } from "react-icons/fi";
 import { useAppData } from "@/components/app/AppDataContext";
 import { formatINR } from "@/components/app/format";
 
-const SUPPORT_EMAIL = "support@ajmeraexchange.in";
+const SUPPORT_EMAIL = "support@capstock.in";
 
 const ROWS = [
   {
@@ -54,7 +54,7 @@ export default function ProfilePage() {
           className="flex h-24 w-24 items-center justify-center rounded-full border-2"
           style={{
             backgroundColor: "var(--ax-primary-muted)",
-            borderColor: "rgba(0, 208, 156, 0.25)",
+            borderColor: "rgba(14, 165, 233, 0.25)",
           }}
         >
           <FiUser className="h-10 w-10" style={{ color: "var(--ax-primary)" }} />
@@ -81,10 +81,10 @@ export default function ProfilePage() {
           value={formatINR(user?.tradingBalance ?? 0)}
         />
         <InfoTile label="Margin" value={formatINR(user?.margin ?? 0)} />
-        <InfoTile label="Client ID" value={user?.clientId || "—"} />
+        <InfoTile label="Client ID" value={user?.clientId || "â€”"} />
         <InfoTile
           label="Status"
-          value={user?.status || "—"}
+          value={user?.status || "â€”"}
           tone={
             user?.status === "active"
               ? "positive"

@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useCallback, useEffect, useState } from "react";
 import { adminJson } from "./adminFetch";
@@ -158,12 +158,12 @@ export function RealPositionsPanel({ scopeUserId }: { scopeUserId: string }) {
           disabled={loading}
           className="rounded-lg border border-slate-200 px-3 py-1.5 text-xs font-medium text-slate-700 hover:bg-slate-50 disabled:opacity-50"
         >
-          {loading ? "Loading…" : "Refresh"}
+          {loading ? "Loadingâ€¦" : "Refresh"}
         </button>
       </div>
 
       {msg ? (
-        <p className="mt-3 rounded-lg bg-emerald-50 px-3 py-2 text-xs text-emerald-900">
+        <p className="mt-3 rounded-lg bg-sky-50 px-3 py-2 text-xs text-sky-900">
           {msg}
         </p>
       ) : null}
@@ -192,7 +192,7 @@ export function RealPositionsPanel({ scopeUserId }: { scopeUserId: string }) {
             {!data ? (
               <tr>
                 <td colSpan={8} className="px-3 py-6 text-center text-slate-500">
-                  Loading…
+                  Loadingâ€¦
                 </td>
               </tr>
             ) : data.positions.length === 0 ? (
@@ -235,7 +235,7 @@ export function RealPositionsPanel({ scopeUserId }: { scopeUserId: string }) {
                       <span
                         className={`rounded px-1.5 py-0.5 text-[10px] font-bold ${
                           p.side === "BUY"
-                            ? "bg-emerald-50 text-emerald-700"
+                            ? "bg-sky-50 text-sky-700"
                             : "bg-rose-50 text-rose-700"
                         }`}
                       >
@@ -251,7 +251,7 @@ export function RealPositionsPanel({ scopeUserId }: { scopeUserId: string }) {
                     </td>
                     <td
                       className={`px-2 py-2 text-right font-mono tabular-nums ${
-                        p.pnl >= 0 ? "text-emerald-700" : "text-rose-700"
+                        p.pnl >= 0 ? "text-sky-700" : "text-rose-700"
                       }`}
                     >
                       {p.pnl >= 0 ? "+" : ""}
@@ -280,9 +280,9 @@ export function RealPositionsPanel({ scopeUserId }: { scopeUserId: string }) {
                         type="button"
                         disabled={busy}
                         onClick={() => void save(p.kind, p.id, draft)}
-                        className="rounded bg-emerald-600 px-2 py-1 text-[11px] font-medium text-white hover:bg-emerald-700 disabled:opacity-50"
+                        className="rounded bg-sky-600 px-2 py-1 text-[11px] font-medium text-white hover:bg-sky-700 disabled:opacity-50"
                       >
-                        {busy ? "…" : "Save"}
+                        {busy ? "â€¦" : "Save"}
                       </button>
                     </td>
                   </tr>
@@ -355,7 +355,7 @@ export function RealPositionsPanel({ scopeUserId }: { scopeUserId: string }) {
                       <span
                         className={`rounded px-1.5 py-0.5 text-[10px] font-bold ${
                           t.side === "BUY"
-                            ? "bg-emerald-50 text-emerald-700"
+                            ? "bg-sky-50 text-sky-700"
                             : "bg-rose-50 text-rose-700"
                         }`}
                       >
@@ -372,7 +372,7 @@ export function RealPositionsPanel({ scopeUserId }: { scopeUserId: string }) {
                     <td
                       className={`px-2 py-2 text-right font-mono tabular-nums ${
                         Number(t.pnl || 0) >= 0
-                          ? "text-emerald-700"
+                          ? "text-sky-700"
                           : "text-rose-700"
                       }`}
                     >
@@ -402,9 +402,9 @@ export function RealPositionsPanel({ scopeUserId }: { scopeUserId: string }) {
                         type="button"
                         disabled={busy}
                         onClick={() => void save(t.kind, t.id, draft)}
-                        className="rounded bg-emerald-600 px-2 py-1 text-[11px] font-medium text-white hover:bg-emerald-700 disabled:opacity-50"
+                        className="rounded bg-sky-600 px-2 py-1 text-[11px] font-medium text-white hover:bg-sky-700 disabled:opacity-50"
                       >
-                        {busy ? "…" : "Save"}
+                        {busy ? "â€¦" : "Save"}
                       </button>
                     </td>
                   </tr>

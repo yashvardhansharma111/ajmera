@@ -1,4 +1,4 @@
-import nodemailer from "nodemailer";
+﻿import nodemailer from "nodemailer";
 
 type SendClientCredentialsEmailParams = {
   to: string;
@@ -8,7 +8,9 @@ type SendClientCredentialsEmailParams = {
 };
 
 export const SUPPORT_EMAIL = "support@ajmeraexchange.in";
-export const FROM_ADDRESS = `"Ajmera Exchange" <${SUPPORT_EMAIL}>`;
+export const FROM_ADDRESS = `"Capstocks" <${SUPPORT_EMAIL}>`;
+// Note: SUPPORT_EMAIL still uses the ajmeraexchange.in domain; rebrand only
+// affected the display name. Update both together if/when the domain moves.
 
 let transporter: nodemailer.Transporter | null = null;
 
@@ -48,7 +50,7 @@ export async function sendOtpEmail({ to, otp }: SendOtpEmailParams) {
   const html = `
     <div style="font-family:Arial,sans-serif;max-width:480px;margin:0 auto;padding:24px;background:#f8fafc;color:#0f172a">
       <div style="background:#ffffff;border:1px solid #e2e8f0;border-radius:16px;padding:28px;text-align:center">
-        <h2 style="margin:0 0 8px;font-size:20px;color:#00B386">Ajmera Exchange</h2>
+        <h2 style="margin:0 0 8px;font-size:20px;color:#0EA5E9">Capstocks</h2>
         <p style="margin:0 0 4px;font-size:13px;color:#475569">Your verification code</p>
         <div style="margin:18px 0;padding:18px 12px;background:#f0fdf4;border:1px solid #bbf7d0;border-radius:12px">
           <p style="margin:0;font-size:32px;font-weight:700;color:#0f172a;letter-spacing:8px">${otp}</p>
@@ -58,14 +60,14 @@ export async function sendOtpEmail({ to, otp }: SendOtpEmailParams) {
         </p>
         <p style="margin:16px 0 0;font-size:11px;color:#94a3b8">
           If you didn&apos;t request this, please ignore this email or reply to
-          <a href="mailto:${SUPPORT_EMAIL}" style="color:#00B386;text-decoration:none">${SUPPORT_EMAIL}</a>.
+          <a href="mailto:${SUPPORT_EMAIL}" style="color:#0EA5E9;text-decoration:none">${SUPPORT_EMAIL}</a>.
         </p>
       </div>
     </div>
   `;
 
   const text = [
-    "Ajmera Exchange verification code",
+    "Capstocks verification code",
     "",
     `Your code: ${otp}`,
     "",
@@ -78,7 +80,7 @@ export async function sendOtpEmail({ to, otp }: SendOtpEmailParams) {
     sender: SUPPORT_EMAIL,
     replyTo: SUPPORT_EMAIL,
     to,
-    subject: `Ajmera Exchange verification code: ${otp}`,
+    subject: `Capstocks verification code: ${otp}`,
     html,
     text,
   });
@@ -98,10 +100,10 @@ export async function sendClientCredentialsEmail({
   const html = `
     <div style="font-family:Arial,sans-serif;max-width:560px;margin:0 auto;padding:24px;background:#f8fafc;color:#0f172a">
       <div style="background:#ffffff;border:1px solid #e2e8f0;border-radius:16px;padding:24px">
-        <h2 style="margin:0 0 12px;font-size:24px;color:#00B386">Ajmera Exchange Login Credentials</h2>
+        <h2 style="margin:0 0 12px;font-size:24px;color:#0EA5E9">Capstocks Login Credentials</h2>
         <p style="margin:0 0 16px;font-size:14px;line-height:1.6">Hello ${name},</p>
         <p style="margin:0 0 16px;font-size:14px;line-height:1.6">
-          Your trading account has been activated by the Ajmera Exchange team. Use the credentials below to sign in to the web or mobile app.
+          Your trading account has been activated by the Capstocks team. Use the credentials below to sign in to the web or mobile app.
         </p>
         <div style="background:#f8fafc;border:1px solid #cbd5e1;border-radius:12px;padding:16px;margin:16px 0">
           <p style="margin:0 0 8px;font-size:14px"><strong>Client ID:</strong> ${clientId}</p>
@@ -112,10 +114,10 @@ export async function sendClientCredentialsEmail({
         </p>
         <p style="margin:16px 0 0;font-size:12px;color:#475569">
           If you did not request this account, reply to this email at
-          <a href="mailto:${SUPPORT_EMAIL}" style="color:#00B386;text-decoration:none">${SUPPORT_EMAIL}</a>.
+          <a href="mailto:${SUPPORT_EMAIL}" style="color:#0EA5E9;text-decoration:none">${SUPPORT_EMAIL}</a>.
         </p>
         <p style="margin:24px 0 0;font-size:11px;color:#94a3b8;text-align:center">
-          — Team Ajmera Exchange
+          â€” Team Capstocks
         </p>
       </div>
     </div>
@@ -124,14 +126,14 @@ export async function sendClientCredentialsEmail({
   const text = [
     `Hello ${name},`,
     "",
-    "Your Ajmera Exchange trading account has been activated.",
+    "Your Capstocks trading account has been activated.",
     `Client ID: ${clientId}`,
     `Password: ${password}`,
     "",
     "Please keep these credentials secure.",
     `Questions? Reply to ${SUPPORT_EMAIL}.`,
     "",
-    "— Team Ajmera Exchange",
+    "â€” Team Capstocks",
   ].join("\n");
 
   await getTransporter().sendMail({
@@ -139,7 +141,7 @@ export async function sendClientCredentialsEmail({
     sender: SUPPORT_EMAIL,
     replyTo: SUPPORT_EMAIL,
     to,
-    subject: "Your Ajmera Exchange login credentials",
+    subject: "Your Capstocks login credentials",
     html,
     text,
   });

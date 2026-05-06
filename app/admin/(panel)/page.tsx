@@ -1,4 +1,4 @@
-import Link from "next/link";
+﻿import Link from "next/link";
 import {
   FiUsers,
   FiTrendingUp,
@@ -21,7 +21,7 @@ const cards = [
     title: "Home & indices",
     desc: "NIFTY / SENSEX rows and featured stocks for the app home.",
     icon: FiTrendingUp,
-    color: "bg-emerald-50 text-emerald-700 ring-emerald-100",
+    color: "bg-sky-50 text-sky-700 ring-sky-100",
   },
   {
     href: "/admin/watchlist",
@@ -42,7 +42,7 @@ const cards = [
     title: "Fund requests",
     desc: "Approve or reject add/withdraw requests.",
     icon: FiDollarSign,
-    color: "bg-teal-50 text-teal-800 ring-teal-100",
+    color: "bg-cyan-50 text-cyan-800 ring-cyan-100",
   },
   {
     href: "/admin/settings",
@@ -65,14 +65,14 @@ export default function AdminOverviewPage() {
           <Link
             key={href}
             href={href}
-            className="group rounded-2xl border border-slate-200 bg-white p-5 shadow-sm transition hover:border-emerald-200 hover:shadow-md"
+            className="group rounded-2xl border border-slate-200 bg-white p-5 shadow-sm transition hover:border-sky-200 hover:shadow-md"
           >
             <div
               className={`inline-flex h-10 w-10 items-center justify-center rounded-xl ring-1 ${color}`}
             >
               <Icon className="h-5 w-5" />
             </div>
-            <h2 className="mt-4 font-semibold text-slate-900 group-hover:text-emerald-700">
+            <h2 className="mt-4 font-semibold text-slate-900 group-hover:text-sky-700">
               {title}
             </h2>
             <p className="mt-2 text-sm text-slate-600">{desc}</p>

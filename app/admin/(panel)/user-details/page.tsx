@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useCallback, useEffect, useState } from "react";
 import { useSearchParams } from "next/navigation";
@@ -35,7 +35,7 @@ function InfoRow({ label, value }: { label: string; value?: string | number | nu
       <span className="w-40 shrink-0 text-xs font-medium uppercase text-slate-500">
         {label}
       </span>
-      <span className="text-sm text-slate-900">{value ?? "—"}</span>
+      <span className="text-sm text-slate-900">{value ?? "â€”"}</span>
     </div>
   );
 }
@@ -101,7 +101,7 @@ export default function AdminUserDetailsPage() {
     return (
       <div className="mx-auto max-w-3xl py-12 text-center text-slate-500">
         No user ID provided.{" "}
-        <Link href="/admin/users" className="text-emerald-600 hover:underline">
+        <Link href="/admin/users" className="text-sky-600 hover:underline">
           Back to users
         </Link>
       </div>
@@ -111,7 +111,7 @@ export default function AdminUserDetailsPage() {
   if (loading) {
     return (
       <div className="mx-auto max-w-3xl py-12 text-center text-slate-500">
-        Loading…
+        Loadingâ€¦
       </div>
     );
   }
@@ -124,9 +124,9 @@ export default function AdminUserDetailsPage() {
         </p>
         <Link
           href="/admin/users"
-          className="mt-4 inline-block text-sm text-emerald-600 hover:underline"
+          className="mt-4 inline-block text-sm text-sky-600 hover:underline"
         >
-          ← Back to users
+          â† Back to users
         </Link>
       </div>
     );
@@ -138,9 +138,9 @@ export default function AdminUserDetailsPage() {
     <div className="mx-auto max-w-4xl">
       <Link
         href="/admin/users"
-        className="mb-4 inline-block text-sm text-emerald-600 hover:underline"
+        className="mb-4 inline-block text-sm text-sky-600 hover:underline"
       >
-        ← Back to users
+        â† Back to users
       </Link>
 
       <h2 className="text-lg font-semibold text-slate-900">
@@ -156,13 +156,13 @@ export default function AdminUserDetailsPage() {
         <span
           className={`rounded-full px-2.5 py-0.5 text-xs font-medium ${
             user.status === "active"
-              ? "bg-emerald-100 text-emerald-800"
+              ? "bg-sky-100 text-sky-800"
               : user.status === "blocked"
                 ? "bg-rose-100 text-rose-800"
                 : "bg-amber-100 text-amber-800"
           }`}
         >
-          {user.status || "—"}
+          {user.status || "â€”"}
         </span>
         <span className="text-xs text-slate-500">
           ID: <code className="rounded bg-slate-100 px-1 text-[11px]">{user._id}</code>
@@ -181,7 +181,7 @@ export default function AdminUserDetailsPage() {
           <a
             key={t.href}
             href={t.href}
-            className="rounded-full border border-slate-200 px-3.5 py-1.5 text-xs font-medium text-slate-700 transition hover:border-emerald-300 hover:bg-emerald-50 hover:text-emerald-800"
+            className="rounded-full border border-slate-200 px-3.5 py-1.5 text-xs font-medium text-slate-700 transition hover:border-sky-300 hover:bg-sky-50 hover:text-sky-800"
           >
             {t.label}
           </a>
@@ -237,14 +237,14 @@ export default function AdminUserDetailsPage() {
       </section>
 
       {/* Quick link to orders scoped to this user */}
-      <section id="positions" className="mt-8 mb-8 scroll-mt-8 rounded-2xl border border-emerald-200 bg-emerald-50 p-5 shadow-sm">
+      <section id="positions" className="mt-8 mb-8 scroll-mt-8 rounded-2xl border border-sky-200 bg-sky-50 p-5 shadow-sm">
         <h3 className="mb-2 font-medium text-slate-900">Positions &amp; Orders</h3>
         <p className="text-sm text-slate-600">
           Manage this user&apos;s positions, P&amp;L, and order history from the Orders page scoped to their ID.
         </p>
         <Link
           href={`/admin/orders?scopeUserId=${encodeURIComponent(user._id)}`}
-          className="mt-3 inline-block rounded-lg bg-emerald-600 px-4 py-2 text-sm font-medium text-white hover:bg-emerald-700"
+          className="mt-3 inline-block rounded-lg bg-sky-600 px-4 py-2 text-sm font-medium text-white hover:bg-sky-700"
         >
           Manage positions for {user.fullName || user.clientId || "this user"}
         </Link>

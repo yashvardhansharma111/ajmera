@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -44,7 +44,7 @@ export function AdminShell({ children }: { children: React.ReactNode }) {
             Admin
           </p>
           <p className="mt-1 text-lg font-bold text-slate-900">
-            Ajmera Exchange
+            Capstocks
           </p>
         </div>
         <nav className="flex flex-1 flex-col gap-0.5 p-3">
@@ -59,7 +59,7 @@ export function AdminShell({ children }: { children: React.ReactNode }) {
                 href={href}
                 className={`flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition ${
                   active
-                    ? "bg-emerald-50 text-emerald-800 ring-1 ring-emerald-200"
+                    ? "bg-sky-50 text-sky-800 ring-1 ring-sky-200"
                     : "text-slate-600 hover:bg-slate-50 hover:text-slate-900"
                 }`}
               >

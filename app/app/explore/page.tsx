@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useEffect, useMemo, useRef, useState } from "react";
 import { FiSearch, FiX } from "react-icons/fi";
@@ -98,7 +98,7 @@ export default function ExplorePage() {
           <input
             value={query}
             onChange={(e) => setQuery(e.target.value)}
-            placeholder="Search stocks, options, ETFs…"
+            placeholder="Search stocks, options, ETFsâ€¦"
             className="w-full bg-transparent text-sm outline-none"
             style={{ color: "var(--ax-text-primary)" }}
           />
@@ -122,7 +122,7 @@ export default function ExplorePage() {
               className="px-4 py-6 text-center text-sm"
               style={{ color: "var(--ax-text-secondary)" }}
             >
-              Searching…
+              Searchingâ€¦
             </p>
           ) : results.length ? (
             results.map((r, i) => (
@@ -337,7 +337,7 @@ function Card({
     return (
       <a
         href={href}
-        className="ax-card w-56 shrink-0 px-4 py-3 transition hover:border-emerald-300"
+        className="ax-card w-56 shrink-0 px-4 py-3 transition hover:border-sky-300"
       >
         {inner}
       </a>

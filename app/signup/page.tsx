@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
@@ -259,7 +259,7 @@ export default function SignupPage() {
 
             <UploadField
               label="Signature"
-              helper="Required · image only"
+              helper="Required Â· image only"
               accept="image/*"
               file={signature}
               onFile={setSignature}
@@ -310,12 +310,12 @@ export default function SignupPage() {
               <div
                 className="rounded-xl border px-4 py-2 text-xs font-semibold"
                 style={{
-                  borderColor: "rgba(0,179,134,0.30)",
-                  backgroundColor: "rgba(0,179,134,0.08)",
+                  borderColor: "rgba(14, 165, 233,0.30)",
+                  backgroundColor: "rgba(14, 165, 233,0.08)",
                   color: "var(--ax-positive)",
                 }}
               >
-                ✓ Email and phone verified — you can submit the form.
+                âœ“ Email and phone verified â€” you can submit the form.
               </div>
             )}
 
@@ -334,7 +334,7 @@ export default function SignupPage() {
               <p
                 className="rounded-lg px-4 py-2 text-sm"
                 style={{
-                  backgroundColor: "rgba(0,179,134,0.08)",
+                  backgroundColor: "rgba(14, 165, 233,0.08)",
                   color: "var(--ax-positive)",
                 }}
               >
@@ -349,7 +349,7 @@ export default function SignupPage() {
               style={{ backgroundColor: "var(--ax-primary)" }}
             >
               {busy
-                ? "Submitting…"
+                ? "Submittingâ€¦"
                 : !emailVerified || !phoneVerified
                   ? "Verify email & phone first"
                   : "Submit request"}
@@ -376,8 +376,8 @@ function StatusChip({ done, label }: { done: boolean; label: string }) {
       style={
         done
           ? {
-              backgroundColor: "rgba(0,179,134,0.10)",
-              borderColor: "rgba(0,179,134,0.35)",
+              backgroundColor: "rgba(14, 165, 233,0.10)",
+              borderColor: "rgba(14, 165, 233,0.35)",
               color: "var(--ax-positive)",
             }
           : {
@@ -387,7 +387,7 @@ function StatusChip({ done, label }: { done: boolean; label: string }) {
             }
       }
     >
-      {done ? `✓ ${label} verified` : `• ${label} pending`}
+      {done ? `âœ“ ${label} verified` : `â€¢ ${label} pending`}
     </span>
   );
 }
@@ -432,7 +432,7 @@ function VerifyField({
   }, [cooldown]);
 
   useEffect(() => {
-    // Upstream value changed — invalidate any pending OTP UI.
+    // Upstream value changed â€” invalidate any pending OTP UI.
     setSent(false);
     setOtp("");
     setErr(null);
@@ -518,7 +518,7 @@ function VerifyField({
           <span
             className="inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[10px] font-bold tracking-wider"
             style={{
-              backgroundColor: "rgba(0,179,134,0.12)",
+              backgroundColor: "rgba(14, 165, 233,0.12)",
               color: "var(--ax-positive)",
             }}
           >
@@ -553,7 +553,7 @@ function VerifyField({
             }}
           >
             {sending
-              ? "Sending…"
+              ? "Sendingâ€¦"
               : cooldown > 0
                 ? `${cooldown}s`
                 : sent
@@ -588,7 +588,7 @@ function VerifyField({
             className="whitespace-nowrap rounded-xl px-4 text-xs font-bold text-white transition disabled:opacity-60"
             style={{ backgroundColor: "var(--ax-primary)" }}
           >
-            {verifying ? "Verifying…" : "Verify"}
+            {verifying ? "Verifyingâ€¦" : "Verify"}
           </button>
         </div>
       ) : null}

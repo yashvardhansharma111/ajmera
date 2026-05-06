@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useCallback, useEffect, useState } from "react";
 import { adminJson } from "@/components/admin/adminFetch";
@@ -122,7 +122,7 @@ export default function AdminHomeConfigPage() {
         <p className="mt-2 text-xs text-slate-500">Config source: {source}</p>
       ) : null}
       {msg ? (
-        <p className="mt-4 rounded-lg bg-emerald-50 px-4 py-2 text-sm text-emerald-900">{msg}</p>
+        <p className="mt-4 rounded-lg bg-sky-50 px-4 py-2 text-sm text-sky-900">{msg}</p>
       ) : null}
       {err ? (
         <p className="mt-4 rounded-lg bg-rose-50 px-4 py-2 text-sm text-rose-900">{err}</p>
@@ -142,9 +142,9 @@ export default function AdminHomeConfigPage() {
           type="button"
           onClick={() => void save()}
           disabled={saving}
-          className="rounded-lg bg-emerald-600 px-4 py-2 text-sm font-medium text-white hover:bg-emerald-700 disabled:opacity-50"
+          className="rounded-lg bg-sky-600 px-4 py-2 text-sm font-medium text-white hover:bg-sky-700 disabled:opacity-50"
         >
-          {saving ? "Saving…" : "Save home config"}
+          {saving ? "Savingâ€¦" : "Save home config"}
         </button>
         <button
           type="button"

@@ -72,20 +72,20 @@ export function AppShell({ children }: { children: React.ReactNode }) {
             className="flex h-10 w-10 items-center justify-center rounded-xl text-white font-bold"
             style={{ backgroundColor: "var(--ax-primary)" }}
           >
-            AE
+            CS
           </div>
           <div>
             <p
               className="text-[11px] font-semibold uppercase tracking-wider"
               style={{ color: "var(--ax-primary)" }}
             >
-              Ajmera
+              Cap
             </p>
             <p
               className="-mt-0.5 text-base font-bold"
               style={{ color: "var(--ax-text-primary)" }}
             >
-              Exchange
+              Stocks
             </p>
           </div>
         </Link>
@@ -168,13 +168,13 @@ export function AppShell({ children }: { children: React.ReactNode }) {
                 className="flex h-8 w-8 items-center justify-center rounded-lg text-white text-xs font-bold"
                 style={{ backgroundColor: "var(--ax-primary)" }}
               >
-                AE
+                CS
               </div>
               <span
                 className="text-sm font-bold"
                 style={{ color: "var(--ax-text-primary)" }}
               >
-                Ajmera Exchange
+                Capstocks
               </span>
             </Link>
             <div className="hidden md:block">
@@ -185,7 +185,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
                 {NAV.find(
                   (n) =>
                     pathname === n.href || pathname.startsWith(n.href + "/"),
-                )?.label || "Ajmera Exchange"}
+                )?.label || "Capstocks"}
               </h1>
             </div>
 

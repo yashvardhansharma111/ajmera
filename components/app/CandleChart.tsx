@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import {
   useCallback,
@@ -36,9 +36,9 @@ const RANGES: Range[] = [
 
 const PADDING = { top: 16, bottom: 40, left: 0, right: 64 };
 const VOLUME_RATIO = 0.18;
-const POSITIVE = "#00B386";
+const POSITIVE = "#06B6D4";
 const NEGATIVE = "#E55461";
-const PRIMARY = "#00D09C";
+const PRIMARY = "#0EA5E9";
 
 type Props = {
   symbol?: string;
@@ -151,7 +151,7 @@ export function CandleChart({
     [cleanSymbol, exchange, onPriceUpdate],
   );
 
-  // Initial + range change → full reload
+  // Initial + range change â†’ full reload
   useEffect(() => {
     void loadData(range, false);
   }, [range, loadData]);
@@ -169,7 +169,7 @@ export function CandleChart({
     };
   }, [range, loadData]);
 
-  // Live LTP stream — updates last candle's close/high/low between refetches.
+  // Live LTP stream â€” updates last candle's close/high/low between refetches.
   const onPriceUpdateRef = useRef(onPriceUpdate);
   useEffect(() => {
     onPriceUpdateRef.current = onPriceUpdate;
@@ -227,7 +227,7 @@ export function CandleChart({
     [width, height],
   );
 
-  // Viewport — show up to last 60 candles by default; shrink if fewer.
+  // Viewport â€” show up to last 60 candles by default; shrink if fewer.
   const visibleCandles = useMemo(() => {
     if (!candles?.length) return [] as Candle[];
     const take = Math.min(60, candles.length);
@@ -352,7 +352,7 @@ export function CandleChart({
               className="text-[10px] font-bold tracking-wider"
               style={{ color: POSITIVE }}
             >
-              LIVE · {range.label}
+              LIVE Â· {range.label}
             </span>
             {lastUpdated > 0 ? (
               <span
@@ -380,7 +380,7 @@ export function CandleChart({
             className="flex h-full items-center justify-center text-xs"
             style={{ color: "var(--ax-text-secondary)" }}
           >
-            Loading chart…
+            Loading chartâ€¦
           </div>
         ) : error && !candles?.length ? (
           <div className="flex h-full flex-col items-center justify-center gap-2 px-4 text-center">
@@ -584,7 +584,7 @@ function renderChart({
         y={baseY - vH}
         width={bodyWidth}
         height={Math.max(0.5, vH)}
-        fill={isUp ? "rgba(0,179,134,0.18)" : "rgba(229,84,97,0.18)"}
+        fill={isUp ? "rgba(6, 182, 212,0.18)" : "rgba(229,84,97,0.18)"}
         rx={bodyWidth > 4 ? 1 : 0}
       />,
     );
@@ -648,7 +648,7 @@ function renderChart({
         y1={drawArea.y}
         x2={cx}
         y2={baseY}
-        stroke="rgba(0,208,156,0.5)"
+        stroke="rgba(14, 165, 233,0.5)"
         strokeWidth={0.8}
         strokeDasharray="3,3"
       />,
@@ -658,7 +658,7 @@ function renderChart({
         y1={cy}
         x2={drawArea.x + drawArea.w}
         y2={cy}
-        stroke="rgba(0,208,156,0.5)"
+        stroke="rgba(14, 165, 233,0.5)"
         strokeWidth={0.8}
         strokeDasharray="3,3"
       />,

@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
@@ -48,7 +48,7 @@ const TICKER = [
 const FAQS: { q: string; a: string }[] = [
   {
     q: "How do I get an account?",
-    a: "Fill out the signup form with your KYC details (PAN, Aadhaar, bank, signature). The Ajmera Exchange team reviews each request and emails your Client ID and password from support@ajmeraexchange.in once approved.",
+    a: "Fill out the signup form with your KYC details (PAN, Aadhaar, bank, signature). The Capstocks team reviews each request and emails your Client ID and password from support@ajmeraexchange.in once approved.",
   },
   {
     q: "How fresh is the market data?",
@@ -60,7 +60,7 @@ const FAQS: { q: string; a: string }[] = [
   },
   {
     q: "What markets are supported?",
-    a: "NSE (equities + indices), BSE (SENSEX), and MCX (gold, silver, crude, natural gas, copper and more) — plus mutual funds with live NAV.",
+    a: "NSE (equities + indices), BSE (SENSEX), and MCX (gold, silver, crude, natural gas, copper and more) â€” plus mutual funds with live NAV.",
   },
   {
     q: "Where can I reach support?",
@@ -102,52 +102,59 @@ export default function HomePage() {
 
   return (
     <div className="relative min-h-screen overflow-hidden bg-white text-slate-900">
-      {/* Decorative background */}
+      {/* Decorative background — sky/blue mesh + grid */}
       <div
         aria-hidden
-        className="pointer-events-none absolute inset-x-0 top-0 -z-10 h-[900px]"
+        className="pointer-events-none absolute inset-x-0 top-0 -z-10 h-[1100px] cs-mesh-bg"
       >
         <div
-          className="absolute -top-40 -left-40 h-[480px] w-[480px] rounded-full blur-3xl"
+          className="absolute -top-48 -left-32 h-[520px] w-[520px] rounded-full blur-3xl"
           style={{
             background:
-              "radial-gradient(closest-side, rgba(0,208,156,0.22), rgba(0,208,156,0))",
+              "radial-gradient(closest-side, rgba(14,165,233,0.30), rgba(14,165,233,0))",
           }}
         />
         <div
-          className="absolute -top-24 right-0 h-[420px] w-[420px] rounded-full blur-3xl"
+          className="absolute -top-20 right-[-80px] h-[460px] w-[460px] rounded-full blur-3xl"
           style={{
             background:
-              "radial-gradient(closest-side, rgba(59,130,246,0.14), rgba(59,130,246,0))",
+              "radial-gradient(closest-side, rgba(29,78,216,0.22), rgba(29,78,216,0))",
           }}
         />
         <div
-          className="absolute bottom-0 left-1/2 h-[360px] w-[720px] -translate-x-1/2 rounded-full blur-3xl"
+          className="absolute bottom-0 left-1/2 h-[400px] w-[760px] -translate-x-1/2 rounded-full blur-3xl"
           style={{
             background:
-              "radial-gradient(closest-side, rgba(0,208,156,0.10), rgba(0,208,156,0))",
+              "radial-gradient(closest-side, rgba(125,211,252,0.22), rgba(125,211,252,0))",
           }}
         />
         <svg
-          className="absolute inset-0 h-full w-full opacity-[0.35]"
+          className="absolute inset-0 h-full w-full opacity-[0.45]"
           xmlns="http://www.w3.org/2000/svg"
         >
           <defs>
             <pattern
-              id="ax-grid"
-              width="32"
-              height="32"
+              id="cs-grid"
+              width="36"
+              height="36"
               patternUnits="userSpaceOnUse"
             >
               <path
-                d="M 32 0 L 0 0 0 32"
+                d="M 36 0 L 0 0 0 36"
                 fill="none"
-                stroke="rgba(15,23,42,0.04)"
+                stroke="rgba(14,165,233,0.06)"
                 strokeWidth="1"
               />
             </pattern>
+            <radialGradient id="cs-grid-fade" cx="50%" cy="0%" r="80%">
+              <stop offset="0%" stopColor="black" stopOpacity="1" />
+              <stop offset="100%" stopColor="black" stopOpacity="0" />
+            </radialGradient>
+            <mask id="cs-grid-mask">
+              <rect width="100%" height="100%" fill="url(#cs-grid-fade)" />
+            </mask>
           </defs>
-          <rect width="100%" height="100%" fill="url(#ax-grid)" />
+          <rect width="100%" height="100%" fill="url(#cs-grid)" mask="url(#cs-grid-mask)" />
         </svg>
       </div>
 
@@ -160,25 +167,28 @@ export default function HomePage() {
         }}
       >
         <div className="mx-auto flex max-w-6xl items-center justify-between px-5 py-3.5 md:px-6">
-          <Link href="/" className="flex items-center gap-3">
+          <Link href="/" className="flex items-center gap-3 group">
             <div
-              className="flex h-10 w-10 items-center justify-center rounded-xl text-white font-bold shadow-md shadow-emerald-500/20"
-              style={{ backgroundColor: "var(--ax-primary)" }}
+              className="flex h-10 w-10 items-center justify-center rounded-xl text-white font-bold cs-glow transition-transform group-hover:scale-105"
+              style={{
+                background:
+                  "linear-gradient(135deg, #0EA5E9 0%, #1D4ED8 100%)",
+              }}
             >
-              AE
+              CS
             </div>
             <div className="leading-none">
               <p
                 className="text-[10px] font-semibold uppercase tracking-[0.18em]"
                 style={{ color: "var(--ax-primary)" }}
               >
-                Ajmera
+                Cap
               </p>
               <p
                 className="mt-0.5 text-base font-bold"
                 style={{ color: "var(--ax-text-primary)" }}
               >
-                Exchange
+                Stocks
               </p>
             </div>
           </Link>
@@ -233,7 +243,7 @@ export default function HomePage() {
                   <span className="font-semibold text-white">{t.symbol}</span>
                   <span>{t.value}</span>
                   <span
-                    style={{ color: positive ? "#00ffa3" : "#ff7a85" }}
+                    style={{ color: positive ? "#22D3EE" : "#ff7a85" }}
                   >
                     {positive ? "+" : ""}
                     {t.changePct.toFixed(2)}%
@@ -277,8 +287,8 @@ export default function HomePage() {
             <span
               className="inline-flex items-center gap-2 rounded-full border px-3 py-1 text-[11px] font-semibold"
               style={{
-                borderColor: "rgba(0,208,156,0.35)",
-                backgroundColor: "rgba(0,208,156,0.08)",
+                borderColor: "rgba(14, 165, 233,0.35)",
+                backgroundColor: "rgba(14, 165, 233,0.08)",
                 color: "var(--ax-primary)",
               }}
             >
@@ -286,24 +296,16 @@ export default function HomePage() {
                 className="inline-block h-1.5 w-1.5 animate-pulse rounded-full"
                 style={{ backgroundColor: "var(--ax-primary)" }}
               />
-              LIVE MARKETS · NSE · BSE · MCX
+              LIVE MARKETS Â· NSE Â· BSE Â· MCX
             </span>
 
             <h1
-              className="mt-5 text-4xl font-bold leading-[1.05] tracking-tight sm:text-5xl lg:text-[56px]"
+              className="mt-5 text-4xl font-bold leading-[1.05] tracking-tight sm:text-5xl lg:text-[60px]"
               style={{ color: "var(--ax-text-primary)" }}
             >
               Trade smarter.
               <br />
-              <span
-                className="bg-clip-text text-transparent"
-                style={{
-                  backgroundImage:
-                    "linear-gradient(90deg, var(--ax-primary), #3B82F6)",
-                }}
-              >
-                Wherever you are.
-              </span>
+              <span className="cs-gradient-text">Wherever you are.</span>
             </h1>
 
             <p
@@ -311,23 +313,26 @@ export default function HomePage() {
               style={{ color: "var(--ax-text-secondary)" }}
             >
               Live charts, orders, mutual funds and a running ledger — all in
-              one place. Sign in on the web, or take Ajmera Exchange with you
-              on Android. One account. Every market.
+              one place. Sign in on the web, or take Capstocks with you
+              on Android. <span className="font-semibold" style={{ color: "var(--ax-text-primary)" }}>One account. Every market.</span>
             </p>
 
             <div className="mt-8 flex flex-wrap items-center gap-3">
               <a
                 href="#signin"
-                className="group inline-flex items-center gap-2 rounded-xl px-5 py-3 text-sm font-semibold text-white shadow-lg shadow-emerald-500/20 transition hover:shadow-emerald-500/30"
-                style={{ backgroundColor: "var(--ax-primary)" }}
+                className="group inline-flex items-center gap-2 rounded-xl px-6 py-3.5 text-sm font-semibold text-white cs-glow transition hover:scale-[1.02]"
+                style={{
+                  background:
+                    "linear-gradient(135deg, #0EA5E9 0%, #1D4ED8 100%)",
+                }}
               >
                 <FiLogIn className="h-4 w-4" />
                 Sign in
-                <FiArrowRight className="h-4 w-4 transition group-hover:translate-x-0.5" />
+                <FiArrowRight className="h-4 w-4 transition group-hover:translate-x-1" />
               </a>
               <a
                 href="#download"
-                className="inline-flex items-center gap-2 rounded-xl border px-5 py-3 text-sm font-semibold hover:bg-slate-50"
+                className="inline-flex items-center gap-2 rounded-xl border px-6 py-3.5 text-sm font-semibold transition hover:border-sky-300 hover:bg-sky-50/50"
                 style={{
                   borderColor: "var(--ax-border)",
                   color: "var(--ax-text-primary)",
@@ -339,10 +344,25 @@ export default function HomePage() {
               </a>
             </div>
 
+            <div className="mt-7 flex flex-wrap items-center gap-x-6 gap-y-2 text-xs" style={{ color: "var(--ax-text-secondary)" }}>
+              <div className="flex items-center gap-1.5">
+                <FiShield className="h-3.5 w-3.5" style={{ color: "var(--ax-primary)" }} />
+                <span>SEBI-aware onboarding</span>
+              </div>
+              <div className="flex items-center gap-1.5">
+                <FiZap className="h-3.5 w-3.5" style={{ color: "var(--ax-primary)" }} />
+                <span>Live ticks · sub-second</span>
+              </div>
+              <div className="flex items-center gap-1.5">
+                <FiHeadphones className="h-3.5 w-3.5" style={{ color: "var(--ax-primary)" }} />
+                <span>Human support</span>
+              </div>
+            </div>
+
             <ul className="mt-8 grid grid-cols-1 gap-2.5 sm:grid-cols-2">
               {[
                 "Real-time candlestick charts",
-                "Positions · holdings · ledger",
+                "Positions Â· holdings Â· ledger",
                 "Admin-approved onboarding",
                 "Mutual funds in one view",
               ].map((f) => (
@@ -373,7 +393,7 @@ export default function HomePage() {
               className="absolute -inset-6 -z-10 rounded-[32px] opacity-70 blur-2xl"
               style={{
                 background:
-                  "linear-gradient(135deg, rgba(0,208,156,0.25), rgba(59,130,246,0.18))",
+                  "linear-gradient(135deg, rgba(14, 165, 233,0.25), rgba(59,130,246,0.18))",
               }}
             />
             <div
@@ -385,7 +405,7 @@ export default function HomePage() {
                 className="absolute -top-12 -right-12 h-40 w-40 rounded-full blur-2xl"
                 style={{
                   background:
-                    "radial-gradient(closest-side, rgba(0,208,156,0.18), rgba(0,208,156,0))",
+                    "radial-gradient(closest-side, rgba(14, 165, 233,0.18), rgba(14, 165, 233,0))",
                 }}
               />
 
@@ -410,7 +430,7 @@ export default function HomePage() {
                 <span
                   className="flex items-center gap-1 rounded-full px-2 py-0.5 text-[10px] font-semibold"
                   style={{
-                    backgroundColor: "rgba(0,208,156,0.10)",
+                    backgroundColor: "rgba(14, 165, 233,0.10)",
                     color: "var(--ax-primary)",
                   }}
                 >
@@ -461,7 +481,7 @@ export default function HomePage() {
                         borderColor: "var(--ax-border)",
                         backgroundColor: "var(--ax-card-muted)",
                       }}
-                      placeholder="••••••••"
+                      placeholder="â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢"
                       autoComplete="current-password"
                     />
                   </div>
@@ -482,11 +502,14 @@ export default function HomePage() {
                 <button
                   type="submit"
                   disabled={loading || !loginId || !password}
-                  className="group flex w-full items-center justify-center gap-2 rounded-xl py-3 text-sm font-semibold text-white shadow-lg shadow-emerald-500/20 transition hover:shadow-emerald-500/30 disabled:cursor-not-allowed disabled:opacity-50 disabled:shadow-none"
-                  style={{ backgroundColor: "var(--ax-primary)" }}
+                  className="group flex w-full items-center justify-center gap-2 rounded-xl py-3.5 text-sm font-semibold text-white cs-glow transition hover:scale-[1.01] disabled:cursor-not-allowed disabled:opacity-50 disabled:shadow-none"
+                  style={{
+                    background:
+                      "linear-gradient(135deg, #0EA5E9 0%, #1D4ED8 100%)",
+                  }}
                 >
                   {loading ? (
-                    "Signing in…"
+                    "Signing inâ€¦"
                   ) : (
                     <>
                       Continue
@@ -504,13 +527,13 @@ export default function HomePage() {
                   color: "var(--ax-text-secondary)",
                 }}
               >
-                New to Ajmera Exchange?{" "}
+                New to Capstocks?{" "}
                 <Link
                   href="/signup"
                   className="font-semibold"
                   style={{ color: "var(--ax-primary)" }}
                 >
-                  Request account →
+                  Request account â†’
                 </Link>
               </div>
             </div>
@@ -526,9 +549,9 @@ export default function HomePage() {
           }}
         >
           <div className="mx-auto grid max-w-6xl grid-cols-2 gap-6 px-5 py-8 text-center md:grid-cols-4 md:px-6">
-            <Stat value="3" label="Exchanges · NSE / BSE / MCX" />
+            <Stat value="3" label="Exchanges Â· NSE / BSE / MCX" />
             <Stat value="1,000+" label="Symbols tracked live" />
-            <Stat value="6" label="Timeframes · 1m → 1W" />
+            <Stat value="6" label="Timeframes Â· 1m â†’ 1W" />
             <Stat value="< 2s" label="Tick-to-chart latency" />
           </div>
         </section>
@@ -552,7 +575,7 @@ export default function HomePage() {
               className="mt-3 text-base"
               style={{ color: "var(--ax-text-secondary)" }}
             >
-              No cold onboarding. Every account is reviewed by the Ajmera
+              No cold onboarding. Every account is reviewed by the Capstocks
               Exchange team before it goes live.
             </p>
           </div>
@@ -561,7 +584,7 @@ export default function HomePage() {
               number="01"
               icon={FiUserCheck}
               title="Request your account"
-              text="Fill in the signup form with KYC basics — name, email, phone, PAN, Aadhaar, bank and signature."
+              text="Fill in the signup form with KYC basics â€” name, email, phone, PAN, Aadhaar, bank and signature."
             />
             <StepCard
               number="02"
@@ -608,7 +631,7 @@ export default function HomePage() {
             <FeatureCard
               icon={FiActivity}
               title="Live charts"
-              text="Candlesticks, volume, live price line — intraday through weekly."
+              text="Candlesticks, volume, live price line â€” intraday through weekly."
             />
             <FeatureCard
               icon={FiBarChart2}
@@ -662,7 +685,7 @@ export default function HomePage() {
               reverse
               badge="Orders"
               title="Positions, holdings and a running ledger."
-              text="One card shows your total P&L with the invested and current figures alongside. Filter chips for positions, holdings and history — every executed order lands in the ledger."
+              text="One card shows your total P&L with the invested and current figures alongside. Filter chips for positions, holdings and history â€” every executed order lands in the ledger."
               bullets={[
                 "Total P&L hero with +/- color accents",
                 "Exit / sell strip on open positions",
@@ -672,10 +695,10 @@ export default function HomePage() {
             />
             <ProductRow
               badge="Markets"
-              title="Indices, funds and commodities — one place."
+              title="Indices, funds and commodities â€” one place."
               text="Tap an index to switch the hero chart. The Explore tab scrolls your watchlist, top gainers, top losers, mutual funds and commodity futures as horizontal cards."
               bullets={[
-                "NSE · BSE · MCX coverage out of the box",
+                "NSE Â· BSE Â· MCX coverage out of the box",
                 "Mutual-fund NAV with change % baked in",
                 "Commodities sorted by name or by today's move",
               ]}
@@ -730,7 +753,7 @@ export default function HomePage() {
                 <SecurityBullet
                   icon={FiMail}
                   title="Branded email delivery"
-                  text={`Credentials are sent from ${SUPPORT_EMAIL} — never shared.`}
+                  text={`Credentials are sent from ${SUPPORT_EMAIL} â€” never shared.`}
                 />
               </div>
             </div>
@@ -739,7 +762,7 @@ export default function HomePage() {
               style={{
                 borderColor: "var(--ax-border)",
                 background:
-                  "linear-gradient(135deg, rgba(0,208,156,0.08), rgba(59,130,246,0.05))",
+                  "linear-gradient(135deg, rgba(14, 165, 233,0.08), rgba(59,130,246,0.05))",
               }}
             >
               <div
@@ -747,7 +770,7 @@ export default function HomePage() {
                 className="absolute -right-16 -top-16 h-56 w-56 rounded-full blur-3xl"
                 style={{
                   background:
-                    "radial-gradient(closest-side, rgba(0,208,156,0.25), rgba(0,208,156,0))",
+                    "radial-gradient(closest-side, rgba(14, 165, 233,0.25), rgba(14, 165, 233,0))",
                 }}
               />
               <FiShield
@@ -758,15 +781,15 @@ export default function HomePage() {
                 className="mt-6 text-xl font-semibold leading-snug"
                 style={{ color: "var(--ax-text-primary)" }}
               >
-                “Trading infrastructure shouldn&apos;t feel intimidating. We
+                â€œTrading infrastructure shouldn&apos;t feel intimidating. We
                 handle the boring security parts so you can focus on the
-                markets.”
+                markets.â€
               </p>
               <p
                 className="mt-4 text-sm font-medium"
                 style={{ color: "var(--ax-text-secondary)" }}
               >
-                — Ajmera Exchange team
+                â€” Capstocks team
               </p>
               <div
                 className="mt-8 flex flex-wrap gap-2 border-t pt-6 text-[10px] font-semibold uppercase tracking-wider"
@@ -808,7 +831,7 @@ export default function HomePage() {
               <span
                 className="inline-flex items-center gap-2 rounded-full px-3 py-1 text-[11px] font-semibold"
                 style={{
-                  backgroundColor: "rgba(0,208,156,0.15)",
+                  backgroundColor: "rgba(14, 165, 233,0.15)",
                   color: "#5eead4",
                 }}
               >
@@ -837,7 +860,7 @@ export default function HomePage() {
                     color: isApkReady ? "#fff" : "#94a3b8",
                     pointerEvents: isApkReady ? "auto" : "none",
                     boxShadow: isApkReady
-                      ? "0 10px 30px -12px rgba(0,208,156,0.45)"
+                      ? "0 10px 30px -12px rgba(14, 165, 233,0.45)"
                       : undefined,
                   }}
                 >
@@ -867,8 +890,8 @@ export default function HomePage() {
               </div>
               <div className="mt-8 grid grid-cols-3 gap-3 text-center">
                 {[
-                  { icon: FiGlobe, label: "NSE · BSE · MCX" },
-                  { icon: FiClock, label: "Live · < 2s latency" },
+                  { icon: FiGlobe, label: "NSE Â· BSE Â· MCX" },
+                  { icon: FiClock, label: "Live Â· < 2s latency" },
                   { icon: FiHeadphones, label: "Email support" },
                 ].map(({ icon: Icon, label }) => (
                   <div
@@ -899,7 +922,7 @@ export default function HomePage() {
                 className="absolute -inset-8 rounded-[48px] opacity-70 blur-3xl"
                 style={{
                   background:
-                    "linear-gradient(135deg, rgba(0,208,156,0.35), rgba(59,130,246,0.25))",
+                    "linear-gradient(135deg, rgba(14, 165, 233,0.35), rgba(59,130,246,0.25))",
                 }}
               />
               <div className="relative overflow-hidden rounded-[36px] border border-slate-700 bg-slate-900 p-3 shadow-2xl">
@@ -967,7 +990,7 @@ export default function HomePage() {
             style={{
               borderColor: "var(--ax-border)",
               background:
-                "linear-gradient(135deg, rgba(0,208,156,0.06), rgba(59,130,246,0.04))",
+                "linear-gradient(135deg, rgba(14, 165, 233,0.06), rgba(59,130,246,0.04))",
             }}
           >
             <svg
@@ -987,7 +1010,7 @@ export default function HomePage() {
               className="mx-auto max-w-3xl text-xl font-medium leading-relaxed sm:text-2xl"
               style={{ color: "var(--ax-text-primary)" }}
             >
-              Everything you need — charts, orders, funds, ledger — without
+              Everything you need â€” charts, orders, funds, ledger â€” without
               the noise. Clean on the web, equally clean on Android.
             </p>
             <div className="mt-6 flex items-center justify-center gap-3">
@@ -1002,7 +1025,7 @@ export default function HomePage() {
                   className="text-sm font-semibold"
                   style={{ color: "var(--ax-text-primary)" }}
                 >
-                  Ajmera Exchange
+                  Capstocks
                 </p>
                 <p
                   className="text-xs"
@@ -1089,7 +1112,7 @@ export default function HomePage() {
             style={{
               borderColor: "var(--ax-border)",
               background:
-                "linear-gradient(135deg, rgba(0,208,156,0.08), rgba(59,130,246,0.06))",
+                "linear-gradient(135deg, rgba(14, 165, 233,0.08), rgba(59,130,246,0.06))",
             }}
           >
             <div className="flex flex-col items-start justify-between gap-6 md:flex-row md:items-center">
@@ -1104,7 +1127,7 @@ export default function HomePage() {
                   className="mt-2 text-sm sm:text-base"
                   style={{ color: "var(--ax-text-secondary)" }}
                 >
-                  Request an account — the Ajmera Exchange team reviews every
+                  Request an account â€” the Capstocks team reviews every
                   request and emails credentials from {SUPPORT_EMAIL} once
                   approved.
                 </p>
@@ -1112,7 +1135,7 @@ export default function HomePage() {
               <div className="flex flex-wrap gap-3">
                 <Link
                   href="/signup"
-                  className="inline-flex items-center gap-2 rounded-xl px-5 py-3 text-sm font-semibold text-white shadow-lg shadow-emerald-500/20 transition hover:shadow-emerald-500/30"
+                  className="inline-flex items-center gap-2 rounded-xl px-5 py-3 text-sm font-semibold text-white shadow-lg shadow-sky-500/20 transition hover:shadow-sky-500/30"
                   style={{ backgroundColor: "var(--ax-primary)" }}
                 >
                   Request account
@@ -1149,7 +1172,7 @@ export default function HomePage() {
             <div className="md:col-span-2">
               <div className="flex items-center gap-3">
                 <div
-                  className="flex h-10 w-10 items-center justify-center rounded-xl text-sm font-bold text-white shadow-md shadow-emerald-500/20"
+                  className="flex h-10 w-10 items-center justify-center rounded-xl text-sm font-bold text-white shadow-md shadow-sky-500/20"
                   style={{ backgroundColor: "var(--ax-primary)" }}
                 >
                   AE
@@ -1159,15 +1182,15 @@ export default function HomePage() {
                     className="text-[10px] font-semibold uppercase tracking-[0.18em]"
                     style={{ color: "#5eead4" }}
                   >
-                    Ajmera
+                    Cap
                   </p>
                   <p className="mt-0.5 text-lg font-bold text-white">
-                    Exchange
+                    Stocks
                   </p>
                 </div>
               </div>
               <p className="mt-5 max-w-md text-sm leading-relaxed text-slate-400">
-                Live markets, orders, mutual funds and a running ledger — on
+                Live markets, orders, mutual funds and a running ledger â€” on
                 web and Android, backed by the same data pipeline.
               </p>
               <a
@@ -1238,7 +1261,7 @@ export default function HomePage() {
           </div>
 
           <div className="mt-10 flex flex-col items-start justify-between gap-2 border-t border-slate-800 pt-6 text-xs text-slate-500 md:flex-row md:items-center">
-            <p>© {new Date().getFullYear()} Ajmera Exchange. All rights reserved.</p>
+            <p>Â© {new Date().getFullYear()} Capstocks. All rights reserved.</p>
             <p>
               Investments in securities market are subject to market risks.
               Read all scheme related documents carefully.
@@ -1250,7 +1273,7 @@ export default function HomePage() {
   );
 }
 
-/* ───────── Presentational helpers ───────── */
+/* â”€â”€â”€â”€â”€â”€â”€â”€â”€ Presentational helpers â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 
 function Stat({ value, label }: { value: string; label: string }) {
   return (
@@ -1343,7 +1366,7 @@ function FeatureCard({
         className="absolute -right-8 -top-8 h-24 w-24 rounded-full opacity-0 blur-2xl transition group-hover:opacity-100"
         style={{
           background:
-            "radial-gradient(closest-side, rgba(0,208,156,0.22), rgba(0,208,156,0))",
+            "radial-gradient(closest-side, rgba(14, 165, 233,0.22), rgba(14, 165, 233,0))",
         }}
       />
       <div
@@ -1479,7 +1502,7 @@ function SecurityBullet({
   );
 }
 
-/* ───────── Decorative visuals ───────── */
+/* â”€â”€â”€â”€â”€â”€â”€â”€â”€ Decorative visuals â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 
 function ChartVisual() {
   return (
@@ -1497,7 +1520,7 @@ function ChartVisual() {
             className="font-bold tracking-wider"
             style={{ color: "var(--ax-positive)" }}
           >
-            LIVE · 5m
+            LIVE Â· 5m
           </span>
         </div>
         <span
@@ -1559,7 +1582,7 @@ function OrdersVisual() {
             className="mt-1 text-2xl font-bold"
             style={{ color: "var(--ax-positive)" }}
           >
-            +₹1,350.00
+            +â‚¹1,350.00
           </p>
           <p
             className="text-xs font-semibold"
@@ -1574,7 +1597,7 @@ function OrdersVisual() {
             className="font-bold"
             style={{ color: "var(--ax-text-primary)" }}
           >
-            ₹95,120
+            â‚¹95,120
           </p>
           <p className="mt-1" style={{ color: "var(--ax-text-secondary)" }}>
             Current
@@ -1583,7 +1606,7 @@ function OrdersVisual() {
             className="font-bold"
             style={{ color: "var(--ax-text-primary)" }}
           >
-            ₹96,470
+            â‚¹96,470
           </p>
         </div>
       </div>
@@ -1631,7 +1654,7 @@ function OrdersVisual() {
                   style={
                     r.side === "BUY"
                       ? {
-                          backgroundColor: "rgba(0,179,134,0.12)",
+                          backgroundColor: "rgba(6, 182, 212,0.12)",
                           color: "var(--ax-positive)",
                         }
                       : {
@@ -1656,7 +1679,7 @@ function OrdersVisual() {
                 color: r.pnl >= 0 ? "var(--ax-positive)" : "var(--ax-negative)",
               }}
             >
-              {r.pnl >= 0 ? "+" : ""}₹{Math.abs(r.pnl).toLocaleString("en-IN")}
+              {r.pnl >= 0 ? "+" : ""}â‚¹{Math.abs(r.pnl).toLocaleString("en-IN")}
               <span className="ml-1 text-[10px]">
                 ({r.pnl >= 0 ? "+" : ""}
                 {r.pct.toFixed(1)}%)
@@ -1745,7 +1768,7 @@ function MarketsVisual() {
             className="h-3 w-3"
             style={{ color: "var(--ax-positive)" }}
           />
-          5 up · 1 down
+          5 up Â· 1 down
         </span>
         <span>Updated a moment ago</span>
       </div>
@@ -1800,7 +1823,7 @@ function MockChart({ large = false }: { large?: boolean }) {
       {candles.map((c, i) => {
         const x = i * cw + cw / 2;
         const up = c.c >= c.o;
-        const color = up ? "#00B386" : "#E55461";
+        const color = up ? "#06B6D4" : "#E55461";
         const bodyTop = scale(Math.max(c.o, c.c));
         const bodyH = Math.max(2, Math.abs(scale(c.o) - scale(c.c)));
         return (
@@ -1829,7 +1852,7 @@ function MockChart({ large = false }: { large?: boolean }) {
         x2={width}
         y1={scale(candles[candles.length - 1].c)}
         y2={scale(candles[candles.length - 1].c)}
-        stroke="#00B386"
+        stroke="#06B6D4"
         strokeDasharray="2,3"
         strokeOpacity={0.5}
       />
