@@ -44,7 +44,7 @@ if (!global._mongoClientPromise) {
 
 const clientPromise = global._mongoClientPromise;
 
-export async function getDb(dbName = process.env.MONGO_DB_NAME || "ajmeraexchange"): Promise<Db> {
+export async function getDb(dbName = process.env.MONGO_DB_NAME || "marketpulse"): Promise<Db> {
   const client = await clientPromise;
   return client.db(dbName);
 }

@@ -1,4 +1,4 @@
-﻿import nodemailer from "nodemailer";
+import nodemailer from "nodemailer";
 
 type SendClientCredentialsEmailParams = {
   to: string;
@@ -7,10 +7,8 @@ type SendClientCredentialsEmailParams = {
   password: string;
 };
 
-export const SUPPORT_EMAIL = "support@ajmeraexchange.in";
+export const SUPPORT_EMAIL = "support@capstock.in";
 export const FROM_ADDRESS = `"Capstocks" <${SUPPORT_EMAIL}>`;
-// Note: SUPPORT_EMAIL still uses the ajmeraexchange.in domain; rebrand only
-// affected the display name. Update both together if/when the domain moves.
 
 let transporter: nodemailer.Transporter | null = null;
 
@@ -21,17 +19,18 @@ function getTransporter() {
 
   const user = process.env.SMTP_USER;
   const pass = process.env.SMTP_PASS;
+  const host = process.env.SMTP_HOST ?? "smtp.titan.email";
+  const port = parseInt(process.env.SMTP_PORT ?? "587", 10);
 
   if (!user || !pass) {
     throw new Error("SMTP credentials are not configured");
   }
 
   transporter = nodemailer.createTransport({
-    service: "gmail",
-    auth: {
-      user,
-      pass,
-    },
+    host,
+    port,
+    secure: false,
+    auth: { user, pass },
   });
 
   return transporter;
@@ -117,7 +116,7 @@ export async function sendClientCredentialsEmail({
           <a href="mailto:${SUPPORT_EMAIL}" style="color:#0EA5E9;text-decoration:none">${SUPPORT_EMAIL}</a>.
         </p>
         <p style="margin:24px 0 0;font-size:11px;color:#94a3b8;text-align:center">
-          â€” Team Capstocks
+          &mdash; Team Capstocks
         </p>
       </div>
     </div>
@@ -133,7 +132,7 @@ export async function sendClientCredentialsEmail({
     "Please keep these credentials secure.",
     `Questions? Reply to ${SUPPORT_EMAIL}.`,
     "",
-    "â€” Team Capstocks",
+    "— Team Capstocks",
   ].join("\n");
 
   await getTransporter().sendMail({

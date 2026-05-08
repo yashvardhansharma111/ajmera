@@ -4,7 +4,7 @@ import { NextResponse } from "next/server";
 export async function GET() {
   try {
     const client = await clientPromise;
-    await client.db("ajmeraexchange").command({ ping: 1 });
+    await client.db(process.env.MONGO_DB_NAME || "marketpulse").command({ ping: 1 });
 
     return NextResponse.json({
       status: "ok",

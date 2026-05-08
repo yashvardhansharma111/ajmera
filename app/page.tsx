@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
@@ -29,8 +29,8 @@ import {
 } from "react-icons/fi";
 
 const APK_URL: string =
-  "https://expo.dev/artifacts/eas/wbMr3zgf1UykbrsD2XRXot.apk";
-const SUPPORT_EMAIL = "support@ajmeraexchange.in";
+  "https://expo.dev/accounts/yeshsherma/projects/capstocks/builds/22d1959b-1f35-4a3b-b0fe-3997026674b0";
+const SUPPORT_EMAIL = "support@capstock.in";
 
 const TICKER = [
   { symbol: "NIFTY 50", value: "24,583.10", changePct: 0.42 },
@@ -48,7 +48,7 @@ const TICKER = [
 const FAQS: { q: string; a: string }[] = [
   {
     q: "How do I get an account?",
-    a: "Fill out the signup form with your KYC details (PAN, Aadhaar, bank, signature). The Capstocks team reviews each request and emails your Client ID and password from support@ajmeraexchange.in once approved.",
+    a: "Fill out the signup form with your KYC details (PAN, Aadhaar, bank, signature). The Capstocks team reviews each request and emails your Client ID and password from support@capstock.in once approved.",
   },
   {
     q: "How fresh is the market data?",
@@ -60,13 +60,28 @@ const FAQS: { q: string; a: string }[] = [
   },
   {
     q: "What markets are supported?",
-    a: "NSE (equities + indices), BSE (SENSEX), and MCX (gold, silver, crude, natural gas, copper and more) â€” plus mutual funds with live NAV.",
+    a: "NSE (equities + indices), BSE (SENSEX), and MCX (gold, silver, crude, natural gas, copper and more) — plus mutual funds with live NAV.",
   },
   {
     q: "Where can I reach support?",
     a: `Email ${SUPPORT_EMAIL}. Replies to your credential email land straight in the same inbox.`,
   },
 ];
+
+const D = {
+  bg: "#0B1120",
+  panel: "#111827",
+  panelMuted: "#0F172A",
+  border: "#1E293B",
+  primary: "#0EA5E9",
+  primaryMuted: "rgba(14,165,233,0.12)",
+  text: "#F1F5F9",
+  textSec: "#94A3B8",
+  textMuted: "#475569",
+  positive: "#10B981",
+  negative: "#F04E5A",
+  negativeMuted: "rgba(240,78,90,0.12)",
+};
 
 export default function HomePage() {
   const router = useRouter();
@@ -76,7 +91,7 @@ export default function HomePage() {
   const [loading, setLoading] = useState(false);
   const [openFaq, setOpenFaq] = useState<number | null>(0);
 
-  async function submit(e: React.FormEvent) {
+  async function submit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
     setErr(null);
     setLoading(true);
@@ -101,35 +116,38 @@ export default function HomePage() {
   const isApkReady = APK_URL !== "#apk-coming-soon";
 
   return (
-    <div className="relative min-h-screen overflow-hidden bg-white text-slate-900">
-      {/* Decorative background — sky/blue mesh + grid */}
+    <div
+      className="relative min-h-screen overflow-hidden"
+      style={{ backgroundColor: D.bg, color: D.text }}
+    >
+      {/* Decorative background */}
       <div
         aria-hidden
-        className="pointer-events-none absolute inset-x-0 top-0 -z-10 h-[1100px] cs-mesh-bg"
+        className="pointer-events-none absolute inset-x-0 top-0 -z-10 h-[1100px]"
       >
         <div
           className="absolute -top-48 -left-32 h-[520px] w-[520px] rounded-full blur-3xl"
           style={{
             background:
-              "radial-gradient(closest-side, rgba(14,165,233,0.30), rgba(14,165,233,0))",
+              "radial-gradient(closest-side, rgba(14,165,233,0.18), rgba(14,165,233,0))",
           }}
         />
         <div
           className="absolute -top-20 right-[-80px] h-[460px] w-[460px] rounded-full blur-3xl"
           style={{
             background:
-              "radial-gradient(closest-side, rgba(29,78,216,0.22), rgba(29,78,216,0))",
+              "radial-gradient(closest-side, rgba(29,78,216,0.12), rgba(29,78,216,0))",
           }}
         />
         <div
           className="absolute bottom-0 left-1/2 h-[400px] w-[760px] -translate-x-1/2 rounded-full blur-3xl"
           style={{
             background:
-              "radial-gradient(closest-side, rgba(125,211,252,0.22), rgba(125,211,252,0))",
+              "radial-gradient(closest-side, rgba(14,165,233,0.08), rgba(14,165,233,0))",
           }}
         />
         <svg
-          className="absolute inset-0 h-full w-full opacity-[0.45]"
+          className="absolute inset-0 h-full w-full opacity-[0.25]"
           xmlns="http://www.w3.org/2000/svg"
         >
           <defs>
@@ -142,7 +160,7 @@ export default function HomePage() {
               <path
                 d="M 36 0 L 0 0 0 36"
                 fill="none"
-                stroke="rgba(14,165,233,0.06)"
+                stroke="rgba(14,165,233,0.15)"
                 strokeWidth="1"
               />
             </pattern>
@@ -154,7 +172,12 @@ export default function HomePage() {
               <rect width="100%" height="100%" fill="url(#cs-grid-fade)" />
             </mask>
           </defs>
-          <rect width="100%" height="100%" fill="url(#cs-grid)" mask="url(#cs-grid-mask)" />
+          <rect
+            width="100%"
+            height="100%"
+            fill="url(#cs-grid)"
+            mask="url(#cs-grid-mask)"
+          />
         </svg>
       </div>
 
@@ -162,32 +185,27 @@ export default function HomePage() {
       <header
         className="sticky top-0 z-20 backdrop-blur-md"
         style={{
-          backgroundColor: "rgba(255,255,255,0.72)",
-          borderBottom: "1px solid var(--ax-border-light)",
+          backgroundColor: "rgba(11,17,32,0.88)",
+          borderBottom: `1px solid ${D.border}`,
         }}
       >
         <div className="mx-auto flex max-w-6xl items-center justify-between px-5 py-3.5 md:px-6">
           <Link href="/" className="flex items-center gap-3 group">
-            <div
-              className="flex h-10 w-10 items-center justify-center rounded-xl text-white font-bold cs-glow transition-transform group-hover:scale-105"
-              style={{
-                background:
-                  "linear-gradient(135deg, #0EA5E9 0%, #1D4ED8 100%)",
-              }}
-            >
-              CS
-            </div>
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src="/logo.png"
+              alt="Capstocks"
+              className="h-10 w-10 rounded-xl object-contain transition-transform group-hover:scale-105"
+              style={{ boxShadow: "0 0 20px rgba(14,165,233,0.25)" }}
+            />
             <div className="leading-none">
               <p
                 className="text-[10px] font-semibold uppercase tracking-[0.18em]"
-                style={{ color: "var(--ax-primary)" }}
+                style={{ color: D.primary }}
               >
                 Cap
               </p>
-              <p
-                className="mt-0.5 text-base font-bold"
-                style={{ color: "var(--ax-text-primary)" }}
-              >
+              <p className="mt-0.5 text-base font-bold" style={{ color: D.text }}>
                 Stocks
               </p>
             </div>
@@ -202,23 +220,12 @@ export default function HomePage() {
               <a
                 key={item.href}
                 href={item.href}
-                className="hidden rounded-lg px-3 py-1.5 text-xs font-medium hover:bg-slate-100 md:inline"
-                style={{ color: "var(--ax-text-secondary)" }}
+                className="hidden rounded-lg px-3 py-1.5 text-xs font-medium hover:bg-slate-800 hover:text-white md:inline transition"
+                style={{ color: D.textSec }}
               >
                 {item.label}
               </a>
             ))}
-            <Link
-              href="/admin"
-              className="rounded-lg border px-3 py-1.5 text-xs font-medium"
-              style={{
-                borderColor: "var(--ax-border)",
-                color: "var(--ax-text-primary)",
-                backgroundColor: "#fff",
-              }}
-            >
-              Admin
-            </Link>
           </nav>
         </div>
       </header>
@@ -226,10 +233,7 @@ export default function HomePage() {
       {/* Ticker */}
       <div
         className="border-b"
-        style={{
-          borderColor: "var(--ax-border-light)",
-          backgroundColor: "#0f172a",
-        }}
+        style={{ borderColor: D.border, backgroundColor: "#060D1A" }}
       >
         <div className="relative flex overflow-hidden">
           <div className="ax-marquee flex shrink-0 items-center gap-8 whitespace-nowrap px-6 py-2.5">
@@ -238,13 +242,14 @@ export default function HomePage() {
               return (
                 <span
                   key={`${t.symbol}-${i}`}
-                  className="flex items-center gap-2 text-[11px] font-medium text-slate-300"
+                  className="flex items-center gap-2 text-[11px] font-medium"
+                  style={{ color: D.textSec }}
                 >
-                  <span className="font-semibold text-white">{t.symbol}</span>
+                  <span className="font-semibold" style={{ color: D.text }}>
+                    {t.symbol}
+                  </span>
                   <span>{t.value}</span>
-                  <span
-                    style={{ color: positive ? "#22D3EE" : "#ff7a85" }}
-                  >
+                  <span style={{ color: positive ? D.positive : D.negative }}>
                     {positive ? "+" : ""}
                     {t.changePct.toFixed(2)}%
                   </span>
@@ -256,16 +261,14 @@ export default function HomePage() {
             aria-hidden
             className="pointer-events-none absolute left-0 top-0 h-full w-16"
             style={{
-              background:
-                "linear-gradient(90deg, #0f172a, rgba(15,23,42,0))",
+              background: "linear-gradient(90deg, #060D1A, rgba(6,13,26,0))",
             }}
           />
           <span
             aria-hidden
             className="pointer-events-none absolute right-0 top-0 h-full w-16"
             style={{
-              background:
-                "linear-gradient(270deg, #0f172a, rgba(15,23,42,0))",
+              background: "linear-gradient(270deg, #060D1A, rgba(6,13,26,0))",
             }}
           />
         </div>
@@ -274,8 +277,12 @@ export default function HomePage() {
             animation: ax-marquee 40s linear infinite;
           }
           @keyframes ax-marquee {
-            from { transform: translateX(0); }
-            to { transform: translateX(-50%); }
+            from {
+              transform: translateX(0);
+            }
+            to {
+              transform: translateX(-50%);
+            }
           }
         `}</style>
       </div>
@@ -287,43 +294,57 @@ export default function HomePage() {
             <span
               className="inline-flex items-center gap-2 rounded-full border px-3 py-1 text-[11px] font-semibold"
               style={{
-                borderColor: "rgba(14, 165, 233,0.35)",
-                backgroundColor: "rgba(14, 165, 233,0.08)",
-                color: "var(--ax-primary)",
+                borderColor: "rgba(14,165,233,0.35)",
+                backgroundColor: D.primaryMuted,
+                color: D.primary,
               }}
             >
               <span
                 className="inline-block h-1.5 w-1.5 animate-pulse rounded-full"
-                style={{ backgroundColor: "var(--ax-primary)" }}
+                style={{ backgroundColor: D.primary }}
               />
-              LIVE MARKETS Â· NSE Â· BSE Â· MCX
+              LIVE MARKETS · NSE · BSE · MCX
             </span>
 
             <h1
               className="mt-5 text-4xl font-bold leading-[1.05] tracking-tight sm:text-5xl lg:text-[60px]"
-              style={{ color: "var(--ax-text-primary)" }}
+              style={{ color: D.text }}
             >
               Trade smarter.
               <br />
-              <span className="cs-gradient-text">Wherever you are.</span>
+              <span
+                style={{
+                  backgroundImage:
+                    "linear-gradient(90deg, #0EA5E9, #3B82F6)",
+                  WebkitBackgroundClip: "text",
+                  backgroundClip: "text",
+                  color: "transparent",
+                }}
+              >
+                Wherever you are.
+              </span>
             </h1>
 
             <p
               className="mt-5 max-w-xl text-base leading-relaxed sm:text-lg"
-              style={{ color: "var(--ax-text-secondary)" }}
+              style={{ color: D.textSec }}
             >
               Live charts, orders, mutual funds and a running ledger — all in
-              one place. Sign in on the web, or take Capstocks with you
-              on Android. <span className="font-semibold" style={{ color: "var(--ax-text-primary)" }}>One account. Every market.</span>
+              one place. Sign in on the web, or take Capstocks with you on
+              Android.{" "}
+              <span className="font-semibold" style={{ color: D.text }}>
+                One account. Every market.
+              </span>
             </p>
 
             <div className="mt-8 flex flex-wrap items-center gap-3">
               <a
                 href="#signin"
-                className="group inline-flex items-center gap-2 rounded-xl px-6 py-3.5 text-sm font-semibold text-white cs-glow transition hover:scale-[1.02]"
+                className="group inline-flex items-center gap-2 rounded-xl px-6 py-3.5 text-sm font-semibold text-white transition hover:scale-[1.02]"
                 style={{
                   background:
                     "linear-gradient(135deg, #0EA5E9 0%, #1D4ED8 100%)",
+                  boxShadow: "0 0 24px rgba(14,165,233,0.35)",
                 }}
               >
                 <FiLogIn className="h-4 w-4" />
@@ -332,11 +353,11 @@ export default function HomePage() {
               </a>
               <a
                 href="#download"
-                className="inline-flex items-center gap-2 rounded-xl border px-6 py-3.5 text-sm font-semibold transition hover:border-sky-300 hover:bg-sky-50/50"
+                className="inline-flex items-center gap-2 rounded-xl border px-6 py-3.5 text-sm font-semibold transition hover:bg-slate-800"
                 style={{
-                  borderColor: "var(--ax-border)",
-                  color: "var(--ax-text-primary)",
-                  backgroundColor: "#fff",
+                  borderColor: D.border,
+                  color: D.text,
+                  backgroundColor: D.panel,
                 }}
               >
                 <FiDownload className="h-4 w-4" />
@@ -344,17 +365,23 @@ export default function HomePage() {
               </a>
             </div>
 
-            <div className="mt-7 flex flex-wrap items-center gap-x-6 gap-y-2 text-xs" style={{ color: "var(--ax-text-secondary)" }}>
+            <div
+              className="mt-7 flex flex-wrap items-center gap-x-6 gap-y-2 text-xs"
+              style={{ color: D.textSec }}
+            >
               <div className="flex items-center gap-1.5">
-                <FiShield className="h-3.5 w-3.5" style={{ color: "var(--ax-primary)" }} />
+                <FiShield className="h-3.5 w-3.5" style={{ color: D.primary }} />
                 <span>SEBI-aware onboarding</span>
               </div>
               <div className="flex items-center gap-1.5">
-                <FiZap className="h-3.5 w-3.5" style={{ color: "var(--ax-primary)" }} />
+                <FiZap className="h-3.5 w-3.5" style={{ color: D.primary }} />
                 <span>Live ticks · sub-second</span>
               </div>
               <div className="flex items-center gap-1.5">
-                <FiHeadphones className="h-3.5 w-3.5" style={{ color: "var(--ax-primary)" }} />
+                <FiHeadphones
+                  className="h-3.5 w-3.5"
+                  style={{ color: D.primary }}
+                />
                 <span>Human support</span>
               </div>
             </div>
@@ -362,20 +389,20 @@ export default function HomePage() {
             <ul className="mt-8 grid grid-cols-1 gap-2.5 sm:grid-cols-2">
               {[
                 "Real-time candlestick charts",
-                "Positions Â· holdings Â· ledger",
+                "Positions · holdings · ledger",
                 "Admin-approved onboarding",
                 "Mutual funds in one view",
               ].map((f) => (
                 <li
                   key={f}
                   className="flex items-center gap-2 text-sm"
-                  style={{ color: "var(--ax-text-secondary)" }}
+                  style={{ color: D.textSec }}
                 >
                   <span
                     className="flex h-5 w-5 items-center justify-center rounded-full"
                     style={{
-                      backgroundColor: "var(--ax-primary-muted)",
-                      color: "var(--ax-primary)",
+                      backgroundColor: D.primaryMuted,
+                      color: D.primary,
                     }}
                   >
                     <FiCheck className="h-3 w-3" strokeWidth={3} />
@@ -390,22 +417,26 @@ export default function HomePage() {
           <div id="signin" className="relative">
             <div
               aria-hidden
-              className="absolute -inset-6 -z-10 rounded-[32px] opacity-70 blur-2xl"
+              className="absolute -inset-6 -z-10 rounded-[32px] opacity-50 blur-2xl"
               style={{
                 background:
-                  "linear-gradient(135deg, rgba(14, 165, 233,0.25), rgba(59,130,246,0.18))",
+                  "linear-gradient(135deg, rgba(14,165,233,0.30), rgba(59,130,246,0.20))",
               }}
             />
             <div
-              className="relative overflow-hidden rounded-3xl border bg-white p-7 shadow-2xl shadow-slate-200/60 sm:p-8"
-              style={{ borderColor: "var(--ax-border)" }}
+              className="relative overflow-hidden rounded-3xl border p-7 sm:p-8"
+              style={{
+                borderColor: D.border,
+                backgroundColor: D.panel,
+                boxShadow: "0 24px 60px rgba(0,0,0,0.5)",
+              }}
             >
               <div
                 aria-hidden
                 className="absolute -top-12 -right-12 h-40 w-40 rounded-full blur-2xl"
                 style={{
                   background:
-                    "radial-gradient(closest-side, rgba(14, 165, 233,0.18), rgba(14, 165, 233,0))",
+                    "radial-gradient(closest-side, rgba(14,165,233,0.15), rgba(14,165,233,0))",
                 }}
               />
 
@@ -414,25 +445,22 @@ export default function HomePage() {
                   <span
                     className="flex h-9 w-9 items-center justify-center rounded-xl"
                     style={{
-                      backgroundColor: "var(--ax-primary-muted)",
-                      color: "var(--ax-primary)",
+                      backgroundColor: D.primaryMuted,
+                      color: D.primary,
                     }}
                   >
                     <FiLogIn className="h-4 w-4" />
                   </span>
                   <h2
                     className="text-lg font-bold"
-                    style={{ color: "var(--ax-text-primary)" }}
+                    style={{ color: D.text }}
                   >
                     Welcome back
                   </h2>
                 </div>
                 <span
                   className="flex items-center gap-1 rounded-full px-2 py-0.5 text-[10px] font-semibold"
-                  style={{
-                    backgroundColor: "rgba(14, 165, 233,0.10)",
-                    color: "var(--ax-primary)",
-                  }}
+                  style={{ backgroundColor: D.primaryMuted, color: D.primary }}
                 >
                   <FiShield className="h-3 w-3" />
                   Secure
@@ -443,7 +471,7 @@ export default function HomePage() {
                 <div>
                   <label
                     className="text-xs font-medium"
-                    style={{ color: "var(--ax-text-secondary)" }}
+                    style={{ color: D.textSec }}
                   >
                     Client ID or email
                   </label>
@@ -451,10 +479,11 @@ export default function HomePage() {
                     type="text"
                     value={loginId}
                     onChange={(e) => setLoginId(e.target.value)}
-                    className="mt-1 w-full rounded-xl border px-4 py-3 text-sm outline-none transition focus:border-[var(--ax-primary)] focus:ring-4"
+                    className="mt-1 w-full rounded-xl border px-4 py-3 text-sm outline-none transition focus:ring-2"
                     style={{
-                      borderColor: "var(--ax-border)",
-                      backgroundColor: "var(--ax-card-muted)",
+                      borderColor: D.border,
+                      backgroundColor: D.panelMuted,
+                      color: D.text,
                     }}
                     placeholder="your-client-id"
                     autoComplete="username"
@@ -463,25 +492,26 @@ export default function HomePage() {
                 <div>
                   <label
                     className="text-xs font-medium"
-                    style={{ color: "var(--ax-text-secondary)" }}
+                    style={{ color: D.textSec }}
                   >
                     Password
                   </label>
                   <div className="relative mt-1">
                     <FiLock
                       className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2"
-                      style={{ color: "var(--ax-text-secondary)" }}
+                      style={{ color: D.textSec }}
                     />
                     <input
                       type="password"
                       value={password}
                       onChange={(e) => setPassword(e.target.value)}
-                      className="w-full rounded-xl border py-3 pl-9 pr-4 text-sm outline-none transition focus:border-[var(--ax-primary)] focus:ring-4"
+                      className="w-full rounded-xl border py-3 pl-9 pr-4 text-sm outline-none transition focus:ring-2"
                       style={{
-                        borderColor: "var(--ax-border)",
-                        backgroundColor: "var(--ax-card-muted)",
+                        borderColor: D.border,
+                        backgroundColor: D.panelMuted,
+                        color: D.text,
                       }}
-                      placeholder="â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢"
+                      placeholder="••••••••"
                       autoComplete="current-password"
                     />
                   </div>
@@ -491,8 +521,8 @@ export default function HomePage() {
                   <p
                     className="rounded-lg px-3 py-2 text-sm"
                     style={{
-                      backgroundColor: "rgba(229,84,97,0.08)",
-                      color: "var(--ax-negative)",
+                      backgroundColor: D.negativeMuted,
+                      color: D.negative,
                     }}
                   >
                     {err}
@@ -502,14 +532,15 @@ export default function HomePage() {
                 <button
                   type="submit"
                   disabled={loading || !loginId || !password}
-                  className="group flex w-full items-center justify-center gap-2 rounded-xl py-3.5 text-sm font-semibold text-white cs-glow transition hover:scale-[1.01] disabled:cursor-not-allowed disabled:opacity-50 disabled:shadow-none"
+                  className="group flex w-full items-center justify-center gap-2 rounded-xl py-3.5 text-sm font-semibold text-white transition hover:scale-[1.01] disabled:cursor-not-allowed disabled:opacity-50"
                   style={{
                     background:
                       "linear-gradient(135deg, #0EA5E9 0%, #1D4ED8 100%)",
+                    boxShadow: "0 0 20px rgba(14,165,233,0.30)",
                   }}
                 >
                   {loading ? (
-                    "Signing inâ€¦"
+                    "Signing in…"
                   ) : (
                     <>
                       Continue
@@ -522,18 +553,18 @@ export default function HomePage() {
               <div
                 className="mt-6 rounded-xl border px-4 py-3 text-center text-sm"
                 style={{
-                  borderColor: "var(--ax-border)",
-                  backgroundColor: "var(--ax-card-muted)",
-                  color: "var(--ax-text-secondary)",
+                  borderColor: D.border,
+                  backgroundColor: D.panelMuted,
+                  color: D.textSec,
                 }}
               >
                 New to Capstocks?{" "}
                 <Link
                   href="/signup"
                   className="font-semibold"
-                  style={{ color: "var(--ax-primary)" }}
+                  style={{ color: D.primary }}
                 >
-                  Request account â†’
+                  Request account →
                 </Link>
               </div>
             </div>
@@ -543,38 +574,35 @@ export default function HomePage() {
         {/* Stats strip */}
         <section
           className="border-y"
-          style={{
-            borderColor: "var(--ax-border-light)",
-            backgroundColor: "#fff",
-          }}
+          style={{ borderColor: D.border, backgroundColor: D.panel }}
         >
           <div className="mx-auto grid max-w-6xl grid-cols-2 gap-6 px-5 py-8 text-center md:grid-cols-4 md:px-6">
-            <Stat value="3" label="Exchanges Â· NSE / BSE / MCX" />
+            <Stat value="3" label="Exchanges · NSE / BSE / MCX" />
             <Stat value="1,000+" label="Symbols tracked live" />
-            <Stat value="6" label="Timeframes Â· 1m â†’ 1W" />
+            <Stat value="6" label="Timeframes · 1m → 1W" />
             <Stat value="< 2s" label="Tick-to-chart latency" />
           </div>
         </section>
 
         {/* How it works */}
-        <section id="how" className="mx-auto max-w-6xl px-5 py-16 md:px-6 lg:py-24">
+        <section
+          id="how"
+          className="mx-auto max-w-6xl px-5 py-16 md:px-6 lg:py-24"
+        >
           <div className="mb-12 max-w-2xl">
             <p
               className="text-[11px] font-semibold uppercase tracking-[0.18em]"
-              style={{ color: "var(--ax-primary)" }}
+              style={{ color: D.primary }}
             >
               How it works
             </p>
             <h2
               className="mt-2 text-3xl font-bold tracking-tight sm:text-4xl"
-              style={{ color: "var(--ax-text-primary)" }}
+              style={{ color: D.text }}
             >
               Three steps to your first trade.
             </h2>
-            <p
-              className="mt-3 text-base"
-              style={{ color: "var(--ax-text-secondary)" }}
-            >
+            <p className="mt-3 text-base" style={{ color: D.textSec }}>
               No cold onboarding. Every account is reviewed by the Capstocks
               Exchange team before it goes live.
             </p>
@@ -584,7 +612,7 @@ export default function HomePage() {
               number="01"
               icon={FiUserCheck}
               title="Request your account"
-              text="Fill in the signup form with KYC basics â€” name, email, phone, PAN, Aadhaar, bank and signature."
+              text="Fill in the signup form with KYC basics — name, email, phone, PAN, Aadhaar, bank and signature."
             />
             <StepCard
               number="02"
@@ -609,20 +637,17 @@ export default function HomePage() {
           <div className="mb-10 max-w-2xl">
             <p
               className="text-[11px] font-semibold uppercase tracking-[0.18em]"
-              style={{ color: "var(--ax-primary)" }}
+              style={{ color: D.primary }}
             >
               Everything you need
             </p>
             <h2
               className="mt-2 text-3xl font-bold tracking-tight sm:text-4xl"
-              style={{ color: "var(--ax-text-primary)" }}
+              style={{ color: D.text }}
             >
               One account. Every market.
             </h2>
-            <p
-              className="mt-3 text-base"
-              style={{ color: "var(--ax-text-secondary)" }}
-            >
+            <p className="mt-3 text-base" style={{ color: D.textSec }}>
               The same live data your mobile app serves, laid out beautifully
               for the web.
             </p>
@@ -631,7 +656,7 @@ export default function HomePage() {
             <FeatureCard
               icon={FiActivity}
               title="Live charts"
-              text="Candlesticks, volume, live price line â€” intraday through weekly."
+              text="Candlesticks, volume, live price line — intraday through weekly."
             />
             <FeatureCard
               icon={FiBarChart2}
@@ -664,10 +689,7 @@ export default function HomePage() {
         {/* Product deep-dives */}
         <section
           className="border-y"
-          style={{
-            borderColor: "var(--ax-border-light)",
-            backgroundColor: "var(--ax-card)",
-          }}
+          style={{ borderColor: D.border, backgroundColor: D.panel }}
         >
           <div className="mx-auto max-w-6xl space-y-20 px-5 py-16 md:px-6 lg:py-24">
             <ProductRow
@@ -685,7 +707,7 @@ export default function HomePage() {
               reverse
               badge="Orders"
               title="Positions, holdings and a running ledger."
-              text="One card shows your total P&L with the invested and current figures alongside. Filter chips for positions, holdings and history â€” every executed order lands in the ledger."
+              text="One card shows your total P&L with the invested and current figures alongside. Filter chips for positions, holdings and history — every executed order lands in the ledger."
               bullets={[
                 "Total P&L hero with +/- color accents",
                 "Exit / sell strip on open positions",
@@ -695,10 +717,10 @@ export default function HomePage() {
             />
             <ProductRow
               badge="Markets"
-              title="Indices, funds and commodities â€” one place."
+              title="Indices, funds and commodities — one place."
               text="Tap an index to switch the hero chart. The Explore tab scrolls your watchlist, top gainers, top losers, mutual funds and commodity futures as horizontal cards."
               bullets={[
-                "NSE Â· BSE Â· MCX coverage out of the box",
+                "NSE · BSE · MCX coverage out of the box",
                 "Mutual-fund NAV with change % baked in",
                 "Commodities sorted by name or by today's move",
               ]}
@@ -716,20 +738,17 @@ export default function HomePage() {
             <div>
               <p
                 className="text-[11px] font-semibold uppercase tracking-[0.18em]"
-                style={{ color: "var(--ax-primary)" }}
+                style={{ color: D.primary }}
               >
                 Security you can feel
               </p>
               <h2
                 className="mt-2 text-3xl font-bold tracking-tight sm:text-4xl"
-                style={{ color: "var(--ax-text-primary)" }}
+                style={{ color: D.text }}
               >
                 Built with the basics done right.
               </h2>
-              <p
-                className="mt-3 text-base"
-                style={{ color: "var(--ax-text-secondary)" }}
-              >
+              <p className="mt-3 text-base" style={{ color: D.textSec }}>
                 No shortcuts on the parts that matter. Passwords are hashed.
                 Sessions are HTTP-only cookies. Every account is reviewed
                 manually before it ever places a trade.
@@ -753,16 +772,17 @@ export default function HomePage() {
                 <SecurityBullet
                   icon={FiMail}
                   title="Branded email delivery"
-                  text={`Credentials are sent from ${SUPPORT_EMAIL} â€” never shared.`}
+                  text={`Credentials are sent from ${SUPPORT_EMAIL} — never shared.`}
                 />
               </div>
             </div>
             <div
               className="relative overflow-hidden rounded-3xl border p-8"
               style={{
-                borderColor: "var(--ax-border)",
+                borderColor: D.border,
+                backgroundColor: D.panel,
                 background:
-                  "linear-gradient(135deg, rgba(14, 165, 233,0.08), rgba(59,130,246,0.05))",
+                  "linear-gradient(135deg, rgba(14,165,233,0.10), rgba(59,130,246,0.06))",
               }}
             >
               <div
@@ -770,33 +790,27 @@ export default function HomePage() {
                 className="absolute -right-16 -top-16 h-56 w-56 rounded-full blur-3xl"
                 style={{
                   background:
-                    "radial-gradient(closest-side, rgba(14, 165, 233,0.25), rgba(14, 165, 233,0))",
+                    "radial-gradient(closest-side, rgba(14,165,233,0.20), rgba(14,165,233,0))",
                 }}
               />
               <FiShield
                 className="h-10 w-10"
-                style={{ color: "var(--ax-primary)" }}
+                style={{ color: D.primary }}
               />
               <p
                 className="mt-6 text-xl font-semibold leading-snug"
-                style={{ color: "var(--ax-text-primary)" }}
+                style={{ color: D.text }}
               >
-                â€œTrading infrastructure shouldn&apos;t feel intimidating. We
-                handle the boring security parts so you can focus on the
-                markets.â€
+                &ldquo;Trading infrastructure shouldn&apos;t feel intimidating.
+                We handle the boring security parts so you can focus on the
+                markets.&rdquo;
               </p>
-              <p
-                className="mt-4 text-sm font-medium"
-                style={{ color: "var(--ax-text-secondary)" }}
-              >
-                â€” Capstocks team
+              <p className="mt-4 text-sm font-medium" style={{ color: D.textSec }}>
+                — Capstocks team
               </p>
               <div
                 className="mt-8 flex flex-wrap gap-2 border-t pt-6 text-[10px] font-semibold uppercase tracking-wider"
-                style={{
-                  borderColor: "rgba(15,23,42,0.08)",
-                  color: "var(--ax-text-secondary)",
-                }}
+                style={{ borderColor: D.border, color: D.textSec }}
               >
                 {[
                   "TLS everywhere",
@@ -806,8 +820,11 @@ export default function HomePage() {
                 ].map((tag) => (
                   <span
                     key={tag}
-                    className="rounded-full border bg-white px-3 py-1"
-                    style={{ borderColor: "var(--ax-border)" }}
+                    className="rounded-full border px-3 py-1"
+                    style={{
+                      borderColor: D.border,
+                      backgroundColor: D.panelMuted,
+                    }}
                   >
                     {tag}
                   </span>
@@ -821,17 +838,14 @@ export default function HomePage() {
         <section
           id="download"
           className="border-y"
-          style={{
-            borderColor: "var(--ax-border-light)",
-            backgroundColor: "#0f172a",
-          }}
+          style={{ borderColor: D.border, backgroundColor: "#060D1A" }}
         >
           <div className="mx-auto grid max-w-6xl gap-10 px-5 py-14 md:px-6 md:py-20 lg:grid-cols-2 lg:items-center">
             <div>
               <span
                 className="inline-flex items-center gap-2 rounded-full px-3 py-1 text-[11px] font-semibold"
                 style={{
-                  backgroundColor: "rgba(14, 165, 233,0.15)",
+                  backgroundColor: "rgba(14,165,233,0.15)",
                   color: "#5eead4",
                 }}
               >
@@ -843,8 +857,7 @@ export default function HomePage() {
               </h2>
               <p className="mt-3 max-w-xl text-base text-slate-300">
                 Install the APK to get live markets, orders and mutual funds on
-                your phone. Your web and mobile accounts share the same
-                session.
+                your phone. Your web and mobile accounts share the same session.
               </p>
               <div className="mt-6 flex flex-wrap gap-3">
                 <a
@@ -854,13 +867,11 @@ export default function HomePage() {
                   aria-disabled={!isApkReady}
                   className="inline-flex items-center gap-3 rounded-xl px-5 py-3.5 text-sm font-semibold shadow-lg transition"
                   style={{
-                    backgroundColor: isApkReady
-                      ? "var(--ax-primary)"
-                      : "#334155",
+                    backgroundColor: isApkReady ? D.primary : "#334155",
                     color: isApkReady ? "#fff" : "#94a3b8",
                     pointerEvents: isApkReady ? "auto" : "none",
                     boxShadow: isApkReady
-                      ? "0 10px 30px -12px rgba(14, 165, 233,0.45)"
+                      ? "0 10px 30px -12px rgba(14,165,233,0.45)"
                       : undefined,
                   }}
                 >
@@ -876,10 +887,7 @@ export default function HomePage() {
                   href="#signin"
                   className="inline-flex items-center gap-3 rounded-xl border border-slate-700 px-5 py-3.5 text-sm font-semibold text-white transition hover:bg-slate-800/60"
                 >
-                  <FiZap
-                    className="h-5 w-5"
-                    style={{ color: "#5eead4" }}
-                  />
+                  <FiZap className="h-5 w-5" style={{ color: "#5eead4" }} />
                   <span className="flex flex-col items-start leading-tight">
                     <span className="text-[10px] font-medium uppercase tracking-wider text-slate-400">
                       Or open
@@ -890,8 +898,8 @@ export default function HomePage() {
               </div>
               <div className="mt-8 grid grid-cols-3 gap-3 text-center">
                 {[
-                  { icon: FiGlobe, label: "NSE Â· BSE Â· MCX" },
-                  { icon: FiClock, label: "Live Â· < 2s latency" },
+                  { icon: FiGlobe, label: "NSE · BSE · MCX" },
+                  { icon: FiClock, label: "Live · < 2s latency" },
                   { icon: FiHeadphones, label: "Email support" },
                 ].map(({ icon: Icon, label }) => (
                   <div
@@ -922,23 +930,26 @@ export default function HomePage() {
                 className="absolute -inset-8 rounded-[48px] opacity-70 blur-3xl"
                 style={{
                   background:
-                    "linear-gradient(135deg, rgba(14, 165, 233,0.35), rgba(59,130,246,0.25))",
+                    "linear-gradient(135deg, rgba(14,165,233,0.35), rgba(59,130,246,0.25))",
                 }}
               />
               <div className="relative overflow-hidden rounded-[36px] border border-slate-700 bg-slate-900 p-3 shadow-2xl">
-                <div className="overflow-hidden rounded-[28px] bg-white">
+                <div
+                  className="overflow-hidden rounded-[28px]"
+                  style={{ backgroundColor: D.panel }}
+                >
                   <div
                     className="flex items-center justify-between px-4 py-3 text-[10px] font-semibold"
-                    style={{ color: "var(--ax-text-primary)" }}
+                    style={{ color: D.text }}
                   >
                     <span>Markets</span>
                     <span
                       className="flex items-center gap-1"
-                      style={{ color: "var(--ax-primary)" }}
+                      style={{ color: D.primary }}
                     >
                       <span
                         className="inline-block h-1.5 w-1.5 animate-pulse rounded-full"
-                        style={{ backgroundColor: "var(--ax-primary)" }}
+                        style={{ backgroundColor: D.primary }}
                       />
                       LIVE
                     </span>
@@ -951,23 +962,24 @@ export default function HomePage() {
                         <div
                           key={t.symbol}
                           className="rounded-xl border p-2.5"
-                          style={{ borderColor: "var(--ax-border-light)" }}
+                          style={{ borderColor: D.border }}
                         >
-                          <p className="text-[10px] font-medium text-slate-500">
+                          <p
+                            className="text-[10px] font-medium"
+                            style={{ color: D.textSec }}
+                          >
                             {t.symbol}
                           </p>
                           <p
                             className="mt-1 text-sm font-bold"
-                            style={{ color: "var(--ax-text-primary)" }}
+                            style={{ color: D.text }}
                           >
                             {t.value}
                           </p>
                           <p
                             className="mt-0.5 text-[10px] font-semibold"
                             style={{
-                              color: positive
-                                ? "var(--ax-positive)"
-                                : "var(--ax-negative)",
+                              color: positive ? D.positive : D.negative,
                             }}
                           >
                             {positive ? "+" : ""}
@@ -988,9 +1000,10 @@ export default function HomePage() {
           <div
             className="relative overflow-hidden rounded-3xl border p-8 text-center md:p-12"
             style={{
-              borderColor: "var(--ax-border)",
+              borderColor: D.border,
               background:
-                "linear-gradient(135deg, rgba(14, 165, 233,0.06), rgba(59,130,246,0.04))",
+                "linear-gradient(135deg, rgba(14,165,233,0.08), rgba(59,130,246,0.05))",
+              backgroundColor: D.panel,
             }}
           >
             <svg
@@ -999,7 +1012,7 @@ export default function HomePage() {
               height="30"
               viewBox="0 0 40 30"
               className="mx-auto mb-6 opacity-20"
-              style={{ color: "var(--ax-primary)" }}
+              style={{ color: D.primary }}
             >
               <path
                 d="M9 30C3.4 30 0 26.6 0 21C0 15.4 3.4 12 9 12C10.4 12 11.7 12.3 13 12.7C12 5.8 7 0 0 0V4C4 4 7 7 7 11C7 11.3 7 11.7 6.9 12C4 13.5 2 16.5 2 21C2 26.6 5.4 30 9 30ZM31 30C25.4 30 22 26.6 22 21C22 15.4 25.4 12 31 12C32.4 12 33.7 12.3 35 12.7C34 5.8 29 0 22 0V4C26 4 29 7 29 11C29 11.3 29 11.7 28.9 12C26 13.5 24 16.5 24 21C24 26.6 27.4 30 31 30Z"
@@ -1008,29 +1021,23 @@ export default function HomePage() {
             </svg>
             <p
               className="mx-auto max-w-3xl text-xl font-medium leading-relaxed sm:text-2xl"
-              style={{ color: "var(--ax-text-primary)" }}
+              style={{ color: D.text }}
             >
-              Everything you need â€” charts, orders, funds, ledger â€” without
+              Everything you need — charts, orders, funds, ledger — without
               the noise. Clean on the web, equally clean on Android.
             </p>
             <div className="mt-6 flex items-center justify-center gap-3">
               <div
                 className="flex h-10 w-10 items-center justify-center rounded-full text-xs font-bold text-white"
-                style={{ backgroundColor: "var(--ax-primary)" }}
+                style={{ backgroundColor: D.primary }}
               >
-                AE
+                CS
               </div>
               <div className="text-left">
-                <p
-                  className="text-sm font-semibold"
-                  style={{ color: "var(--ax-text-primary)" }}
-                >
+                <p className="text-sm font-semibold" style={{ color: D.text }}>
                   Capstocks
                 </p>
-                <p
-                  className="text-xs"
-                  style={{ color: "var(--ax-text-secondary)" }}
-                >
+                <p className="text-xs" style={{ color: D.textSec }}>
                   Product mandate
                 </p>
               </div>
@@ -1046,13 +1053,13 @@ export default function HomePage() {
           <div className="mb-10 text-center">
             <p
               className="text-[11px] font-semibold uppercase tracking-[0.18em]"
-              style={{ color: "var(--ax-primary)" }}
+              style={{ color: D.primary }}
             >
               Frequently asked
             </p>
             <h2
               className="mt-2 text-3xl font-bold tracking-tight sm:text-4xl"
-              style={{ color: "var(--ax-text-primary)" }}
+              style={{ color: D.text }}
             >
               Good questions, quick answers.
             </h2>
@@ -1063,8 +1070,8 @@ export default function HomePage() {
               return (
                 <div
                   key={item.q}
-                  className="overflow-hidden rounded-2xl border bg-white transition"
-                  style={{ borderColor: "var(--ax-border)" }}
+                  className="overflow-hidden rounded-2xl border transition"
+                  style={{ borderColor: D.border, backgroundColor: D.panel }}
                 >
                   <button
                     type="button"
@@ -1073,16 +1080,13 @@ export default function HomePage() {
                   >
                     <span
                       className="text-sm font-semibold"
-                      style={{ color: "var(--ax-text-primary)" }}
+                      style={{ color: D.text }}
                     >
                       {item.q}
                     </span>
                     <span
                       className="flex h-7 w-7 items-center justify-center rounded-full border"
-                      style={{
-                        borderColor: "var(--ax-border)",
-                        color: "var(--ax-primary)",
-                      }}
+                      style={{ borderColor: D.border, color: D.primary }}
                     >
                       {open ? (
                         <FiMinus className="h-3.5 w-3.5" />
@@ -1094,7 +1098,7 @@ export default function HomePage() {
                   {open ? (
                     <p
                       className="px-5 pb-5 text-sm leading-relaxed"
-                      style={{ color: "var(--ax-text-secondary)" }}
+                      style={{ color: D.textSec }}
                     >
                       {item.a}
                     </p>
@@ -1110,33 +1114,33 @@ export default function HomePage() {
           <div
             className="overflow-hidden rounded-3xl border p-8 md:p-12"
             style={{
-              borderColor: "var(--ax-border)",
+              borderColor: D.border,
+              backgroundColor: D.panel,
               background:
-                "linear-gradient(135deg, rgba(14, 165, 233,0.08), rgba(59,130,246,0.06))",
+                "linear-gradient(135deg, rgba(14,165,233,0.10), rgba(59,130,246,0.07))",
             }}
           >
             <div className="flex flex-col items-start justify-between gap-6 md:flex-row md:items-center">
               <div className="max-w-xl">
                 <h3
                   className="text-2xl font-bold sm:text-3xl"
-                  style={{ color: "var(--ax-text-primary)" }}
+                  style={{ color: D.text }}
                 >
                   Ready to get started?
                 </h3>
-                <p
-                  className="mt-2 text-sm sm:text-base"
-                  style={{ color: "var(--ax-text-secondary)" }}
-                >
-                  Request an account â€” the Capstocks team reviews every
-                  request and emails credentials from {SUPPORT_EMAIL} once
-                  approved.
+                <p className="mt-2 text-sm sm:text-base" style={{ color: D.textSec }}>
+                  Request an account — the Capstocks team reviews every request
+                  and emails credentials from {SUPPORT_EMAIL} once approved.
                 </p>
               </div>
               <div className="flex flex-wrap gap-3">
                 <Link
                   href="/signup"
-                  className="inline-flex items-center gap-2 rounded-xl px-5 py-3 text-sm font-semibold text-white shadow-lg shadow-sky-500/20 transition hover:shadow-sky-500/30"
-                  style={{ backgroundColor: "var(--ax-primary)" }}
+                  className="inline-flex items-center gap-2 rounded-xl px-5 py-3 text-sm font-semibold text-white transition hover:scale-[1.02]"
+                  style={{
+                    backgroundColor: D.primary,
+                    boxShadow: "0 10px 30px -12px rgba(14,165,233,0.45)",
+                  }}
                 >
                   Request account
                   <FiArrowRight className="h-4 w-4" />
@@ -1145,9 +1149,9 @@ export default function HomePage() {
                   href="#signin"
                   className="inline-flex items-center gap-2 rounded-xl border px-5 py-3 text-sm font-semibold"
                   style={{
-                    borderColor: "var(--ax-border)",
-                    color: "var(--ax-text-primary)",
-                    backgroundColor: "#fff",
+                    borderColor: D.border,
+                    color: D.text,
+                    backgroundColor: D.panelMuted,
                   }}
                 >
                   Sign in
@@ -1161,36 +1165,27 @@ export default function HomePage() {
       {/* Footer */}
       <footer
         className="border-t"
-        style={{
-          borderColor: "var(--ax-border-light)",
-          backgroundColor: "#0f172a",
-          color: "#cbd5e1",
-        }}
+        style={{ borderColor: D.border, backgroundColor: "#060D1A", color: "#CBD5E1" }}
       >
         <div className="mx-auto max-w-6xl px-5 py-12 md:px-6">
+
+          {/* Top grid */}
           <div className="grid gap-10 md:grid-cols-4">
             <div className="md:col-span-2">
               <div className="flex items-center gap-3">
-                <div
-                  className="flex h-10 w-10 items-center justify-center rounded-xl text-sm font-bold text-white shadow-md shadow-sky-500/20"
-                  style={{ backgroundColor: "var(--ax-primary)" }}
-                >
-                  AE
-                </div>
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img
+                  src="/logo.png"
+                  alt="Capstocks"
+                  className="h-10 w-10 rounded-xl object-contain"
+                />
                 <div className="leading-none">
-                  <p
-                    className="text-[10px] font-semibold uppercase tracking-[0.18em]"
-                    style={{ color: "#5eead4" }}
-                  >
-                    Cap
-                  </p>
-                  <p className="mt-0.5 text-lg font-bold text-white">
-                    Stocks
-                  </p>
+                  <p className="text-[10px] font-semibold uppercase tracking-[0.18em]" style={{ color: "#5eead4" }}>Cap</p>
+                  <p className="mt-0.5 text-lg font-bold text-white">Stocks</p>
                 </div>
               </div>
               <p className="mt-5 max-w-md text-sm leading-relaxed text-slate-400">
-                Live markets, orders, mutual funds and a running ledger â€” on
+                Live markets, orders, mutual funds and a running ledger — on
                 web and Android, backed by the same data pipeline.
               </p>
               <a
@@ -1201,70 +1196,142 @@ export default function HomePage() {
                 {SUPPORT_EMAIL}
               </a>
             </div>
+
             <div>
-              <p className="text-xs font-semibold uppercase tracking-wider text-slate-300">
-                Product
-              </p>
+              <p className="text-xs font-semibold uppercase tracking-wider text-slate-300">Product</p>
               <ul className="mt-4 space-y-2 text-sm text-slate-400">
-                <li>
-                  <a href="#features" className="hover:text-white">
-                    Features
-                  </a>
-                </li>
-                <li>
-                  <a href="#how" className="hover:text-white">
-                    How it works
-                  </a>
-                </li>
-                <li>
-                  <a href="#security" className="hover:text-white">
-                    Security
-                  </a>
-                </li>
-                <li>
-                  <a href="#download" className="hover:text-white">
-                    Download APK
-                  </a>
-                </li>
+                <li><a href="#features" className="hover:text-white">Features</a></li>
+                <li><a href="#how" className="hover:text-white">How it works</a></li>
+                <li><a href="#security" className="hover:text-white">Security</a></li>
+                <li><a href="#download" className="hover:text-white">Download APK</a></li>
               </ul>
             </div>
+
             <div>
-              <p className="text-xs font-semibold uppercase tracking-wider text-slate-300">
-                Account
-              </p>
+              <p className="text-xs font-semibold uppercase tracking-wider text-slate-300">Account</p>
               <ul className="mt-4 space-y-2 text-sm text-slate-400">
-                <li>
-                  <a href="#signin" className="hover:text-white">
-                    Sign in
-                  </a>
-                </li>
-                <li>
-                  <Link href="/signup" className="hover:text-white">
-                    Request account
-                  </Link>
-                </li>
-                <li>
-                  <Link href="/admin" className="hover:text-white">
-                    Admin panel
-                  </Link>
-                </li>
-                <li>
-                  <a
-                    href={`mailto:${SUPPORT_EMAIL}`}
-                    className="hover:text-white"
-                  >
-                    Contact support
-                  </a>
-                </li>
+                <li><a href="#signin" className="hover:text-white">Sign in</a></li>
+                <li><Link href="/signup" className="hover:text-white">Request account</Link></li>
+                <li><Link href="/admin" className="hover:text-white">Admin panel</Link></li>
+                <li><a href={`mailto:${SUPPORT_EMAIL}`} className="hover:text-white">Contact support</a></li>
               </ul>
             </div>
           </div>
 
-          <div className="mt-10 flex flex-col items-start justify-between gap-2 border-t border-slate-800 pt-6 text-xs text-slate-500 md:flex-row md:items-center">
-            <p>Â© {new Date().getFullYear()} Capstocks. All rights reserved.</p>
-            <p>
+          {/* Office addresses */}
+          <div className="mt-10 rounded-2xl border border-slate-800 bg-slate-900/40 p-6">
+            <p className="text-[10px] font-semibold uppercase tracking-wider text-slate-400 mb-5">Our Offices</p>
+            <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-4 text-xs text-slate-400 leading-relaxed">
+
+              {/* Main / Head Office */}
+              <div className="space-y-0.5">
+                <p className="font-semibold text-slate-200 text-[11px] mb-1">Main Office</p>
+                <p className="text-[10px] uppercase tracking-wide text-slate-500 mb-1">Registered &amp; Corporate</p>
+                <p>
+                  Capstocks Towers,<br />
+                  Thakaraparambu Road,<br />
+                  Fort P.O, Trivandrum 695023<br />
+                </p>
+                <p className="mt-1">Ph: +91-471-4093333, 4093444</p>
+                <a href="mailto:cspl@capstocks.com" className="block hover:text-white">cspl@capstocks.com</a>
+                <div className="mt-2 pt-2 border-t border-slate-800">
+                  <p className="text-[10px] uppercase tracking-wide text-slate-500 mb-0.5">Annexe 1 — Legal</p>
+                  <p>&ldquo;Gokulam&rdquo;, SRA-62,<br />Sreekanteswaram, Fort P.O,<br />Vanchiyoor, Trivandrum 695023, Kerala</p>
+                </div>
+                <div className="mt-2 pt-2 border-t border-slate-800">
+                  <p className="text-[10px] uppercase tracking-wide text-slate-500 mb-0.5">Annexe 2</p>
+                  <p>Ananda Bhavan,<br />Thakaraparambu Road,<br />Fort P.O, Trivandrum 695023</p>
+                </div>
+              </div>
+
+              {/* Regional — South */}
+              <div className="space-y-3">
+                <div>
+                  <p className="font-semibold text-slate-200 text-[11px] mb-1">Ernakulam</p>
+                  <p>IInd Floor, 39/1728D, Tharakan House,<br />Pallimukku, Opp. Coir Board,<br />M.G. Road, Ernakulam 682016</p>
+                  <p className="mt-1">Ph: 0484–4031998, 4618558<br />Mob: 9847460187</p>
+                  <a href="mailto:kochi@capstocks.com" className="block hover:text-white">kochi@capstocks.com</a>
+                </div>
+                <div className="pt-2 border-t border-slate-800">
+                  <p className="font-semibold text-slate-200 text-[11px] mb-1">Thrissur</p>
+                  <p>Room No 41, 2nd Floor,<br />Suharsha Towers, Shornur Road,<br />Round North, Thrissur 680001</p>
+                  <p className="mt-1">Ph: 0487–2994553<br />Mob: 9349050226, 9847768658</p>
+                  <a href="mailto:thrissur@capstocks.com" className="block hover:text-white">thrissur@capstocks.com</a>
+                </div>
+              </div>
+
+              {/* Regional — North */}
+              <div className="space-y-3">
+                <div>
+                  <p className="font-semibold text-slate-200 text-[11px] mb-1">Calicut</p>
+                  <p>19/2096, Indus Avenue, C2 Part,<br />1st Floor, Kallai Road,<br />Calicut 673002</p>
+                  <p className="mt-1">Ph: 0495-4017734, 2301734, 2951734<br />Mob: 9387440171, 9387077723</p>
+                  <a href="mailto:calicutro@capstocks.com" className="block hover:text-white">calicutro@capstocks.com</a>
+                </div>
+              </div>
+
+              {/* Metro */}
+              <div className="space-y-3">
+                <div>
+                  <p className="font-semibold text-slate-200 text-[11px] mb-1">Chennai</p>
+                  <p>20/3 &amp; 4, Indiradevi Complex,<br />Gopalakrishna Street, T. Nagar,<br />Chennai 600017</p>
+                  <p className="mt-1">Ph: 044-28156920, 28156921<br />Mob: 9791802660, 9380010870</p>
+                  <a href="mailto:chennai@capstocks.com" className="block hover:text-white">chennai@capstocks.com</a>
+                </div>
+                <div className="pt-2 border-t border-slate-800">
+                  <p className="font-semibold text-slate-200 text-[11px] mb-1">Bangalore</p>
+                  <p>802, Ground Floor, 9th A-Main Road,<br />Indira Nagar 1st Stage,<br />Bangalore 560038</p>
+                  <p className="mt-1">Ph: 080-25287565 / 25287566<br />Mob: 9343686898, 9379585700</p>
+                  <a href="mailto:bangalore@capstocks.com" className="block hover:text-white">bangalore@capstocks.com</a>
+                </div>
+              </div>
+
+            </div>
+          </div>
+
+          {/* Regulatory info */}
+          <div className="mt-4 rounded-2xl border border-slate-800 bg-slate-900/40 p-6">
+            <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+              <div>
+                <p className="text-[10px] font-semibold uppercase tracking-wider text-slate-400 mb-2">Membership</p>
+                <p className="text-xs text-slate-400 leading-relaxed">
+                  <span className="text-slate-300 font-medium">Members in:</span> NSE, BSE, MCX<br />
+                  <span className="text-slate-300 font-medium">DP:</span> CDSL &nbsp;|&nbsp; Portfolio Manager<br />
+                  <span className="text-slate-300 font-medium">Helpdesk:</span>{" "}
+                  <a href="mailto:helpdesk@capstocks.com" className="hover:text-white">helpdesk@capstocks.com</a>
+                </p>
+              </div>
+              <div>
+                <p className="text-[10px] font-semibold uppercase tracking-wider text-slate-400 mb-2">SEBI Registrations</p>
+                <p className="text-xs text-slate-400 leading-relaxed">
+                  SEBI Reg (NSE, BSE &amp; MCX): <span className="text-slate-300">INZ000165931</span><br />
+                  DP: <span className="text-slate-300">IN-DP-CDSL-203-2003</span><br />
+                  PMS: <span className="text-slate-300">INP000001066</span><br />
+                  Research Entity: <span className="text-slate-300">INH2000003109</span><br />
+                  AMFI Reg No: <span className="text-slate-300">20149</span>
+                </p>
+              </div>
+              <div>
+                <p className="text-[10px] font-semibold uppercase tracking-wider text-slate-400 mb-2">Exchange &amp; Corporate</p>
+                <p className="text-xs text-slate-400 leading-relaxed">
+                  BSE Enlisted No: <span className="text-slate-300">5189</span><br />
+                  Member ID — NSE: <span className="text-slate-300">11674</span> | BSE: <span className="text-slate-300">3086</span> | MCX: <span className="text-slate-300">55990</span><br />
+                  CIN: <span className="text-slate-300">U67120KL2001PTC014680</span><br />
+                  <span className="text-slate-300 font-medium">Investor Grievances:</span>{" "}
+                  <a href="mailto:Customer.redressal@capstocksindia.com" className="hover:text-white break-all">
+                    Customer.redressal@capstocksindia.com
+                  </a>
+                </p>
+              </div>
+            </div>
+          </div>
+
+          {/* Bottom bar */}
+          <div className="mt-6 flex flex-col items-start justify-between gap-3 border-t border-slate-800 pt-6 text-xs text-slate-500 md:flex-row md:items-center">
+            <p>© {new Date().getFullYear()} Capstocks. All rights reserved.</p>
+            <p className="max-w-xl text-center md:text-right">
               Investments in securities market are subject to market risks.
-              Read all scheme related documents carefully.
+              Read all scheme related documents carefully before investing.
             </p>
           </div>
         </div>
@@ -1273,7 +1340,7 @@ export default function HomePage() {
   );
 }
 
-/* â”€â”€â”€â”€â”€â”€â”€â”€â”€ Presentational helpers â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+/* --------- Presentational helpers --------- */
 
 function Stat({ value, label }: { value: string; label: string }) {
   return (
@@ -1281,8 +1348,7 @@ function Stat({ value, label }: { value: string; label: string }) {
       <p
         className="text-3xl font-bold tracking-tight sm:text-4xl"
         style={{
-          backgroundImage:
-            "linear-gradient(90deg, var(--ax-primary), #3B82F6)",
+          backgroundImage: "linear-gradient(90deg, #0EA5E9, #3B82F6)",
           WebkitBackgroundClip: "text",
           backgroundClip: "text",
           color: "transparent",
@@ -1290,10 +1356,7 @@ function Stat({ value, label }: { value: string; label: string }) {
       >
         {value}
       </p>
-      <p
-        className="mt-1 text-xs font-medium"
-        style={{ color: "var(--ax-text-secondary)" }}
-      >
+      <p className="mt-1 text-xs font-medium" style={{ color: "#94A3B8" }}>
         {label}
       </p>
     </div>
@@ -1313,34 +1376,25 @@ function StepCard({
 }) {
   return (
     <div
-      className="relative overflow-hidden rounded-2xl border bg-white p-6"
-      style={{ borderColor: "var(--ax-border)" }}
+      className="relative overflow-hidden rounded-2xl border p-6"
+      style={{ borderColor: "#1E293B", backgroundColor: "#111827" }}
     >
       <span
         className="absolute right-4 top-4 text-4xl font-bold opacity-10"
-        style={{ color: "var(--ax-primary)" }}
+        style={{ color: "#0EA5E9" }}
       >
         {number}
       </span>
       <div
         className="flex h-11 w-11 items-center justify-center rounded-xl"
-        style={{
-          backgroundColor: "var(--ax-primary-muted)",
-          color: "var(--ax-primary)",
-        }}
+        style={{ backgroundColor: "rgba(14,165,233,0.12)", color: "#0EA5E9" }}
       >
         <Icon className="h-5 w-5" />
       </div>
-      <h3
-        className="mt-5 text-base font-semibold"
-        style={{ color: "var(--ax-text-primary)" }}
-      >
+      <h3 className="mt-5 text-base font-semibold" style={{ color: "#F1F5F9" }}>
         {title}
       </h3>
-      <p
-        className="mt-2 text-sm leading-relaxed"
-        style={{ color: "var(--ax-text-secondary)" }}
-      >
+      <p className="mt-2 text-sm leading-relaxed" style={{ color: "#94A3B8" }}>
         {text}
       </p>
     </div>
@@ -1358,36 +1412,27 @@ function FeatureCard({
 }) {
   return (
     <div
-      className="group relative overflow-hidden rounded-2xl border bg-white p-5 transition hover:-translate-y-0.5 hover:shadow-lg hover:shadow-slate-200/60"
-      style={{ borderColor: "var(--ax-border)" }}
+      className="group relative overflow-hidden rounded-2xl border p-5 transition hover:-translate-y-0.5 hover:shadow-lg"
+      style={{ borderColor: "#1E293B", backgroundColor: "#111827" }}
     >
       <div
         aria-hidden
         className="absolute -right-8 -top-8 h-24 w-24 rounded-full opacity-0 blur-2xl transition group-hover:opacity-100"
         style={{
           background:
-            "radial-gradient(closest-side, rgba(14, 165, 233,0.22), rgba(14, 165, 233,0))",
+            "radial-gradient(closest-side, rgba(14,165,233,0.22), rgba(14,165,233,0))",
         }}
       />
       <div
         className="mb-4 flex h-10 w-10 items-center justify-center rounded-xl"
-        style={{
-          backgroundColor: "var(--ax-primary-muted)",
-          color: "var(--ax-primary)",
-        }}
+        style={{ backgroundColor: "rgba(14,165,233,0.12)", color: "#0EA5E9" }}
       >
         <Icon className="h-5 w-5" />
       </div>
-      <h3
-        className="text-base font-semibold"
-        style={{ color: "var(--ax-text-primary)" }}
-      >
+      <h3 className="text-base font-semibold" style={{ color: "#F1F5F9" }}>
         {title}
       </h3>
-      <p
-        className="mt-1 text-sm leading-relaxed"
-        style={{ color: "var(--ax-text-secondary)" }}
-      >
+      <p className="mt-1 text-sm leading-relaxed" style={{ color: "#94A3B8" }}>
         {text}
       </p>
     </div>
@@ -1419,21 +1464,21 @@ function ProductRow({
         <span
           className="inline-flex items-center gap-2 rounded-full px-3 py-1 text-[11px] font-semibold"
           style={{
-            backgroundColor: "var(--ax-primary-muted)",
-            color: "var(--ax-primary)",
+            backgroundColor: "rgba(14,165,233,0.12)",
+            color: "#0EA5E9",
           }}
         >
           {badge}
         </span>
         <h3
           className="mt-4 text-2xl font-bold tracking-tight sm:text-3xl"
-          style={{ color: "var(--ax-text-primary)" }}
+          style={{ color: "#F1F5F9" }}
         >
           {title}
         </h3>
         <p
           className="mt-3 max-w-xl text-base leading-relaxed"
-          style={{ color: "var(--ax-text-secondary)" }}
+          style={{ color: "#94A3B8" }}
         >
           {text}
         </p>
@@ -1442,13 +1487,13 @@ function ProductRow({
             <li
               key={b}
               className="flex items-start gap-2.5 text-sm"
-              style={{ color: "var(--ax-text-primary)" }}
+              style={{ color: "#F1F5F9" }}
             >
               <span
                 className="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full"
                 style={{
-                  backgroundColor: "var(--ax-primary-muted)",
-                  color: "var(--ax-primary)",
+                  backgroundColor: "rgba(14,165,233,0.12)",
+                  color: "#0EA5E9",
                 }}
               >
                 <FiCheck className="h-3 w-3" strokeWidth={3} />
@@ -1474,64 +1519,52 @@ function SecurityBullet({
 }) {
   return (
     <div
-      className="rounded-2xl border bg-white p-4"
-      style={{ borderColor: "var(--ax-border)" }}
+      className="rounded-2xl border p-4"
+      style={{ borderColor: "#1E293B", backgroundColor: "#0F172A" }}
     >
       <div
         className="flex h-9 w-9 items-center justify-center rounded-xl"
-        style={{
-          backgroundColor: "var(--ax-primary-muted)",
-          color: "var(--ax-primary)",
-        }}
+        style={{ backgroundColor: "rgba(14,165,233,0.12)", color: "#0EA5E9" }}
       >
         <Icon className="h-4 w-4" />
       </div>
-      <p
-        className="mt-3 text-sm font-semibold"
-        style={{ color: "var(--ax-text-primary)" }}
-      >
+      <p className="mt-3 text-sm font-semibold" style={{ color: "#F1F5F9" }}>
         {title}
       </p>
-      <p
-        className="mt-1 text-xs leading-relaxed"
-        style={{ color: "var(--ax-text-secondary)" }}
-      >
+      <p className="mt-1 text-xs leading-relaxed" style={{ color: "#94A3B8" }}>
         {text}
       </p>
     </div>
   );
 }
 
-/* â”€â”€â”€â”€â”€â”€â”€â”€â”€ Decorative visuals â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+/* --------- Decorative visuals --------- */
 
 function ChartVisual() {
   return (
     <div
-      className="relative overflow-hidden rounded-3xl border bg-white p-4 shadow-xl shadow-slate-200/70"
-      style={{ borderColor: "var(--ax-border)" }}
+      className="relative overflow-hidden rounded-3xl border p-4 shadow-xl"
+      style={{ borderColor: "#1E293B", backgroundColor: "#111827" }}
     >
       <div className="flex items-center justify-between text-[11px]">
         <div className="flex items-center gap-1.5">
           <span
             className="inline-block h-1.5 w-1.5 animate-pulse rounded-full"
-            style={{ backgroundColor: "var(--ax-positive)" }}
+            style={{ backgroundColor: "#10B981" }}
           />
-          <span
-            className="font-bold tracking-wider"
-            style={{ color: "var(--ax-positive)" }}
-          >
-            LIVE Â· 5m
+          <span className="font-bold tracking-wider" style={{ color: "#10B981" }}>
+            LIVE · 5m
           </span>
         </div>
         <span
           className="rounded px-2 py-0.5 text-[10px] font-bold text-white"
-          style={{ backgroundColor: "var(--ax-positive)" }}
+          style={{ backgroundColor: "#10B981" }}
         >
           24,583.10
         </span>
       </div>
       <MockChart large />
-      <div className="mt-3 flex gap-1 rounded-xl bg-slate-50 p-1">
+      <div className="mt-3 flex gap-1 rounded-xl p-1" style={{ backgroundColor: "#0F172A" }}>
         {["1m", "5m", "15m", "1H", "1D", "1W"].map((t, i) => (
           <span
             key={t}
@@ -1539,11 +1572,11 @@ function ChartVisual() {
             style={
               i === 1
                 ? {
-                    backgroundColor: "#fff",
-                    color: "var(--ax-primary)",
-                    boxShadow: "0 1px 3px rgba(0,0,0,0.08)",
+                    backgroundColor: "#1E293B",
+                    color: "#0EA5E9",
+                    boxShadow: "0 1px 3px rgba(0,0,0,0.3)",
                   }
-                : { color: "var(--ax-text-secondary)" }
+                : { color: "#64748B" }
             }
           >
             {t}
@@ -1562,80 +1595,56 @@ function OrdersVisual() {
   ];
   return (
     <div
-      className="overflow-hidden rounded-3xl border bg-white shadow-xl shadow-slate-200/70"
-      style={{ borderColor: "var(--ax-border)" }}
+      className="overflow-hidden rounded-3xl border shadow-xl"
+      style={{ borderColor: "#1E293B", backgroundColor: "#111827" }}
     >
       <div
         className="flex items-center justify-between gap-4 border-l-4 p-5"
-        style={{
-          borderLeftColor: "var(--ax-positive)",
-        }}
+        style={{ borderLeftColor: "#10B981" }}
       >
         <div>
           <p
             className="text-[10px] font-semibold uppercase tracking-wider"
-            style={{ color: "var(--ax-text-secondary)" }}
+            style={{ color: "#64748B" }}
           >
             Total P&amp;L
           </p>
-          <p
-            className="mt-1 text-2xl font-bold"
-            style={{ color: "var(--ax-positive)" }}
-          >
-            +â‚¹1,350.00
+          <p className="mt-1 text-2xl font-bold" style={{ color: "#10B981" }}>
+            +₹1,350.00
           </p>
-          <p
-            className="text-xs font-semibold"
-            style={{ color: "var(--ax-positive)" }}
-          >
+          <p className="text-xs font-semibold" style={{ color: "#10B981" }}>
             +1.42%
           </p>
         </div>
         <div className="text-right text-xs">
-          <p style={{ color: "var(--ax-text-secondary)" }}>Invested</p>
-          <p
-            className="font-bold"
-            style={{ color: "var(--ax-text-primary)" }}
-          >
-            â‚¹95,120
+          <p style={{ color: "#64748B" }}>Invested</p>
+          <p className="font-bold" style={{ color: "#F1F5F9" }}>
+            ₹95,120
           </p>
-          <p className="mt-1" style={{ color: "var(--ax-text-secondary)" }}>
+          <p className="mt-1" style={{ color: "#64748B" }}>
             Current
           </p>
-          <p
-            className="font-bold"
-            style={{ color: "var(--ax-text-primary)" }}
-          >
-            â‚¹96,470
+          <p className="font-bold" style={{ color: "#F1F5F9" }}>
+            ₹96,470
           </p>
         </div>
       </div>
-      <div
-        className="flex gap-2 px-5 py-3"
-        style={{ borderTop: "1px solid var(--ax-border)" }}
-      >
+      <div className="flex gap-2 px-5 py-3" style={{ borderTop: "1px solid #1E293B" }}>
         {["Positions", "Holdings", "History"].map((t, i) => (
           <span
             key={t}
             className="rounded-full border px-3 py-1 text-[11px] font-semibold"
             style={
               i === 0
-                ? {
-                    backgroundColor: "var(--ax-primary)",
-                    borderColor: "var(--ax-primary)",
-                    color: "#fff",
-                  }
-                : {
-                    borderColor: "var(--ax-border)",
-                    color: "var(--ax-text-secondary)",
-                  }
+                ? { backgroundColor: "#0EA5E9", borderColor: "#0EA5E9", color: "#fff" }
+                : { borderColor: "#1E293B", color: "#64748B" }
             }
           >
             {t}
           </span>
         ))}
       </div>
-      <div className="divide-y" style={{ borderColor: "var(--ax-border)" }}>
+      <div className="divide-y" style={{ borderColor: "#1E293B" }}>
         {rows.map((r) => (
           <div
             key={r.sym}
@@ -1643,43 +1652,29 @@ function OrdersVisual() {
           >
             <div>
               <div className="flex items-center gap-2">
-                <p
-                  className="text-sm font-bold"
-                  style={{ color: "var(--ax-text-primary)" }}
-                >
+                <p className="text-sm font-bold" style={{ color: "#F1F5F9" }}>
                   {r.sym}
                 </p>
                 <span
                   className="rounded px-1.5 py-0.5 text-[9px] font-bold tracking-wider"
                   style={
                     r.side === "BUY"
-                      ? {
-                          backgroundColor: "rgba(6, 182, 212,0.12)",
-                          color: "var(--ax-positive)",
-                        }
-                      : {
-                          backgroundColor: "rgba(229,84,97,0.12)",
-                          color: "var(--ax-negative)",
-                        }
+                      ? { backgroundColor: "rgba(16,185,129,0.12)", color: "#10B981" }
+                      : { backgroundColor: "rgba(240,78,90,0.12)", color: "#F04E5A" }
                   }
                 >
                   {r.side}
                 </span>
               </div>
-              <p
-                className="mt-0.5 text-[11px]"
-                style={{ color: "var(--ax-text-secondary)" }}
-              >
+              <p className="mt-0.5 text-[11px]" style={{ color: "#64748B" }}>
                 Qty {r.qty}
               </p>
             </div>
             <p
               className="text-sm font-bold"
-              style={{
-                color: r.pnl >= 0 ? "var(--ax-positive)" : "var(--ax-negative)",
-              }}
+              style={{ color: r.pnl >= 0 ? "#10B981" : "#F04E5A" }}
             >
-              {r.pnl >= 0 ? "+" : ""}â‚¹{Math.abs(r.pnl).toLocaleString("en-IN")}
+              {r.pnl >= 0 ? "+" : ""}₹{Math.abs(r.pnl).toLocaleString("en-IN")}
               <span className="ml-1 text-[10px]">
                 ({r.pnl >= 0 ? "+" : ""}
                 {r.pct.toFixed(1)}%)
@@ -1694,81 +1689,63 @@ function OrdersVisual() {
 
 function MarketsVisual() {
   const items = [
-    { name: "NIFTY 50", value: "24,583.10", pct: 0.42, accent: "var(--ax-positive)" },
-    { name: "BANK NIFTY", value: "52,110.85", pct: 0.71, accent: "var(--ax-positive)" },
-    { name: "SENSEX", value: "80,920.15", pct: 0.38, accent: "var(--ax-positive)" },
-    { name: "GOLD", value: "74,210.00", pct: 0.95, accent: "var(--ax-positive)" },
-    { name: "SILVER", value: "89,345.00", pct: 1.34, accent: "var(--ax-positive)" },
-    { name: "CRUDE", value: "6,728.00", pct: -0.46, accent: "var(--ax-negative)" },
+    { name: "NIFTY 50", value: "24,583.10", pct: 0.42, pos: true },
+    { name: "BANK NIFTY", value: "52,110.85", pct: 0.71, pos: true },
+    { name: "SENSEX", value: "80,920.15", pct: 0.38, pos: true },
+    { name: "GOLD", value: "74,210.00", pct: 0.95, pos: true },
+    { name: "SILVER", value: "89,345.00", pct: 1.34, pos: true },
+    { name: "CRUDE", value: "6,728.00", pct: -0.46, pos: false },
   ];
   return (
     <div
-      className="rounded-3xl border bg-white p-5 shadow-xl shadow-slate-200/70"
-      style={{ borderColor: "var(--ax-border)" }}
+      className="rounded-3xl border p-5 shadow-xl"
+      style={{ borderColor: "#1E293B", backgroundColor: "#111827" }}
     >
       <div className="flex items-center justify-between">
-        <p
-          className="text-sm font-semibold"
-          style={{ color: "var(--ax-text-primary)" }}
-        >
+        <p className="text-sm font-semibold" style={{ color: "#F1F5F9" }}>
           Markets feed
         </p>
         <span
           className="flex items-center gap-1.5 text-[10px] font-bold"
-          style={{ color: "var(--ax-positive)" }}
+          style={{ color: "#10B981" }}
         >
           <span
             className="inline-block h-1.5 w-1.5 animate-pulse rounded-full"
-            style={{ backgroundColor: "var(--ax-positive)" }}
+            style={{ backgroundColor: "#10B981" }}
           />
           LIVE
         </span>
       </div>
       <div className="mt-4 grid grid-cols-2 gap-2.5 sm:grid-cols-3">
-        {items.map((it) => {
-          const positive = it.pct >= 0;
-          return (
-            <div
-              key={it.name}
-              className="rounded-xl border p-3"
-              style={{ borderColor: "var(--ax-border-light)" }}
+        {items.map((it) => (
+          <div
+            key={it.name}
+            className="rounded-xl border p-3"
+            style={{ borderColor: "#1E293B", backgroundColor: "#0F172A" }}
+          >
+            <p className="text-[10px] font-medium" style={{ color: "#64748B" }}>
+              {it.name}
+            </p>
+            <p className="mt-1 text-sm font-bold" style={{ color: "#F1F5F9" }}>
+              {it.value}
+            </p>
+            <p
+              className="mt-0.5 text-[10px] font-semibold"
+              style={{ color: it.pos ? "#10B981" : "#F04E5A" }}
             >
-              <p
-                className="text-[10px] font-medium"
-                style={{ color: "var(--ax-text-secondary)" }}
-              >
-                {it.name}
-              </p>
-              <p
-                className="mt-1 text-sm font-bold"
-                style={{ color: "var(--ax-text-primary)" }}
-              >
-                {it.value}
-              </p>
-              <p
-                className="mt-0.5 text-[10px] font-semibold"
-                style={{ color: it.accent }}
-              >
-                {positive ? "+" : ""}
-                {it.pct.toFixed(2)}%
-              </p>
-            </div>
-          );
-        })}
+              {it.pos ? "+" : ""}
+              {it.pct.toFixed(2)}%
+            </p>
+          </div>
+        ))}
       </div>
       <div
         className="mt-4 flex items-center justify-between border-t pt-3 text-[11px]"
-        style={{
-          borderColor: "var(--ax-border)",
-          color: "var(--ax-text-secondary)",
-        }}
+        style={{ borderColor: "#1E293B", color: "#64748B" }}
       >
         <span className="flex items-center gap-1">
-          <FiTrendingUp
-            className="h-3 w-3"
-            style={{ color: "var(--ax-positive)" }}
-          />
-          5 up Â· 1 down
+          <FiTrendingUp className="h-3 w-3" style={{ color: "#10B981" }} />
+          5 up · 1 down
         </span>
         <span>Updated a moment ago</span>
       </div>
@@ -1816,14 +1793,14 @@ function MockChart({ large = false }: { large?: boolean }) {
           x2={width}
           y1={height * p}
           y2={height * p}
-          stroke="rgba(15,23,42,0.05)"
+          stroke="rgba(255,255,255,0.04)"
           strokeDasharray="3,3"
         />
       ))}
       {candles.map((c, i) => {
         const x = i * cw + cw / 2;
         const up = c.c >= c.o;
-        const color = up ? "#06B6D4" : "#E55461";
+        const color = up ? "#10B981" : "#F04E5A";
         const bodyTop = scale(Math.max(c.o, c.c));
         const bodyH = Math.max(2, Math.abs(scale(c.o) - scale(c.c)));
         return (
@@ -1852,7 +1829,7 @@ function MockChart({ large = false }: { large?: boolean }) {
         x2={width}
         y1={scale(candles[candles.length - 1].c)}
         y2={scale(candles[candles.length - 1].c)}
-        stroke="#06B6D4"
+        stroke="#10B981"
         strokeDasharray="2,3"
         strokeOpacity={0.5}
       />
