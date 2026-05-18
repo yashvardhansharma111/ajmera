@@ -121,7 +121,7 @@ export default function OrdersPage() {
     return history;
   }, [activeFilter, positions, holdings, history]);
 
-  const { totalPnl = 0, totalInvested = 0, totalCurrent = 0 } = summary;
+  const { totalPnl = 0, totalInvested = 0 } = summary;
   const positive = totalPnl >= 0;
   const pnlPct = totalInvested > 0 ? (totalPnl / totalInvested) * 100 : 0;
 
@@ -213,36 +213,6 @@ export default function OrdersPage() {
               {pnlPct.toFixed(2)}%
             </p>
           ) : null}
-        </div>
-        <div className="flex gap-6 text-right">
-          <div>
-            <p
-              className="text-[10px] font-semibold uppercase"
-              style={{ color: "var(--ax-text-secondary)" }}
-            >
-              Invested
-            </p>
-            <p
-              className="mt-1 text-sm font-bold"
-              style={{ color: "var(--ax-text-primary)" }}
-            >
-              {formatINR(totalInvested)}
-            </p>
-          </div>
-          <div>
-            <p
-              className="text-[10px] font-semibold uppercase"
-              style={{ color: "var(--ax-text-secondary)" }}
-            >
-              Current
-            </p>
-            <p
-              className="mt-1 text-sm font-bold"
-              style={{ color: "var(--ax-text-primary)" }}
-            >
-              {formatINR(totalCurrent)}
-            </p>
-          </div>
         </div>
       </div>
 

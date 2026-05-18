@@ -1616,18 +1616,6 @@ function OrdersVisual() {
             +1.42%
           </p>
         </div>
-        <div className="text-right text-xs">
-          <p style={{ color: "#64748B" }}>Invested</p>
-          <p className="font-bold" style={{ color: "#F1F5F9" }}>
-            ₹95,120
-          </p>
-          <p className="mt-1" style={{ color: "#64748B" }}>
-            Current
-          </p>
-          <p className="font-bold" style={{ color: "#F1F5F9" }}>
-            ₹96,470
-          </p>
-        </div>
       </div>
       <div className="flex gap-2 px-5 py-3" style={{ borderTop: "1px solid #1E293B" }}>
         {["Positions", "Holdings", "History"].map((t, i) => (
