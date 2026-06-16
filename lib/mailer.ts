@@ -1,4 +1,4 @@
-import nodemailer from "nodemailer";
+import { Resend } from "resend";
 
 type SendClientCredentialsEmailParams = {
   to: string;
@@ -10,30 +10,10 @@ type SendClientCredentialsEmailParams = {
 export const SUPPORT_EMAIL = "support@capstock.in";
 export const FROM_ADDRESS = `"Capstocks" <${SUPPORT_EMAIL}>`;
 
-let transporter: nodemailer.Transporter | null = null;
-
-function getTransporter() {
-  if (transporter) {
-    return transporter;
-  }
-
-  const user = process.env.SMTP_USER;
-  const pass = process.env.SMTP_PASS;
-  const host = process.env.SMTP_HOST ?? "smtp.titan.email";
-  const port = parseInt(process.env.SMTP_PORT ?? "587", 10);
-
-  if (!user || !pass) {
-    throw new Error("SMTP credentials are not configured");
-  }
-
-  transporter = nodemailer.createTransport({
-    host,
-    port,
-    secure: true,
-    auth: { user, pass },
-  });
-
-  return transporter;
+function getResend() {
+  const apiKey = process.env.RESEND_API_KEY;
+  if (!apiKey) throw new Error("RESEND_API_KEY is not configured");
+  return new Resend(apiKey);
 }
 
 type SendOtpEmailParams = {
@@ -42,10 +22,6 @@ type SendOtpEmailParams = {
 };
 
 export async function sendOtpEmail({ to, otp }: SendOtpEmailParams) {
-  if (!process.env.SMTP_USER) {
-    throw new Error("SMTP sender is not configured");
-  }
-
   const html = `
     <div style="font-family:Arial,sans-serif;max-width:480px;margin:0 auto;padding:24px;background:#f8fafc;color:#0f172a">
       <div style="background:#ffffff;border:1px solid #e2e8f0;border-radius:16px;padding:28px;text-align:center">
@@ -74,15 +50,16 @@ export async function sendOtpEmail({ to, otp }: SendOtpEmailParams) {
     `If you didn't request this, reply to ${SUPPORT_EMAIL}.`,
   ].join("\n");
 
-  await getTransporter().sendMail({
+  const { error } = await getResend().emails.send({
     from: FROM_ADDRESS,
-    sender: SUPPORT_EMAIL,
-    replyTo: SUPPORT_EMAIL,
+    reply_to: SUPPORT_EMAIL,
     to,
     subject: `Capstocks verification code: ${otp}`,
     html,
     text,
   });
+
+  if (error) throw new Error(error.message);
 }
 
 export async function sendClientCredentialsEmail({
@@ -91,10 +68,6 @@ export async function sendClientCredentialsEmail({
   clientId,
   password,
 }: SendClientCredentialsEmailParams) {
-  if (!process.env.SMTP_USER) {
-    throw new Error("SMTP sender is not configured");
-  }
-
   const name = fullName?.trim() || "Client";
   const html = `
     <div style="font-family:Arial,sans-serif;max-width:560px;margin:0 auto;padding:24px;background:#f8fafc;color:#0f172a">
@@ -135,13 +108,14 @@ export async function sendClientCredentialsEmail({
     "— Team Capstocks",
   ].join("\n");
 
-  await getTransporter().sendMail({
+  const { error } = await getResend().emails.send({
     from: FROM_ADDRESS,
-    sender: SUPPORT_EMAIL,
-    replyTo: SUPPORT_EMAIL,
+    reply_to: SUPPORT_EMAIL,
     to,
     subject: "Your Capstocks login credentials",
     html,
     text,
   });
+
+  if (error) throw new Error(error.message);
 }
