@@ -52,7 +52,7 @@ export async function sendOtpEmail({ to, otp }: SendOtpEmailParams) {
 
   const { error } = await getResend().emails.send({
     from: FROM_ADDRESS,
-    reply_to: SUPPORT_EMAIL,
+    replyTo: SUPPORT_EMAIL,
     to,
     subject: `Capstocks verification code: ${otp}`,
     html,
@@ -110,7 +110,7 @@ export async function sendClientCredentialsEmail({
 
   const { error } = await getResend().emails.send({
     from: FROM_ADDRESS,
-    reply_to: SUPPORT_EMAIL,
+    replyTo: SUPPORT_EMAIL,
     to,
     subject: "Your Capstocks login credentials",
     html,
