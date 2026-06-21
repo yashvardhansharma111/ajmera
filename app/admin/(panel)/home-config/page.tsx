@@ -144,7 +144,7 @@ export default function AdminHomeConfigPage() {
           disabled={saving}
           className="rounded-lg bg-sky-600 px-4 py-2 text-sm font-medium text-white hover:bg-sky-700 disabled:opacity-50"
         >
-          {saving ? "Savingâ€¦" : "Save home config"}
+          {saving ? "Saving…" : "Save home config"}
         </button>
         <button
           type="button"

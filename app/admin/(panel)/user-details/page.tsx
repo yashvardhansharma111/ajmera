@@ -35,7 +35,7 @@ function InfoRow({ label, value }: { label: string; value?: string | number | nu
       <span className="w-40 shrink-0 text-xs font-medium uppercase text-slate-500">
         {label}
       </span>
-      <span className="text-sm text-slate-900">{value ?? "â€”"}</span>
+      <span className="text-sm text-slate-900">{value ?? "—"}</span>
     </div>
   );
 }
@@ -111,7 +111,7 @@ export default function AdminUserDetailsPage() {
   if (loading) {
     return (
       <div className="mx-auto max-w-3xl py-12 text-center text-slate-500">
-        Loadingâ€¦
+        Loading…
       </div>
     );
   }
@@ -162,7 +162,7 @@ export default function AdminUserDetailsPage() {
                 : "bg-amber-100 text-amber-800"
           }`}
         >
-          {user.status || "â€”"}
+          {user.status || "—"}
         </span>
         <span className="text-xs text-slate-500">
           ID: <code className="rounded bg-slate-100 px-1 text-[11px]">{user._id}</code>

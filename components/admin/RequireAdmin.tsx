@@ -61,7 +61,7 @@ export function RequireAdmin({ children }: { children: React.ReactNode }) {
       <div className="flex min-h-screen items-center justify-center bg-slate-100">
         <div className="text-center">
           <div className="mx-auto h-8 w-8 animate-spin rounded-full border-2 border-sky-600 border-t-transparent" />
-          <p className="mt-3 text-sm text-slate-600">Checking admin sessionâ€¦</p>
+          <p className="mt-3 text-sm text-slate-600">Checking admin session…</p>
         </div>
       </div>
     );

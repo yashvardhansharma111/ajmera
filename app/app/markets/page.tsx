@@ -47,7 +47,7 @@ export default function MarketsPage() {
       (i) => (i.tvSymbol || i.symbol || i.name) === selectedKey,
     ) || indices[0] || null;
   // Prefer Yahoo-style `symbol` (keys in the resolver map) over `tvSymbol`
-  // so "^NSEI" â†’ NIFTY/NSE, "GC=F" â†’ GOLD/MCX, etc.
+  // so "^NSEI" â†' NIFTY/NSE, "GC=F" â†' GOLD/MCX, etc.
   const chartTarget = resolveChartSymbol(
     selectedIndex?.symbol || selectedIndex?.tvSymbol,
   );
@@ -219,7 +219,7 @@ export default function MarketsPage() {
                 className="text-xs"
                 style={{ color: "var(--ax-text-secondary)" }}
               >
-                {chartTarget.exchange}:{chartTarget.symbol} Â· Live
+                {chartTarget.exchange}:{chartTarget.symbol} · Live
               </p>
             </div>
           </div>
@@ -427,7 +427,7 @@ export default function MarketsPage() {
                   color: "var(--ax-primary)",
                 }}
               >
-                Sort: {commoditySort === "name" ? "Aâ€“Z" : "Movement"}
+                Sort: {commoditySort === "name" ? "A—Z" : "Movement"}
               </button>
             </div>
             <div className="mt-4 grid gap-3 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
@@ -556,8 +556,8 @@ export default function MarketsPage() {
               return (
                 <Row
                   key={item.id || item.symbol}
-                  title={item.symbol || "â€”"}
-                  subtitle={`Qty ${item.qty || 0} Â· Avg ${formatINR(item.avgPrice)}`}
+                  title={item.symbol || "—"}
+                  subtitle={`Qty ${item.qty || 0} · Avg ${formatINR(item.avgPrice)}`}
                   value={`${positive ? "+" : ""}${formatINR(pnl)}`}
                   valueColor={
                     positive ? "var(--ax-positive)" : "var(--ax-negative)"
@@ -578,8 +578,8 @@ export default function MarketsPage() {
               return (
                 <Row
                   key={item.id || item.symbol}
-                  title={`${item.symbol || "â€”"} Â· ${item.side || ""}`}
-                  subtitle={`Qty ${item.qty || 0} Â· LTP ${formatINR(item.ltp)}`}
+                  title={`${item.symbol || "—"} · ${item.side || ""}`}
+                  subtitle={`Qty ${item.qty || 0} · LTP ${formatINR(item.ltp)}`}
                   value={`${positive ? "+" : ""}${formatINR(pnl)}`}
                   valueColor={
                     positive ? "var(--ax-positive)" : "var(--ax-negative)"
@@ -597,8 +597,8 @@ export default function MarketsPage() {
             openOrders.map((item) => (
               <Row
                 key={item.id || `${item.symbol}-${item.time}`}
-                title={`${item.symbol || "â€”"} Â· ${item.side || ""}`}
-                subtitle={`${item.segmentKey || ""} Â· ${item.time || "Live"}`}
+                title={`${item.symbol || "—"} · ${item.side || ""}`}
+                subtitle={`${item.segmentKey || ""} · ${item.time || "Live"}`}
                 value={formatINR(item.orderPrice ?? item.ltp)}
               />
             ))

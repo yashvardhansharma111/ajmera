@@ -158,7 +158,7 @@ export function RealPositionsPanel({ scopeUserId }: { scopeUserId: string }) {
           disabled={loading}
           className="rounded-lg border border-slate-200 px-3 py-1.5 text-xs font-medium text-slate-700 hover:bg-slate-50 disabled:opacity-50"
         >
-          {loading ? "Loadingâ€¦" : "Refresh"}
+          {loading ? "Loading…" : "Refresh"}
         </button>
       </div>
 
@@ -192,7 +192,7 @@ export function RealPositionsPanel({ scopeUserId }: { scopeUserId: string }) {
             {!data ? (
               <tr>
                 <td colSpan={8} className="px-3 py-6 text-center text-slate-500">
-                  Loadingâ€¦
+                  Loading…
                 </td>
               </tr>
             ) : data.positions.length === 0 ? (
@@ -282,7 +282,7 @@ export function RealPositionsPanel({ scopeUserId }: { scopeUserId: string }) {
                         onClick={() => void save(p.kind, p.id, draft)}
                         className="rounded bg-sky-600 px-2 py-1 text-[11px] font-medium text-white hover:bg-sky-700 disabled:opacity-50"
                       >
-                        {busy ? "â€¦" : "Save"}
+                        {busy ? "…" : "Save"}
                       </button>
                     </td>
                   </tr>
@@ -404,7 +404,7 @@ export function RealPositionsPanel({ scopeUserId }: { scopeUserId: string }) {
                         onClick={() => void save(t.kind, t.id, draft)}
                         className="rounded bg-sky-600 px-2 py-1 text-[11px] font-medium text-white hover:bg-sky-700 disabled:opacity-50"
                       >
-                        {busy ? "â€¦" : "Save"}
+                        {busy ? "…" : "Save"}
                       </button>
                     </td>
                   </tr>

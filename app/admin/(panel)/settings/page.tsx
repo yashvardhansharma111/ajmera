@@ -125,7 +125,7 @@ export default function AdminSettingsPage() {
       <section className="mt-8 space-y-4 rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
         <h3 className="font-medium text-slate-900">QR image</h3>
         <p className="text-xs text-slate-500">
-          Status: {hasImage ? "Image stored in database" : "No image â€” using URL below if set"}
+          Status: {hasImage ? "Image stored in database" : "No image — using URL below if set"}
         </p>
         <div className="flex flex-wrap items-center gap-3">
           <input
@@ -157,7 +157,7 @@ export default function AdminSettingsPage() {
         <h3 className="font-medium text-slate-900">QR URL (fallback)</h3>
         <input
           className="w-full rounded-lg border border-slate-200 px-3 py-2 text-sm"
-          placeholder="https://â€¦"
+          placeholder="https://…"
           value={qrUrl}
           onChange={(e) => setQrUrl(e.target.value)}
         />
@@ -191,7 +191,7 @@ export default function AdminSettingsPage() {
         onClick={() => void saveMeta()}
         className="mt-6 rounded-lg bg-slate-900 px-6 py-2.5 text-sm font-semibold text-white hover:bg-slate-800 disabled:opacity-50"
       >
-        {saving ? "Savingâ€¦" : "Save payment settings"}
+        {saving ? "Saving…" : "Save payment settings"}
       </button>
     </div>
   );

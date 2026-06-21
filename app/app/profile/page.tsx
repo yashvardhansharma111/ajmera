@@ -24,7 +24,7 @@ const ROWS = [
     key: "funds",
     label: "Funds",
     icon: FiDollarSign,
-    href: null as string | null,
+    href: "/app/funds",
   },
   {
     key: "support",
@@ -81,10 +81,10 @@ export default function ProfilePage() {
           value={formatINR(user?.tradingBalance ?? 0)}
         />
         <InfoTile label="Margin" value={formatINR(user?.margin ?? 0)} />
-        <InfoTile label="Client ID" value={user?.clientId || "â€”"} />
+        <InfoTile label="Client ID" value={user?.clientId || "—"} />
         <InfoTile
           label="Status"
-          value={user?.status || "â€”"}
+          value={user?.status || "—"}
           tone={
             user?.status === "active"
               ? "positive"

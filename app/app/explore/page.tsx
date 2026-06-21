@@ -98,7 +98,7 @@ export default function ExplorePage() {
           <input
             value={query}
             onChange={(e) => setQuery(e.target.value)}
-            placeholder="Search stocks, options, ETFsâ€¦"
+            placeholder="Search stocks, options, ETFs…"
             className="w-full bg-transparent text-sm outline-none"
             style={{ color: "var(--ax-text-primary)" }}
           />
@@ -122,7 +122,7 @@ export default function ExplorePage() {
               className="px-4 py-6 text-center text-sm"
               style={{ color: "var(--ax-text-secondary)" }}
             >
-              Searchingâ€¦
+              Searching…
             </p>
           ) : results.length ? (
             results.map((r, i) => (

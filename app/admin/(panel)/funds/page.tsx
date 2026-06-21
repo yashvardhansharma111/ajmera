@@ -97,7 +97,7 @@ export default function AdminFundsPage() {
               {loading ? (
                 <tr>
                   <td colSpan={7} className="px-3 py-8 text-center text-slate-500">
-                    Loadingâ€¦
+                    Loading…
                   </td>
                 </tr>
               ) : requests.length === 0 ? (
@@ -118,7 +118,7 @@ export default function AdminFundsPage() {
                       â‚¹{r.amount?.toLocaleString("en-IN")}
                     </td>
                     <td className="px-3 py-3 max-w-[180px] truncate text-slate-600">
-                      {r.reference || "â€”"}
+                      {r.reference || "—"}
                     </td>
                     <td className="px-3 py-3">
                       <span
@@ -136,7 +136,7 @@ export default function AdminFundsPage() {
                     <td className="px-3 py-3 text-xs text-slate-500">
                       {r.createdAt
                         ? new Date(r.createdAt).toLocaleString()
-                        : "â€”"}
+                        : "—"}
                     </td>
                     <td className="px-3 py-3">
                       {r.status === "pending" ? (
@@ -157,7 +157,7 @@ export default function AdminFundsPage() {
                           </button>
                         </div>
                       ) : (
-                        <span className="text-xs text-slate-400">â€”</span>
+                        <span className="text-xs text-slate-400">—</span>
                       )}
                     </td>
                   </tr>

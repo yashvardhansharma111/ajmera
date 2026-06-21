@@ -26,8 +26,8 @@ type Range = {
 };
 
 const RANGES: Range[] = [
-  { key: "1m", label: "1m", interval: "ONE_MINUTE", range: "1D", refreshMs: 3000 },
-  { key: "5m", label: "5m", interval: "FIVE_MINUTE", range: "1D", refreshMs: 5000 },
+  { key: "1m", label: "1m", interval: "ONE_MINUTE", range: "3D", refreshMs: 3000 },
+  { key: "5m", label: "5m", interval: "FIVE_MINUTE", range: "5D", refreshMs: 5000 },
   { key: "15m", label: "15m", interval: "FIFTEEN_MINUTE", range: "1W", refreshMs: 10000 },
   { key: "1H", label: "1H", interval: "ONE_HOUR", range: "1M", refreshMs: 15000 },
   { key: "1D", label: "1D", interval: "ONE_DAY", range: "3M", refreshMs: 30000 },
@@ -151,7 +151,7 @@ export function CandleChart({
     [cleanSymbol, exchange, onPriceUpdate],
   );
 
-  // Initial + range change â†’ full reload
+  // Initial + range change â†' full reload
   useEffect(() => {
     void loadData(range, false);
   }, [range, loadData]);
@@ -169,7 +169,7 @@ export function CandleChart({
     };
   }, [range, loadData]);
 
-  // Live LTP stream â€” updates last candle's close/high/low between refetches.
+  // Live LTP stream — updates last candle's close/high/low between refetches.
   const onPriceUpdateRef = useRef(onPriceUpdate);
   useEffect(() => {
     onPriceUpdateRef.current = onPriceUpdate;
@@ -227,12 +227,13 @@ export function CandleChart({
     [width, height],
   );
 
-  // Viewport â€” show up to last 60 candles by default; shrink if fewer.
+  // Viewport — show more candles for short timeframes so they don't look blocky.
   const visibleCandles = useMemo(() => {
     if (!candles?.length) return [] as Candle[];
-    const take = Math.min(60, candles.length);
+    const maxVisible = ["1m", "5m"].includes(rangeKey) ? 120 : 60;
+    const take = Math.min(maxVisible, candles.length);
     return candles.slice(candles.length - take);
-  }, [candles]);
+  }, [candles, rangeKey]);
 
   const { priceMin, priceMax, volMax } = useMemo(() => {
     if (!visibleCandles.length)
@@ -352,7 +353,7 @@ export function CandleChart({
               className="text-[10px] font-bold tracking-wider"
               style={{ color: POSITIVE }}
             >
-              LIVE Â· {range.label}
+              LIVE · {range.label}
             </span>
             {lastUpdated > 0 ? (
               <span
@@ -380,7 +381,7 @@ export function CandleChart({
             className="flex h-full items-center justify-center text-xs"
             style={{ color: "var(--ax-text-secondary)" }}
           >
-            Loading chartâ€¦
+            Loading chart…
           </div>
         ) : error && !candles?.length ? (
           <div className="flex h-full flex-col items-center justify-center gap-2 px-4 text-center">
@@ -481,8 +482,8 @@ function renderChart({
 }) {
   if (!candles.length || candleWidth <= 0) return null;
 
-  const bodyWidth = Math.max(1, candleWidth * 0.6);
-  const wickWidth = Math.max(0.5, candleWidth * 0.08);
+  const bodyWidth = Math.max(1, Math.min(12, candleWidth * 0.6));
+  const wickWidth = Math.max(0.5, Math.min(1.5, candleWidth * 0.08));
   const halfBody = bodyWidth / 2;
   const baseY = drawArea.y + drawArea.h;
 

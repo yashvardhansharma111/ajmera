@@ -2,7 +2,7 @@
 
 import { useCallback, useEffect, useState } from "react";
 import Link from "next/link";
-import { FiArrowLeft, FiDownload } from "react-icons/fi";
+import { FiArrowLeft, FiDownload, FiBook } from "react-icons/fi";
 import { formatINR } from "@/components/app/format";
 
 type Order = {
@@ -42,7 +42,7 @@ function formatDate(value?: string) {
     minute: "2-digit",
     hour12: false,
   });
-  return `${day} ${month} ${d.getFullYear()} Â· ${time}`;
+  return `${day} ${month} ${d.getFullYear()} · ${time}`;
 }
 
 export default function LedgerPage() {
@@ -155,11 +155,11 @@ export default function LedgerPage() {
       {loading ? (
         <div className="ax-card px-4 py-12 text-center text-sm"
           style={{ color: "var(--ax-text-secondary)" }}>
-          Loading your ledgerâ€¦
+          Loading your ledger…
         </div>
       ) : orders.length === 0 ? (
         <div className="ax-card flex flex-col items-center gap-2 px-4 py-12 text-center">
-          <span className="text-4xl">ðŸ“’</span>
+          <FiBook className="h-10 w-10 opacity-30" style={{ color: "var(--ax-text-secondary)" }} />
           <p
             className="text-sm font-bold"
             style={{ color: "var(--ax-text-primary)" }}
@@ -192,14 +192,14 @@ export default function LedgerPage() {
                       className="text-sm font-bold"
                       style={{ color: "var(--ax-text-primary)" }}
                     >
-                      {o.symbol || "â€”"}
+                      {o.symbol || "—"}
                     </p>
                     <p
                       className="mt-0.5 text-xs"
                       style={{ color: "var(--ax-text-secondary)" }}
                     >
                       {o.exchange || "NSE"}
-                      {o.productType ? ` Â· ${o.productType}` : ""}
+                      {o.productType ? ` · ${o.productType}` : ""}
                     </p>
                   </div>
                   <span
@@ -267,7 +267,7 @@ export default function LedgerPage() {
         style={{ color: "var(--ax-text-secondary)" }}
       >
         <FiDownload className="h-4 w-4" />
-        {downloading ? "Exportingâ€¦" : "Download Ledger CSV"}
+        {downloading ? "Exporting…" : "Download Ledger CSV"}
       </button>
     </div>
   );

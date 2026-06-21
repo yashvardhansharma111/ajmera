@@ -100,8 +100,8 @@ export default function AdminUsersPage() {
       });
       setMsg(
         data.emailSent
-          ? `Credentials emailed to ${data.email || "user"}. Client ID: ${data.clientId || "â€”"}`
-          : `${data.emailWarning || "Saved, but email could not be sent."} Client ID: ${data.clientId || "â€”"}`,
+          ? `Credentials emailed to ${data.email || "user"}. Client ID: ${data.clientId || "—"}`
+          : `${data.emailWarning || "Saved, but email could not be sent."} Client ID: ${data.clientId || "—"}`,
       );
       setPasswordDrafts((p) => ({ ...p, [userId]: "" }));
       setClientIdDrafts((p) => ({ ...p, [userId]: "" }));
@@ -182,7 +182,7 @@ export default function AdminUsersPage() {
     <div className="mx-auto max-w-7xl">
       <h2 className="text-lg font-semibold text-slate-900">Users &amp; clients</h2>
       <p className="mt-1 text-sm text-slate-600">
-        Assign Client ID &amp; password in one step â€” credentials are emailed automatically.
+        Assign Client ID &amp; password in one step — credentials are emailed automatically.
       </p>
 
       {msg ? (
@@ -221,7 +221,7 @@ export default function AdminUsersPage() {
           disabled={creating}
           className="mt-4 rounded-lg bg-sky-600 px-4 py-2 text-sm font-medium text-white hover:bg-sky-700 disabled:opacity-50"
         >
-          {creating ? "Creatingâ€¦" : "Create client"}
+          {creating ? "Creating…" : "Create client"}
         </button>
       </section>
 
@@ -248,7 +248,7 @@ export default function AdminUsersPage() {
               {loading ? (
                 <tr>
                   <td colSpan={9} className="px-3 py-8 text-center text-slate-500">
-                    Loadingâ€¦
+                    Loading…
                   </td>
                 </tr>
               ) : (
@@ -261,13 +261,13 @@ export default function AdminUsersPage() {
                           href={`/admin/user-details?id=${u._id}`}
                           className="text-sky-600 hover:underline"
                         >
-                          {u.fullName || "â€”"}
+                          {u.fullName || "—"}
                         </Link>
                       </td>
-                      <td className="px-3 py-3 text-slate-700">{u.clientId || "â€”"}</td>
-                      <td className="px-3 py-3 text-slate-600">{u.email || "â€”"}</td>
+                      <td className="px-3 py-3 text-slate-700">{u.clientId || "—"}</td>
+                      <td className="px-3 py-3 text-slate-600">{u.email || "—"}</td>
                       <td className="px-3 py-3 font-mono text-xs text-slate-600">
-                        {u.adminPlainPassword || "â€”"}
+                        {u.adminPlainPassword || "—"}
                       </td>
                       <td className="px-3 py-3">
                         <span
@@ -279,7 +279,7 @@ export default function AdminUsersPage() {
                                 : "bg-amber-100 text-amber-800"
                           }`}
                         >
-                          {u.status || "â€”"}
+                          {u.status || "—"}
                         </span>
                       </td>
                       <td className="px-3 py-3 text-right tabular-nums text-slate-800">
@@ -313,7 +313,7 @@ export default function AdminUsersPage() {
                             className="whitespace-nowrap rounded bg-sky-600 px-2 py-1 text-xs font-medium text-white hover:bg-sky-700 disabled:opacity-50"
                             onClick={() => void activateUser(u._id)}
                           >
-                            {busy ? "â€¦" : "Activate & Email"}
+                            {busy ? "…" : "Activate & Email"}
                           </button>
                         </div>
                       </td>
@@ -365,7 +365,7 @@ export default function AdminUsersPage() {
                               className="rounded bg-sky-100 px-2 py-0.5 text-xs text-sky-800 disabled:opacity-50"
                               onClick={() => void resendCredentials(u._id)}
                             >
-                              {resending[u._id] ? "Sendingâ€¦" : "Resend Mail"}
+                              {resending[u._id] ? "Sending…" : "Resend Mail"}
                             </button>
                           </div>
                         </div>

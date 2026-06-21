@@ -1,7 +1,7 @@
 ﻿"use client";
 
 import { useCallback, useEffect, useMemo, useState } from "react";
-import { FiDownload, FiRefreshCw, FiTrendingDown, FiTrendingUp } from "react-icons/fi";
+import { FiDownload, FiRefreshCw, FiTrendingDown, FiTrendingUp, FiBarChart2 } from "react-icons/fi";
 import { formatINR } from "@/components/app/format";
 
 const FILTERS = [
@@ -281,7 +281,7 @@ export default function OrdersPage() {
             const ltp = Number(item.ltp ?? item.price ?? 0);
             const title = isOption
               ? `${item.symbol || ""} ${item.strikePrice ?? ""}`
-              : item.symbol || "â€”";
+              : item.symbol || "—";
             return (
               <div
                 key={item.id || `${item.symbol}-${idx}`}
@@ -312,9 +312,9 @@ export default function OrdersPage() {
                       style={{ color: "var(--ax-text-secondary)" }}
                     >
                       {item.exchange || "NSE"}
-                      {isOption && item.expiry ? ` Â· ${item.expiry}` : ""}
+                      {isOption && item.expiry ? ` · ${item.expiry}` : ""}
                       {!isOption && item.productType
-                        ? ` Â· ${item.productType}`
+                        ? ` · ${item.productType}`
                         : ""}
                     </p>
                   </div>
@@ -376,7 +376,7 @@ export default function OrdersPage() {
         </div>
       ) : !loading ? (
         <div className="ax-card flex flex-col items-center gap-2 px-4 py-12 text-center">
-          <span className="text-4xl">ðŸ“Š</span>
+          <FiBarChart2 className="h-10 w-10 opacity-30" style={{ color: "var(--ax-text-secondary)" }} />
           <p
             className="text-sm font-bold"
             style={{ color: "var(--ax-text-primary)" }}
@@ -397,7 +397,7 @@ export default function OrdersPage() {
       ) : (
         <div className="ax-card animate-pulse px-4 py-12 text-center text-sm"
           style={{ color: "var(--ax-text-secondary)" }}>
-          Loading your tradesâ€¦
+          Loading your trades…
         </div>
       )}
 
@@ -409,7 +409,7 @@ export default function OrdersPage() {
         style={{ color: "var(--ax-text-secondary)" }}
       >
         <FiDownload className="h-4 w-4" />
-        {downloading ? "Exportingâ€¦" : "Download Ledger CSV"}
+        {downloading ? "Exporting…" : "Download Ledger CSV"}
       </button>
     </div>
   );

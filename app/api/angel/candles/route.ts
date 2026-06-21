@@ -11,6 +11,8 @@ import { INDEX_TOKENS, resolveTradable } from "@/lib/angelone/instruments";
 
 const RANGE_MAP: Record<string, { days: number; interval: string }> = {
   "1D": { days: 1, interval: "FIVE_MINUTE" },
+  "3D": { days: 3, interval: "ONE_MINUTE" },
+  "5D": { days: 5, interval: "FIVE_MINUTE" },
   "1W": { days: 7, interval: "FIFTEEN_MINUTE" },
   "1M": { days: 30, interval: "ONE_DAY" },
   "3M": { days: 90, interval: "ONE_DAY" },
@@ -65,8 +67,8 @@ export async function GET(request: NextRequest) {
       toDate.getTime() - rangeConfig.days * 24 * 60 * 60 * 1000,
     );
 
-    // Intraday start-of-day: MCX opens 09:00, NSE/BSE open 09:15.
-    // Never clamp `toDate` — Angel returns whatever's traded so far (MCX runs till 23:30).
+    // For single-day intraday: clamp fromDate to market open so we get today's candles only.
+    // Multi-day ranges (3D, 5D, 1W…) use a rolling window — no clamping needed.
     if (range === "1D") {
       const mcx = resolvedExchange === "MCX";
       fromDate.setHours(mcx ? 9 : 9, mcx ? 0 : 15, 0, 0);

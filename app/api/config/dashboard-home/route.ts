@@ -358,7 +358,7 @@ type YahooChartResponse = {
   };
 };
 
-/** v7 quote — same day change / % as Yahoo’s UI (avoids chart API baseline bugs). */
+/** v7 quote — same day change / % as Yahoo's UI (avoids chart API baseline bugs). */
 type YahooQuoteV7Response = {
   quoteResponse?: {
     result?: Array<{

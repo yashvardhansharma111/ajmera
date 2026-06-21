@@ -259,7 +259,7 @@ export default function SignupPage() {
 
             <UploadField
               label="Signature"
-              helper="Required Â· image only"
+              helper="Required · image only"
               accept="image/*"
               file={signature}
               onFile={setSignature}
@@ -315,7 +315,7 @@ export default function SignupPage() {
                   color: "var(--ax-positive)",
                 }}
               >
-                âœ“ Email and phone verified â€” you can submit the form.
+                ✓ Email and phone verified — you can submit the form.
               </div>
             )}
 
@@ -349,7 +349,7 @@ export default function SignupPage() {
               style={{ backgroundColor: "var(--ax-primary)" }}
             >
               {busy
-                ? "Submittingâ€¦"
+                ? "Submitting…"
                 : !emailVerified || !phoneVerified
                   ? "Verify email & phone first"
                   : "Submit request"}
@@ -387,7 +387,7 @@ function StatusChip({ done, label }: { done: boolean; label: string }) {
             }
       }
     >
-      {done ? `âœ“ ${label} verified` : `â€¢ ${label} pending`}
+      {done ? `✓ ${label} verified` : `• ${label} pending`}
     </span>
   );
 }
@@ -432,7 +432,7 @@ function VerifyField({
   }, [cooldown]);
 
   useEffect(() => {
-    // Upstream value changed â€” invalidate any pending OTP UI.
+    // Upstream value changed — invalidate any pending OTP UI.
     setSent(false);
     setOtp("");
     setErr(null);
@@ -553,7 +553,7 @@ function VerifyField({
             }}
           >
             {sending
-              ? "Sendingâ€¦"
+              ? "Sending…"
               : cooldown > 0
                 ? `${cooldown}s`
                 : sent
@@ -588,7 +588,7 @@ function VerifyField({
             className="whitespace-nowrap rounded-xl px-4 text-xs font-bold text-white transition disabled:opacity-60"
             style={{ backgroundColor: "var(--ax-primary)" }}
           >
-            {verifying ? "Verifyingâ€¦" : "Verify"}
+            {verifying ? "Verifying…" : "Verify"}
           </button>
         </div>
       ) : null}

@@ -259,13 +259,13 @@ export default function AdminOrdersPage() {
       >
         {scopeUserId.trim() ? (
           <>
-            <strong>Editing this user only</strong> â€” paste/save the MongoDB <code className="rounded bg-white/80 px-1">_id</code>{" "}
+            <strong>Editing this user only</strong> — paste/save the MongoDB <code className="rounded bg-white/80 px-1">_id</code>{" "}
             above. The app merges these rows with <strong>global</strong> trades (per-user replaces same{" "}
             <code className="rounded bg-white/80 px-1">id</code>).
           </>
         ) : (
           <>
-            <strong>Global scope</strong> â€” these trades show for every account unless a user has their own scoped list.
+            <strong>Global scope</strong> — these trades show for every account unless a user has their own scoped list.
           </>
         )}
       </div>
@@ -286,7 +286,7 @@ export default function AdminOrdersPage() {
           disabled={saving}
           className="rounded-lg bg-sky-600 px-4 py-2 text-sm font-medium text-white hover:bg-sky-700 disabled:opacity-50"
         >
-          {saving ? "Savingâ€¦" : "Save"}
+          {saving ? "Saving…" : "Save"}
         </button>
         <button
           type="button"
@@ -409,7 +409,7 @@ export default function AdminOrdersPage() {
             <span className="rounded bg-sky-600 px-1 py-0.5 text-[9px] font-bold uppercase tracking-wider text-white">
               Live
             </span>{" "}
-            are real positions placed from the user&apos;s app. They&apos;re shown read-only â€”
+            are real positions placed from the user&apos;s app. They&apos;re shown read-only —
             edits or removals on these rows are <strong>not saved</strong>.
           </p>
         ) : null}
@@ -458,7 +458,7 @@ export default function AdminOrdersPage() {
                     className={`border-b border-slate-100 ${
                       live ? "bg-sky-50/60" : "hover:bg-slate-50/80"
                     }`}
-                    title={live ? "Live position from the user's app â€” read-only (changes won't be saved)" : undefined}
+                    title={live ? "Live position from the user's app — read-only (changes won't be saved)" : undefined}
                   >
                     <td className="px-1.5 py-1 align-top">
                       <div className="flex items-center gap-1">

@@ -55,7 +55,7 @@ export default function AdminLoginPage() {
                 value={pin}
                 onChange={(e) => setPin(e.target.value)}
                 className="w-full rounded-xl border border-slate-200 px-4 py-3 text-slate-900 outline-none ring-sky-500/30 focus:border-sky-500 focus:ring-4"
-                placeholder="â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢"
+                placeholder="••••••••"
                 autoComplete="off"
               />
               <button
@@ -75,7 +75,7 @@ export default function AdminLoginPage() {
             disabled={loading || !pin}
             className="w-full rounded-xl bg-sky-600 py-3 text-sm font-semibold text-white shadow-sm transition hover:bg-sky-700 disabled:opacity-50"
           >
-            {loading ? "Signing inâ€¦" : "Continue"}
+            {loading ? "Signing in…" : "Continue"}
           </button>
         </form>
       </div>

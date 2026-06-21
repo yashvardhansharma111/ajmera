@@ -76,14 +76,14 @@ export function ScopeUserBar({
           <span className="font-semibold text-slate-900">
             {selected?.fullName || selected?.clientId || "User"}{" "}
             <span className="font-normal text-slate-500">
-              {selected?.email ? `Â· ${selected.email}` : null}
+              {selected?.email ? `· ${selected.email}` : null}
             </span>
             <code className="ml-2 rounded bg-slate-100 px-1.5 py-0.5 text-xs text-slate-700">
               {scopeUserId}
             </code>
           </span>
         ) : (
-          <span className="font-semibold text-sky-800">Global â€” all users</span>
+          <span className="font-semibold text-sky-800">Global — all users</span>
         )}
       </div>
 
@@ -95,13 +95,13 @@ export function ScopeUserBar({
         value={search}
         onChange={(e) => setSearch(e.target.value)}
         className="mt-1 block w-full max-w-xl rounded-lg border border-slate-200 px-3 py-2 text-sm text-slate-900 placeholder:text-slate-400 focus:border-sky-500 focus:outline-none focus:ring-1 focus:ring-sky-500"
-        placeholder="Name, email, client ID, or paste MongoDB _idâ€¦"
+        placeholder="Name, email, client ID, or paste MongoDB _id…"
         autoComplete="off"
       />
       <p className="mt-1 text-[11px] text-slate-400">
         {debouncedSearch.trim()
           ? `Showing ${filtered.length} match(es)${users.length > LIST_CAP ? " (refine if list is long)" : ""}.`
-          : `Showing up to ${LIST_CAP} users â€” type to narrow.`}
+          : `Showing up to ${LIST_CAP} users — type to narrow.`}
       </p>
 
       <ul className="mt-3 max-h-64 overflow-y-auto rounded-lg border border-slate-200 bg-slate-50/80">
@@ -140,7 +140,7 @@ export function ScopeUserBar({
                     {title}
                   </span>
                   <span className="mt-0.5 text-xs text-slate-500">
-                    {[u.clientId, u.email].filter(Boolean).join(" Â· ") || "â€”"}
+                    {[u.clientId, u.email].filter(Boolean).join(" · ") || "—"}
                   </span>
                   <code className="mt-1 text-[10px] text-slate-400">{u._id}</code>
                 </button>
