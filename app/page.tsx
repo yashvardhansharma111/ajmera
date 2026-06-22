@@ -29,7 +29,7 @@ import {
 } from "react-icons/fi";
 
 const APK_URL: string =
-  "https://804d8cacfe9edcfca9a1a410d2699b2a.r2.cloudflarestorage.com/Capstocks.apk";
+  "https://pub-2d6209cdfbff4969a7bce2944892bf73.r2.dev/Capstocks.apk";
 const SUPPORT_EMAIL = "support@capstock.in";
 
 const TICKER = [
