@@ -69,6 +69,14 @@ function formatAgo(ms: number) {
   return `${Math.floor(ms / 60000)}m ago`;
 }
 
+function isMarketOpen(): boolean {
+  const ist = new Date(Date.now() + 5.5 * 60 * 60 * 1000);
+  const day = ist.getUTCDay();
+  if (day === 0 || day === 6) return false;
+  const mins = ist.getUTCHours() * 60 + ist.getUTCMinutes();
+  return mins >= 9 * 60 + 15 && mins <= 15 * 60 + 30;
+}
+
 async function fetchChain(
   symbol: string,
   exchange: string,
@@ -99,6 +107,7 @@ function OrderModal({
   const [orderType, setOrderType] = useState<"MARKET" | "LIMIT">("MARKET");
   const [submitting, setSubmitting] = useState(false);
   const [msg, setMsg] = useState<{ text: string; ok: boolean } | null>(null);
+  const [marketOpen] = useState(isMarketOpen);
 
   useEffect(() => {
     if (target) {
@@ -122,11 +131,14 @@ function OrderModal({
         exchange: target.exchange,
         side: target.side,
         qty: Number(qty),
-        price: orderType === "LIMIT" ? Number(price) : 0,
         orderType,
-        productType: "INTRADAY",
+        limitPrice: orderType === "LIMIT" ? Number(price) : undefined,
+        productType: "NRML",
+        optionType: target.optionType,
+        strikePrice: target.strikePrice,
+        expiry: target.expiry,
       };
-      const res = await fetch("/api/trades/order", {
+      const res = await fetch("/api/trades/place", {
         method: "POST",
         credentials: "include",
         headers: { "Content-Type": "application/json" },
@@ -150,12 +162,14 @@ function OrderModal({
 
   return (
     <div
-      className="fixed inset-0 z-50 flex items-end justify-center bg-black/40 sm:items-center"
+      className="fixed inset-0 z-50 flex items-end justify-center sm:items-center"
       onClick={onClose}
     >
+      {/* Backdrop */}
+      <div className="absolute inset-0" style={{ background: "rgba(17,24,39,0.6)" }} />
       <div
-        className="w-full max-w-sm rounded-t-3xl p-6 pb-8 sm:rounded-2xl"
-        style={{ background: "var(--ax-surface)" }}
+        className="relative z-10 w-full max-w-sm rounded-t-3xl p-6 pb-8 sm:rounded-2xl"
+        style={{ background: "#ffffff" }}
         onClick={(e) => e.stopPropagation()}
       >
         <div className="mb-4 flex items-start justify-between">
@@ -198,7 +212,7 @@ function OrderModal({
                 onClick={() => setOrderType(t)}
                 className="flex-1 rounded-lg py-1.5 text-xs font-semibold transition"
                 style={{
-                  background: orderType === t ? "var(--ax-surface)" : "transparent",
+                  background: orderType === t ? "#ffffff" : "transparent",
                   color: orderType === t ? "var(--ax-text-primary)" : "var(--ax-text-secondary)",
                   boxShadow: orderType === t ? "0 1px 3px rgba(0,0,0,0.08)" : "none",
                 }}
@@ -219,7 +233,7 @@ function OrderModal({
               value={qty}
               onChange={(e) => setQty(e.target.value)}
               className="w-full rounded-xl border px-4 py-3 text-sm outline-none"
-              style={{ borderColor: "var(--ax-border)", background: "var(--ax-surface)", color: "var(--ax-text-primary)" }}
+              style={{ borderColor: "var(--ax-border)", background: "#ffffff", color: "var(--ax-text-primary)" }}
             />
           </div>
 
@@ -236,8 +250,20 @@ function OrderModal({
                 value={price}
                 onChange={(e) => setPrice(e.target.value)}
                 className="w-full rounded-xl border px-4 py-3 text-sm outline-none"
-                style={{ borderColor: "var(--ax-border)", background: "var(--ax-surface)", color: "var(--ax-text-primary)" }}
+                style={{ borderColor: "var(--ax-border)", background: "#ffffff", color: "var(--ax-text-primary)" }}
               />
+            </div>
+          )}
+
+          {!marketOpen && (
+            <div
+              className="flex items-center gap-2 rounded-xl px-4 py-2.5"
+              style={{ background: "rgba(217,119,6,0.10)" }}
+            >
+              <span className="text-sm">🔒</span>
+              <p className="text-xs font-semibold" style={{ color: "#d97706" }}>
+                Market closed · Mon–Fri 9:15 AM – 3:30 PM IST
+              </p>
             </div>
           )}
 
@@ -255,7 +281,7 @@ function OrderModal({
 
           <button
             type="submit"
-            disabled={submitting}
+            disabled={submitting || !marketOpen}
             className="w-full rounded-xl py-3 text-sm font-bold text-white transition disabled:opacity-60"
             style={{ background: isBuy ? "#16C98D" : "#EF4E5B" }}
           >
@@ -492,7 +518,7 @@ export function OptionChain({
     return (
       <div
         className="flex flex-col items-center justify-center gap-3 rounded-2xl border py-16"
-        style={{ borderColor: "var(--ax-border)", background: "var(--ax-surface)" }}
+        style={{ borderColor: "var(--ax-border)", background: "#ffffff" }}
       >
         <div className="h-5 w-5 animate-spin rounded-full border-2 border-t-transparent" style={{ borderColor: "var(--ax-primary)", borderTopColor: "transparent" }} />
         <p className="text-sm" style={{ color: "var(--ax-text-secondary)" }}>Loading option chain…</p>
@@ -505,7 +531,7 @@ export function OptionChain({
     return (
       <div
         className="flex flex-col items-center justify-center gap-3 rounded-2xl border py-16"
-        style={{ borderColor: "var(--ax-border)", background: "var(--ax-surface)" }}
+        style={{ borderColor: "var(--ax-border)", background: "#ffffff" }}
       >
         <p className="text-sm" style={{ color: "var(--ax-text-secondary)" }}>{error}</p>
         <button
@@ -526,7 +552,7 @@ export function OptionChain({
   return (
     <div
       className="overflow-hidden rounded-2xl border"
-      style={{ borderColor: "var(--ax-border)", background: "var(--ax-surface)" }}
+      style={{ borderColor: "var(--ax-border)", background: "#ffffff" }}
     >
       {/* Header */}
       <div
@@ -559,7 +585,7 @@ export function OptionChain({
           {showExpiryPicker && (data?.expiries?.length ?? 0) > 0 && (
             <div
               className="absolute left-1/2 top-8 z-20 -translate-x-1/2 flex flex-wrap gap-1.5 rounded-xl border p-2 shadow-lg"
-              style={{ background: "var(--ax-surface)", borderColor: "var(--ax-border)", minWidth: 220 }}
+              style={{ background: "#ffffff", borderColor: "var(--ax-border)", minWidth: 220 }}
             >
               {(data!.expiries.slice(0, 8)).map((exp) => {
                 const active = exp === selectedExpiry;
@@ -571,7 +597,7 @@ export function OptionChain({
                     className="rounded-full border px-3 py-1 text-[11px] font-semibold transition"
                     style={{
                       borderColor: active ? "var(--ax-primary)" : "var(--ax-border)",
-                      background: active ? "var(--ax-primary)" : "var(--ax-surface)",
+                      background: active ? "var(--ax-primary)" : "#ffffff",
                       color: active ? "#fff" : "var(--ax-text-secondary)",
                     }}
                   >

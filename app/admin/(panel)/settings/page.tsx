@@ -22,6 +22,7 @@ export default function AdminSettingsPage() {
   });
   const [hasImage, setHasImage] = useState(false);
   const [file, setFile] = useState<File | null>(null);
+  const [filePreview, setFilePreview] = useState<string | null>(null);
   const [msg, setMsg] = useState<string | null>(null);
   const [err, setErr] = useState<string | null>(null);
   const [saving, setSaving] = useState(false);
@@ -87,6 +88,7 @@ export default function AdminSettingsPage() {
       if (!res.ok) throw new Error(data.message || "Upload failed");
       setMsg("QR image uploaded.");
       setFile(null);
+      setFilePreview(null);
       await load();
     } catch (e) {
       setErr(e instanceof Error ? e.message : "Upload failed");
@@ -125,28 +127,55 @@ export default function AdminSettingsPage() {
       <section className="mt-8 space-y-4 rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
         <h3 className="font-medium text-slate-900">QR image</h3>
         <p className="text-xs text-slate-500">
-          Status: {hasImage ? "Image stored in database" : "No image — using URL below if set"}
+          Status: {hasImage ? "✓ Image stored in database" : "No image — using URL below if set"}
         </p>
+
+        {/* Live preview */}
+        {hasImage && (
+          <div className="flex flex-col items-start gap-2">
+            <p className="text-xs font-medium text-slate-500">Current QR preview:</p>
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src={`/api/config/fund-qr-image?_=${Date.now()}`}
+              alt="Current QR"
+              className="h-40 w-40 rounded-xl border border-slate-200 object-contain"
+            />
+          </div>
+        )}
+
         <div className="flex flex-wrap items-center gap-3">
           <input
             type="file"
             accept="image/*"
-            onChange={(e) => setFile(e.target.files?.[0] || null)}
+            onChange={(e) => {
+              const f = e.target.files?.[0] || null;
+              setFile(f);
+              if (f) {
+                const url = URL.createObjectURL(f);
+                setFilePreview(url);
+              } else {
+                setFilePreview(null);
+              }
+            }}
             className="text-sm"
           />
+          {filePreview && (
+            // eslint-disable-next-line @next/next/no-img-element
+            <img src={filePreview} alt="Selected" className="h-16 w-16 rounded-lg border border-slate-200 object-contain" />
+          )}
           <button
             type="button"
             disabled={!file || saving}
             onClick={() => void uploadImage()}
             className="rounded-lg bg-sky-600 px-4 py-2 text-sm font-medium text-white disabled:opacity-50"
           >
-            Upload
+            {file ? `Upload "${file.name}"` : "Upload"}
           </button>
           <button
             type="button"
             disabled={!hasImage || saving}
             onClick={() => void deleteImage()}
-            className="rounded-lg border border-rose-200 px-4 py-2 text-sm text-rose-700"
+            className="rounded-lg border border-rose-200 px-4 py-2 text-sm text-rose-700 disabled:opacity-40"
           >
             Delete image
           </button>

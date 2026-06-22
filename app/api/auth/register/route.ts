@@ -109,13 +109,8 @@ export async function POST(request: Request) {
       ? signatureUrlRaw
       : null;
 
-    if (!documents.signature && !signatureUploadThingUrl) {
-      return NextResponse.json(
-        { message: "Signature image is required" },
-        { status: 400 },
-      );
-    }
-
+    // Signature, bank docs, and supporting documents are optional.
+    // If a signatureUrl was supplied it must be a valid UploadThing URL.
     if (signatureUrlRaw && !signatureUploadThingUrl) {
       return NextResponse.json(
         { message: "Invalid signature URL" },

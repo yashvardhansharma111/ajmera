@@ -1,11 +1,13 @@
 ﻿"use client";
 
 import { useMemo, useState } from "react";
+import Link from "next/link";
 import {
   FiBarChart2,
   FiBell,
   FiCalendar,
   FiLayers,
+  FiMaximize2,
   FiRefreshCw,
   FiSearch,
   FiTrendingUp,
@@ -207,7 +209,7 @@ export default function MarketsPage() {
 
       {selectedIndex ? (
         <div>
-          <div className="mb-2 flex items-end justify-between">
+          <div className="mb-2 flex items-center justify-between">
             <div>
               <p
                 className="text-sm font-semibold"
@@ -216,12 +218,33 @@ export default function MarketsPage() {
                 {selectedIndex.name}
               </p>
               <p
-                className="text-xs"
+                className="flex items-center gap-1 text-xs"
                 style={{ color: "var(--ax-text-secondary)" }}
               >
-                {chartTarget.exchange}:{chartTarget.symbol} · Live
+                {chartTarget.exchange}:{chartTarget.symbol}
+                <span className="mx-0.5" style={{ color: "#CBD5E1" }}>·</span>
+                <span className="h-1.5 w-1.5 rounded-full inline-block" style={{ background: "var(--ax-positive)" }} />
+                <span style={{ color: "var(--ax-positive)" }}>Live</span>
               </p>
             </div>
+            {/* Full details link — opens stock detail with Chart/Option Chain/Details tabs */}
+            <Link
+              href={buildStockHref(
+                selectedIndex.symbol || selectedIndex.tvSymbol || "NIFTY",
+                selectedIndex.name || "",
+                Number(selectedIndex.value || 0),
+                Number(selectedIndex.changePct || 0),
+              )}
+              className="flex items-center gap-1.5 rounded-xl border px-3 py-1.5 text-xs font-semibold transition hover:opacity-80"
+              style={{
+                borderColor: "var(--ax-border)",
+                color: "var(--ax-primary)",
+                background: "var(--ax-primary-muted)",
+              }}
+            >
+              <FiMaximize2 className="h-3 w-3" />
+              Full details
+            </Link>
           </div>
           <CandleChart
             key={`${chartTarget.exchange}-${chartTarget.symbol}`}

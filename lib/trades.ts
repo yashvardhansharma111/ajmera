@@ -224,6 +224,16 @@ function brokerageEstimate(totalValue: number, productType: string, isOption: bo
   return 0;
 }
 
+/** Returns true if current IST time is within NSE/BSE trading hours (Mon–Fri 9:15–15:30). */
+function isMarketOpen(): boolean {
+  const utc = Date.now();
+  const ist = new Date(utc + 5.5 * 60 * 60 * 1000);
+  const day = ist.getUTCDay(); // 0=Sun, 6=Sat in shifted time
+  if (day === 0 || day === 6) return false;
+  const mins = ist.getUTCHours() * 60 + ist.getUTCMinutes();
+  return mins >= 9 * 60 + 15 && mins <= 15 * 60 + 30;
+}
+
 /** Place a paper trade order with balance deduction/credit. */
 export async function placeOrder(params: {
   userId: string;
@@ -253,6 +263,7 @@ export async function placeOrder(params: {
   } = params;
 
   if (qty <= 0) throw new Error("Quantity must be positive");
+  if (!isMarketOpen()) throw new Error("Market is closed. Trading hours are Mon–Fri 9:15 AM – 3:30 PM IST.");
 
   // Get real market price
   let executionPrice: number;

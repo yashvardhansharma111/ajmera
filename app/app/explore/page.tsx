@@ -125,28 +125,41 @@ export default function ExplorePage() {
               Searching…
             </p>
           ) : results.length ? (
-            results.map((r, i) => (
-              <div
-                key={`${r.symbol}-${i}`}
-                className="flex items-center justify-between border-t px-4 py-3 first:border-t-0"
-                style={{ borderColor: "var(--ax-border)" }}
-              >
-                <div>
-                  <p
-                    className="text-sm font-medium"
-                    style={{ color: "var(--ax-text-primary)" }}
+            results.map((r, i) => {
+              const sym = r.tradingsymbol || r.symbol;
+              const exch = r.exch_seg || "NSE";
+              const p = new URLSearchParams({ exchange: exch, name: r.name || sym, price: "0", changePct: "0" });
+              const href = `/app/stock/${encodeURIComponent(sym)}?${p.toString()}`;
+              return (
+                <a
+                  key={`${r.symbol}-${i}`}
+                  href={href}
+                  className="flex items-center justify-between border-t px-4 py-3 first:border-t-0 hover:bg-slate-50 transition"
+                  style={{ borderColor: "var(--ax-border)" }}
+                >
+                  <div className="flex-1 min-w-0">
+                    <p
+                      className="text-sm font-medium"
+                      style={{ color: "var(--ax-text-primary)" }}
+                    >
+                      {sym}
+                    </p>
+                    <p
+                      className="mt-0.5 text-xs truncate"
+                      style={{ color: "var(--ax-text-secondary)" }}
+                    >
+                      {r.name || ""} {exch ? `· ${exch}` : ""}
+                    </p>
+                  </div>
+                  <span
+                    className="ml-3 rounded px-2 py-0.5 text-[10px] font-semibold"
+                    style={{ background: "var(--ax-primary-muted)", color: "var(--ax-primary)" }}
                   >
-                    {r.tradingsymbol || r.symbol}
-                  </p>
-                  <p
-                    className="mt-0.5 text-xs"
-                    style={{ color: "var(--ax-text-secondary)" }}
-                  >
-                    {r.name || r.exch_seg || ""}
-                  </p>
-                </div>
-              </div>
-            ))
+                    {exch}
+                  </span>
+                </a>
+              );
+            })
           ) : (
             <p
               className="px-4 py-6 text-center text-sm"

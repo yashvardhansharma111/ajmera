@@ -60,7 +60,7 @@ function BankTransferCard({ meta }: { meta: PaymentMeta | null }) {
   return (
     <div
       className="rounded-2xl border p-4"
-      style={{ borderColor: "var(--ax-border)", background: "var(--ax-surface)" }}
+      style={{ borderColor: "var(--ax-border)", background: "#ffffff" }}
     >
       <div className="mb-3 flex items-center gap-2.5">
         <div
@@ -123,7 +123,7 @@ function RequestCard({ item }: { item: FundRequest }) {
   return (
     <div
       className="w-40 shrink-0 rounded-2xl border p-3"
-      style={{ borderColor: "var(--ax-border)", background: "var(--ax-surface)" }}
+      style={{ borderColor: "var(--ax-border)", background: "#ffffff" }}
     >
       <div className="mb-2 flex items-center justify-between">
         <span
@@ -245,7 +245,7 @@ export default function FundsPage() {
       {/* Balance + Margin card */}
       <div
         className="rounded-2xl border p-5"
-        style={{ borderColor: "var(--ax-border)", background: "var(--ax-surface)" }}
+        style={{ borderColor: "var(--ax-border)", background: "#ffffff" }}
       >
         <div className="flex items-start gap-4">
           <div className="flex-1">
@@ -302,7 +302,7 @@ export default function FundsPage() {
             onClick={() => { setMode(t); setMsg(null); }}
             className="flex-1 rounded-xl py-2.5 text-sm font-semibold transition"
             style={{
-              background: mode === t ? "var(--ax-surface)" : "transparent",
+              background: mode === t ? "#ffffff" : "transparent",
               color: mode === t ? "var(--ax-text-primary)" : "var(--ax-text-secondary)",
               boxShadow: mode === t ? "0 1px 4px rgba(0,0,0,0.08)" : "none",
             }}
@@ -316,7 +316,7 @@ export default function FundsPage() {
       <form
         onSubmit={(e) => void handleSubmit(e)}
         className="overflow-hidden rounded-2xl border"
-        style={{ borderColor: "var(--ax-border)", background: "var(--ax-surface)" }}
+        style={{ borderColor: "var(--ax-border)", background: "#ffffff" }}
       >
         <div className="px-4 py-4">
           <p className="mb-2 text-[10px] font-semibold uppercase tracking-widest" style={{ color: "var(--ax-text-secondary)" }}>
@@ -369,7 +369,7 @@ export default function FundsPage() {
           {/* Pay by UPI section */}
           <div
             className="rounded-2xl border p-4"
-            style={{ borderColor: "var(--ax-border)", background: "var(--ax-surface)" }}
+            style={{ borderColor: "var(--ax-border)", background: "#ffffff" }}
           >
             <div className="mb-3 flex items-center gap-2.5">
               <div
@@ -428,7 +428,7 @@ export default function FundsPage() {
           {fundConfig?.qrUrl ? (
             <div
               className="flex flex-col items-center rounded-2xl border p-4"
-              style={{ borderColor: "var(--ax-border)", background: "var(--ax-surface)" }}
+              style={{ borderColor: "var(--ax-border)", background: "#ffffff" }}
             >
               <p className="mb-4 text-sm font-semibold" style={{ color: "var(--ax-text-primary)" }}>
                 Scan &amp; Pay
@@ -444,7 +444,7 @@ export default function FundsPage() {
       ) : (
         <div
           className="rounded-2xl border p-4"
-          style={{ borderColor: "var(--ax-border)", background: "var(--ax-surface)" }}
+          style={{ borderColor: "var(--ax-border)", background: "#ffffff" }}
         >
           <p className="mb-4 text-sm leading-relaxed" style={{ color: "var(--ax-text-secondary)" }}>
             Withdrawal requests are sent to the admin panel and processed manually after verification.
