@@ -30,10 +30,10 @@ type FundRequest = {
 };
 
 const UPI_APPS = [
-  { key: "gpay", label: "Google Pay" },
-  { key: "phonepe", label: "PhonePe" },
-  { key: "paytm", label: "Paytm" },
-  { key: "other", label: "Other UPI app" },
+  { key: "gpay",    label: "Google Pay",    color: "#4285F4", initial: "G" },
+  { key: "phonepe", label: "PhonePe",       color: "#5F259F", initial: "P" },
+  { key: "paytm",   label: "Paytm",         color: "#002970", initial: "P" },
+  { key: "other",   label: "Other UPI app", color: "#64748B", initial: "U" },
 ];
 
 async function apiFetch<T>(path: string, init?: RequestInit): Promise<T> {
@@ -494,23 +494,23 @@ export default function FundsPage() {
       {/* UPI App chooser modal */}
       {chooserOpen ? (
         <div
-          className="fixed inset-0 z-50 flex items-end justify-center bg-black/40"
+          className="fixed inset-0 z-50 flex items-end justify-center bg-black/60"
           onClick={() => setChooserOpen(false)}
         >
           <div
-            className="w-full max-w-sm rounded-t-3xl p-6 pb-10"
-            style={{ background: "var(--ax-surface)" }}
+            className="w-full rounded-t-3xl p-6 pb-10 sm:max-w-md"
+            style={{ background: "#ffffff" }}
             onClick={(e) => e.stopPropagation()}
           >
             <div className="mb-1 flex items-center justify-between">
-              <p className="text-lg font-bold" style={{ color: "var(--ax-text-primary)" }}>
+              <p className="text-lg font-bold" style={{ color: "#0f172a" }}>
                 Choose UPI App
               </p>
               <button type="button" onClick={() => setChooserOpen(false)}>
-                <FiX className="h-5 w-5" style={{ color: "var(--ax-text-secondary)" }} />
+                <FiX className="h-5 w-5" style={{ color: "#64748b" }} />
               </button>
             </div>
-            <p className="mb-4 text-sm" style={{ color: "var(--ax-text-secondary)" }}>
+            <p className="mb-4 text-sm" style={{ color: "#64748b" }}>
               Amount {formatINR(numericAmount || 0)} will be pre-filled.
             </p>
             {UPI_APPS.map((app) => (
@@ -518,9 +518,15 @@ export default function FundsPage() {
                 key={app.key}
                 type="button"
                 onClick={openUpiApp}
-                className="mb-2 w-full rounded-xl border px-4 py-3.5 text-left text-sm font-semibold transition hover:opacity-80"
-                style={{ borderColor: "var(--ax-border)", color: "var(--ax-text-primary)" }}
+                className="mb-2 flex w-full items-center gap-3 rounded-xl border px-4 py-3.5 text-left text-sm font-semibold transition hover:opacity-80"
+                style={{ borderColor: "#e2e8f0", color: "#0f172a", background: "#fff" }}
               >
+                <span
+                  className="flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-full text-sm font-bold text-white"
+                  style={{ background: app.color }}
+                >
+                  {app.initial}
+                </span>
                 {app.label}
               </button>
             ))}
@@ -528,7 +534,7 @@ export default function FundsPage() {
               type="button"
               onClick={() => setChooserOpen(false)}
               className="mt-2 w-full py-3 text-sm font-medium"
-              style={{ color: "var(--ax-text-secondary)" }}
+              style={{ color: "#64748b" }}
             >
               Cancel
             </button>

@@ -12,7 +12,7 @@ const ROWS = [
     key: "editProfile",
     label: "Edit Profile",
     icon: FiEdit3,
-    href: null as string | null,
+    href: "/app/profile/edit" as string | null,
   },
   {
     key: "ledger",
