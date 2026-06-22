@@ -56,7 +56,7 @@ export default function EditProfilePage() {
   const router = useRouter();
   const { user, refresh } = useAppData();
 
-  const [fullName, setFullName] = useState(user?.fullName || user?.name || "");
+  const [fullName, setFullName] = useState(user?.fullName || "");
   const [email, setEmail] = useState(user?.email || "");
   const [phone, setPhone] = useState(user?.phone || "");
   const [saving, setSaving] = useState(false);
