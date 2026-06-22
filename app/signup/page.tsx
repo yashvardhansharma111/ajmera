@@ -82,31 +82,29 @@ export default function SignupPage() {
       setError("Enter your bank account number and IFSC code");
       return;
     }
-    if (!signature) {
-      setError("Upload your signature image");
-      return;
-    }
 
     setBusy(true);
     try {
-      // 1) Upload signature to UploadThing via server endpoint.
-      const sigForm = new FormData();
-      sigForm.append("file", signature);
-      const sigRes = await fetch("/api/register/signature-upload", {
-        method: "POST",
-        body: sigForm,
-      });
-      const sigData = await sigRes.json();
-      if (!sigRes.ok || !sigData?.url) {
-        throw new Error(sigData?.message || "Signature upload failed");
-      }
-
-      // 2) Submit main registration as multipart with the signature URL and (optional) document file.
       const payload = new FormData();
       for (const [k, v] of Object.entries(form)) {
         payload.append(k, v);
       }
-      payload.append("signatureUrl", sigData.url);
+
+      // Upload signature only if the user chose one (optional).
+      if (signature) {
+        const sigForm = new FormData();
+        sigForm.append("file", signature);
+        const sigRes = await fetch("/api/register/signature-upload", {
+          method: "POST",
+          body: sigForm,
+        });
+        const sigData = await sigRes.json();
+        if (!sigRes.ok || !sigData?.url) {
+          throw new Error(sigData?.message || "Signature upload failed");
+        }
+        payload.append("signatureUrl", sigData.url);
+      }
+
       if (document) {
         payload.append("document", document);
       }
@@ -161,8 +159,8 @@ export default function SignupPage() {
             className="mt-2 text-sm"
             style={{ color: "var(--ax-text-secondary)" }}
           >
-            Enter your details below. A signature image is required to complete
-            signup. After admin approval, your Client ID and password will be
+            Enter your details below. Signature and supporting documents are
+            optional. After admin approval, your Client ID and password will be
             sent to your email.
           </p>
 
@@ -181,7 +179,7 @@ export default function SignupPage() {
               onChange={(v) => update("email", v)}
               disabled={busy}
               verified={emailVerified}
-              onVerified={() => setEmailVerified(true)}
+              onVerified={() => { setEmailVerified(true); setError(null); }}
             />
             <VerifyField
               label="Phone"
@@ -191,7 +189,7 @@ export default function SignupPage() {
               onChange={(v) => update("phone", v)}
               disabled={busy}
               verified={phoneVerified}
-              onVerified={() => setPhoneVerified(true)}
+              onVerified={() => { setPhoneVerified(true); setError(null); }}
             />
             <Field
               label="PAN Number"
@@ -259,7 +257,7 @@ export default function SignupPage() {
 
             <UploadField
               label="Signature"
-              helper="Required · image only"
+              helper="Optional · image only"
               accept="image/*"
               file={signature}
               onFile={setSignature}

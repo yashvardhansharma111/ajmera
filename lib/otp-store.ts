@@ -18,18 +18,28 @@ export type OtpEntry = {
   createdAt: number;
 };
 
-const cache = new NodeCache({
-  stdTTL: OTP_TTL_SECONDS,
-  checkperiod: 60,
-  useClones: false,
-});
+// Survive Next.js hot-reloads in dev — same pattern as the Angel One session cache.
+declare global {
+  // eslint-disable-next-line no-var
+  var __otpCache: NodeCache | undefined;
+}
+
+const cache: NodeCache =
+  globalThis.__otpCache ??
+  (globalThis.__otpCache = new NodeCache({
+    stdTTL: OTP_TTL_SECONDS,
+    checkperiod: 60,
+    useClones: false,
+  }));
 
 function key(target: OtpTarget, value: string) {
   return `${target}:${value.trim().toLowerCase()}`;
 }
 
 export function generateOtp(): string {
-  return String(Math.floor(100000 + Math.random() * 900000));
+  const otp = String(Math.floor(100000 + Math.random() * 900000));
+  console.log(`[otp-store] generateOtp → ${otp}`);
+  return otp;
 }
 
 export function storeOtp(target: OtpTarget, value: string, otp: string): void {
@@ -40,6 +50,7 @@ export function storeOtp(target: OtpTarget, value: string, otp: string): void {
     createdAt: Date.now(),
   };
   cache.set(key(target, value), entry, OTP_TTL_SECONDS);
+  console.log(`[otp-store] storeOtp  target=${target} value=${value} ttl=${OTP_TTL_SECONDS}s cacheKeys=${cache.keys().length}`);
 }
 
 export function verifyOtp(
@@ -49,34 +60,41 @@ export function verifyOtp(
 ): { ok: boolean; message: string } {
   const k = key(target, value);
   const entry = cache.get<OtpEntry>(k);
+  console.log(`[otp-store] verifyOtp target=${target} value=${value} entryFound=${!!entry} attempts=${entry?.attempts ?? "—"}`);
+
   if (!entry) {
+    console.log(`[otp-store] verifyOtp FAIL — no entry (expired or not requested)`);
     return { ok: false, message: "OTP expired or not requested. Please request a new code." };
   }
   if (entry.verified) {
+    console.log(`[otp-store] verifyOtp OK — already verified`);
     return { ok: true, message: "Already verified" };
   }
   if (entry.attempts >= MAX_ATTEMPTS) {
     cache.del(k);
-    return {
-      ok: false,
-      message: "Too many wrong attempts. Request a new code.",
-    };
+    console.log(`[otp-store] verifyOtp FAIL — max attempts reached, entry deleted`);
+    return { ok: false, message: "Too many wrong attempts. Request a new code." };
   }
   if (entry.otp !== otp.trim()) {
     entry.attempts += 1;
     cache.set(k, entry, OTP_TTL_SECONDS);
+    console.log(`[otp-store] verifyOtp FAIL — wrong OTP attempts=${entry.attempts}/${MAX_ATTEMPTS}`);
     return { ok: false, message: "Invalid OTP. Please try again." };
   }
   entry.verified = true;
   cache.set(k, entry, VERIFIED_TTL_SECONDS);
+  console.log(`[otp-store] verifyOtp OK — marked verified ttl=${VERIFIED_TTL_SECONDS}s`);
   return { ok: true, message: "Verified" };
 }
 
 export function isVerified(target: OtpTarget, value: string): boolean {
   const entry = cache.get<OtpEntry>(key(target, value));
-  return !!entry?.verified;
+  const result = !!entry?.verified;
+  console.log(`[otp-store] isVerified target=${target} value=${value} → ${result} (entryFound=${!!entry})`);
+  return result;
 }
 
 export function clearVerification(target: OtpTarget, value: string): void {
   cache.del(key(target, value));
+  console.log(`[otp-store] clearVerification target=${target} value=${value} remainingKeys=${cache.keys().length}`);
 }
