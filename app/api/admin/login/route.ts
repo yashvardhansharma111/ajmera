@@ -1,5 +1,11 @@
+import { createHash } from "crypto";
 import { apiErrorResponse } from "@/lib/api-error";
+import { getDb } from "@/lib/mongodb";
 import { NextResponse } from "next/server";
+
+function hashPin(pin: string): string {
+  return createHash("sha256").update(pin.trim()).digest("hex");
+}
 
 export async function POST(request: Request) {
   try {
@@ -13,16 +19,28 @@ export async function POST(request: Request) {
       );
     }
 
-    const adminPin = process.env.ADMIN_PIN;
-    if (!adminPin) {
-      console.error("ADMIN_PIN is not set in environment");
-      return NextResponse.json(
-        { message: "Admin PIN is not configured on server" },
-        { status: 500 },
-      );
+    // Check DB-stored PIN first (set via admin panel), fall back to env var
+    const db = await getDb();
+    const pinDoc = await db
+      .collection("settings")
+      .findOne<{ value?: string }>({ key: "admin_pin" });
+
+    let valid: boolean;
+    if (pinDoc?.value) {
+      valid = pinDoc.value === hashPin(pin);
+    } else {
+      const adminPin = process.env.ADMIN_PIN;
+      if (!adminPin) {
+        console.error("ADMIN_PIN is not set in environment");
+        return NextResponse.json(
+          { message: "Admin PIN is not configured on server" },
+          { status: 500 },
+        );
+      }
+      valid = pin === adminPin;
     }
 
-    if (pin !== adminPin) {
+    if (!valid) {
       return NextResponse.json(
         { message: "Invalid admin PIN" },
         { status: 401 },

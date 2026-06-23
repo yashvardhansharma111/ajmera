@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useState } from "react";
 import { adminJson } from "@/components/admin/adminFetch";
+import { FiEye, FiEyeOff } from "react-icons/fi";
 
 type Meta = {
   upiId: string;
@@ -26,6 +27,16 @@ export default function AdminSettingsPage() {
   const [msg, setMsg] = useState<string | null>(null);
   const [err, setErr] = useState<string | null>(null);
   const [saving, setSaving] = useState(false);
+
+  // Change PIN state
+  const [currentPin, setCurrentPin] = useState("");
+  const [newPin, setNewPin] = useState("");
+  const [confirmPin, setConfirmPin] = useState("");
+  const [showCurrentPin, setShowCurrentPin] = useState(false);
+  const [showNewPin, setShowNewPin] = useState(false);
+  const [pinMsg, setPinMsg] = useState<string | null>(null);
+  const [pinErr, setPinErr] = useState<string | null>(null);
+  const [savingPin, setSavingPin] = useState(false);
 
   const load = useCallback(async () => {
     setErr(null);
@@ -107,6 +118,38 @@ export default function AdminSettingsPage() {
       setErr(e instanceof Error ? e.message : "Delete failed");
     } finally {
       setSaving(false);
+    }
+  }
+
+  async function changePin() {
+    setPinMsg(null);
+    setPinErr(null);
+    if (!currentPin || !newPin || !confirmPin) {
+      setPinErr("All PIN fields are required.");
+      return;
+    }
+    if (newPin !== confirmPin) {
+      setPinErr("New PIN and confirmation do not match.");
+      return;
+    }
+    if (newPin.length < 4) {
+      setPinErr("New PIN must be at least 4 characters.");
+      return;
+    }
+    setSavingPin(true);
+    try {
+      await adminJson("/api/admin/pin", {
+        method: "POST",
+        body: JSON.stringify({ currentPin, newPin }),
+      });
+      setPinMsg("PIN updated successfully.");
+      setCurrentPin("");
+      setNewPin("");
+      setConfirmPin("");
+    } catch (e) {
+      setPinErr(e instanceof Error ? e.message : "Failed to update PIN");
+    } finally {
+      setSavingPin(false);
     }
   }
 
@@ -222,6 +265,82 @@ export default function AdminSettingsPage() {
       >
         {saving ? "Saving…" : "Save payment settings"}
       </button>
+
+      {/* ── Change Admin PIN ─────────────────────────────────── */}
+      <h2 className="mt-12 text-lg font-semibold text-slate-900">Admin PIN</h2>
+      <p className="mt-1 text-sm text-slate-600">
+        Change the PIN used to log in to the admin panel. The new PIN will be stored securely in
+        the database and will override the environment variable.
+      </p>
+
+      {pinMsg ? (
+        <p className="mt-4 rounded-lg bg-sky-50 px-4 py-2 text-sm text-sky-900">{pinMsg}</p>
+      ) : null}
+      {pinErr ? (
+        <p className="mt-4 rounded-lg bg-rose-50 px-4 py-2 text-sm text-rose-900">{pinErr}</p>
+      ) : null}
+
+      <section className="mt-4 space-y-4 rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
+        <label className="block">
+          <span className="text-xs font-medium text-slate-500">Current PIN</span>
+          <div className="relative mt-1">
+            <input
+              type={showCurrentPin ? "text" : "password"}
+              className="w-full rounded-lg border border-slate-200 px-3 py-2 pr-10 text-sm"
+              placeholder="Enter current PIN"
+              value={currentPin}
+              onChange={(e) => setCurrentPin(e.target.value)}
+            />
+            <button
+              type="button"
+              onClick={() => setShowCurrentPin((v) => !v)}
+              className="absolute inset-y-0 right-2 flex items-center text-slate-400 hover:text-slate-600"
+            >
+              {showCurrentPin ? <FiEyeOff className="h-4 w-4" /> : <FiEye className="h-4 w-4" />}
+            </button>
+          </div>
+        </label>
+
+        <label className="block">
+          <span className="text-xs font-medium text-slate-500">New PIN</span>
+          <div className="relative mt-1">
+            <input
+              type={showNewPin ? "text" : "password"}
+              className="w-full rounded-lg border border-slate-200 px-3 py-2 pr-10 text-sm"
+              placeholder="Enter new PIN (min 4 characters)"
+              value={newPin}
+              onChange={(e) => setNewPin(e.target.value)}
+            />
+            <button
+              type="button"
+              onClick={() => setShowNewPin((v) => !v)}
+              className="absolute inset-y-0 right-2 flex items-center text-slate-400 hover:text-slate-600"
+            >
+              {showNewPin ? <FiEyeOff className="h-4 w-4" /> : <FiEye className="h-4 w-4" />}
+            </button>
+          </div>
+        </label>
+
+        <label className="block">
+          <span className="text-xs font-medium text-slate-500">Confirm new PIN</span>
+          <input
+            type="password"
+            className="mt-1 w-full rounded-lg border border-slate-200 px-3 py-2 text-sm"
+            placeholder="Re-enter new PIN"
+            value={confirmPin}
+            onChange={(e) => setConfirmPin(e.target.value)}
+          />
+        </label>
+
+        <button
+          type="button"
+          disabled={savingPin}
+          onClick={() => void changePin()}
+          className="rounded-lg bg-slate-900 px-6 py-2.5 text-sm font-semibold text-white hover:bg-slate-800 disabled:opacity-50"
+        >
+          {savingPin ? "Updating…" : "Update PIN"}
+        </button>
+      </section>
     </div>
   );
 }
