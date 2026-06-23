@@ -3,6 +3,7 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { FiDownload, FiRefreshCw, FiTrendingDown, FiTrendingUp, FiBarChart2 } from "react-icons/fi";
 import { formatINR } from "@/components/app/format";
+import { OrderModal } from "@/components/app/OrderModal";
 
 const FILTERS = [
   { key: "positions", label: "Positions" },
@@ -64,6 +65,7 @@ export default function OrdersPage() {
   const [loading, setLoading] = useState(true);
   const [err, setErr] = useState<string | null>(null);
   const [downloading, setDownloading] = useState(false);
+  const [sellTarget, setSellTarget] = useState<Row | null>(null);
 
   const load = useCallback(async () => {
     setErr(null);
@@ -370,6 +372,20 @@ export default function OrdersPage() {
                     </p>
                   </div>
                 </div>
+
+                {/* SELL button — only on positions/holdings, not history */}
+                {activeFilter !== "history" && (
+                  <div className="mt-3 flex justify-end border-t pt-3" style={{ borderColor: "#F1F5F9" }}>
+                    <button
+                      type="button"
+                      onClick={() => setSellTarget(item)}
+                      className="rounded-xl px-5 py-2 text-xs font-bold text-white transition hover:opacity-90"
+                      style={{ background: "var(--ax-negative)" }}
+                    >
+                      SELL
+                    </button>
+                  </div>
+                )}
               </div>
             );
           })}
@@ -411,6 +427,25 @@ export default function OrdersPage() {
         <FiDownload className="h-4 w-4" />
         {downloading ? "Exporting…" : "Download Ledger CSV"}
       </button>
+
+      {/* SELL order modal */}
+      <OrderModal
+        open={!!sellTarget}
+        onClose={() => setSellTarget(null)}
+        side="SELL"
+        symbol={sellTarget?.symbol ?? ""}
+        exchange={sellTarget?.exchange ?? "NSE"}
+        name={sellTarget?.symbol ?? ""}
+        initialPrice={Number(sellTarget?.ltp ?? sellTarget?.price ?? 0)}
+        optionType={sellTarget?.optionType}
+        strikePrice={sellTarget?.strikePrice != null ? Number(sellTarget.strikePrice) : undefined}
+        expiry={sellTarget?.expiry}
+        defaultQty={Number(sellTarget?.qty ?? 1)}
+        onTradeComplete={() => {
+          setSellTarget(null);
+          void load();
+        }}
+      />
     </div>
   );
 }
