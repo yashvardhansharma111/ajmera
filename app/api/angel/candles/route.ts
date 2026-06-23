@@ -20,6 +20,25 @@ const RANGE_MAP: Record<string, { days: number; interval: string }> = {
   "1Y": { days: 365, interval: "ONE_DAY" },
 };
 
+// Cache TTL per range — intraday refreshes faster than daily/weekly
+const CACHE_TTL_MS: Record<string, number> = {
+  "1D": 30_000,
+  "3D": 60_000,
+  "5D": 60_000,
+  "1W": 120_000,
+  "1M": 300_000,
+  "3M": 600_000,
+  "6M": 1_200_000,
+  "1Y": 3_600_000,
+};
+
+declare global {
+  // eslint-disable-next-line no-var
+  var __candleCache: Map<string, { payload: unknown; fetchedAt: number }> | undefined;
+}
+const candleCache: Map<string, { payload: unknown; fetchedAt: number }> =
+  globalThis.__candleCache ?? (globalThis.__candleCache = new Map());
+
 function formatDate(d: Date): string {
   const y = d.getFullYear();
   const m = String(d.getMonth() + 1).padStart(2, "0");
@@ -30,13 +49,13 @@ function formatDate(d: Date): string {
 }
 
 export async function GET(request: NextRequest) {
-  try {
-    const sp = request.nextUrl.searchParams;
-    const symbolName = sp.get("symbol") || "NIFTY";
-    const exchange = sp.get("exchange") || "NSE";
-    const range = sp.get("range") || "1D";
-    const intervalOverride = sp.get("interval");
+  const sp = request.nextUrl.searchParams;
+  const symbolName = sp.get("symbol") || "NIFTY";
+  const exchange = sp.get("exchange") || "NSE";
+  const range = sp.get("range") || "1D";
+  const intervalOverride = sp.get("interval");
 
+  try {
     // Resolve symbol token (handles indices, equities, options, MCX futures)
     let token: string | undefined;
     let resolvedExchange = exchange;
@@ -53,6 +72,7 @@ export async function GET(request: NextRequest) {
     }
 
     if (!token) {
+      console.warn(`[angel/candles] symbol not found: ${exchange}:${symbolName}`);
       return NextResponse.json(
         { error: `Symbol not found: ${exchange}:${symbolName}` },
         { status: 404 },
@@ -61,14 +81,20 @@ export async function GET(request: NextRequest) {
 
     const rangeConfig = RANGE_MAP[range] || RANGE_MAP["1D"];
     const interval = intervalOverride || rangeConfig.interval;
+    const cacheKey = `${symbolName}:${resolvedExchange}:${range}:${interval}`;
+    const ttl = CACHE_TTL_MS[range] ?? 60_000;
+
+    // Serve from cache if fresh
+    const hit = candleCache.get(cacheKey);
+    if (hit && Date.now() - hit.fetchedAt < ttl) {
+      console.log(`[angel/candles] CACHE HIT  ${cacheKey} age=${Math.round((Date.now() - hit.fetchedAt) / 1000)}s`);
+      return NextResponse.json(hit.payload);
+    }
 
     const toDate = new Date();
-    const fromDate = new Date(
-      toDate.getTime() - rangeConfig.days * 24 * 60 * 60 * 1000,
-    );
+    const fromDate = new Date(toDate.getTime() - rangeConfig.days * 24 * 60 * 60 * 1000);
 
     // For single-day intraday: clamp fromDate to market open so we get today's candles only.
-    // Multi-day ranges (3D, 5D, 1W…) use a rolling window — no clamping needed.
     if (range === "1D") {
       const mcx = resolvedExchange === "MCX";
       fromDate.setHours(mcx ? 9 : 9, mcx ? 0 : 15, 0, 0);
@@ -82,10 +108,14 @@ export async function GET(request: NextRequest) {
       todate: formatDate(toDate),
     };
 
+    console.log(`[angel/candles] FETCH ${cacheKey} from=${body.fromdate} to=${body.todate}`);
+
     const result = await angelPost(
       "/rest/secure/angelbroking/historical/v1/getCandleData",
       body,
     );
+
+    console.log(`[angel/candles] ANGEL response status=${result?.status} msg=${result?.message ?? "—"} dataLen=${Array.isArray(result?.data) ? result.data.length : "none"}`);
 
     if (!result.status || !result.data) {
       return NextResponse.json(
@@ -106,15 +136,13 @@ export async function GET(request: NextRequest) {
       }),
     );
 
-    return NextResponse.json({
-      symbol: symbolName,
-      exchange,
-      range,
-      interval,
-      candles,
-    });
+    const payload = { symbol: symbolName, exchange, range, interval, candles };
+    candleCache.set(cacheKey, { payload, fetchedAt: Date.now() });
+    console.log(`[angel/candles] CACHE SET  ${cacheKey} candles=${candles.length} ttl=${ttl / 1000}s`);
+
+    return NextResponse.json(payload);
   } catch (err: any) {
-    console.error("[angel/candles]", err);
+    console.error(`[angel/candles] ERROR ${symbolName}:${exchange}:${range}`, err?.message ?? err);
     return NextResponse.json(
       { error: err.message || "Internal error" },
       { status: 500 },
