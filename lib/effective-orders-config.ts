@@ -96,9 +96,9 @@ export async function getEffectiveOrdersConfigForUser(
     };
   }
 
-  const global = await loadGlobal();
-
+  // When no userId is given (e.g. admin panel preview) return the global template.
   if (!userId || !ObjectId.isValid(userId)) {
+    const global = await loadGlobal();
     console.log(
       "[effective-orders] returning global only — invalid/missing userId",
       JSON.stringify({ userId, globalRowCount: global.orders.length }),
@@ -106,6 +106,8 @@ export async function getEffectiveOrdersConfigForUser(
     return global;
   }
 
+  // For a real user: ONLY return rows explicitly assigned to them.
+  // Do NOT fall back to global — global rows would contaminate every user's P&L.
   const userDoc = await settings.findOne<{ value?: OrdersConfigEffective }>({
     key: KEY,
     userId: new ObjectId(userId),
@@ -113,37 +115,16 @@ export async function getEffectiveOrdersConfigForUser(
 
   if (!userDoc?.value) {
     console.log(
-      "[effective-orders] no per-user override — returning global",
-      JSON.stringify({ userId, globalRowCount: global.orders.length }),
-    );
-    return global;
-  }
-  console.log(
-    "[effective-orders] merging per-user override with global",
-    JSON.stringify({
+      "[effective-orders] no per-user config — returning empty (not global) for userId",
       userId,
-      globalRowCount: global.orders.length,
-      userRowCount: userDoc.value.orders?.length ?? 0,
-    }),
-  );
+    );
+    return { ...empty };
+  }
 
   const u = normalize(userDoc.value);
-  const gOrders = global.orders;
-  const uOrders = u.orders;
-
-  const byId = new Map(gOrders.map((o) => [o.id, o]));
-  for (const row of uOrders) {
-    byId.set(row.id, row);
-  }
-
-  return {
-    ...global,
-    ...u,
-    summary: u.summary ?? global.summary,
-    segments:
-      u.segments.length > 0 ? u.segments : global.segments.length > 0 ? global.segments : [],
-    orders: Array.from(byId.values()),
-    showOptionType: u.showOptionType ?? global.showOptionType,
-    showSide: u.showSide ?? global.showSide,
-  };
+  console.log(
+    "[effective-orders] per-user config found",
+    JSON.stringify({ userId, rowCount: u.orders.length }),
+  );
+  return u;
 }

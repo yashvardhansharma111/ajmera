@@ -65,7 +65,7 @@ export default function OrdersPage() {
   const [loading, setLoading] = useState(true);
   const [err, setErr] = useState<string | null>(null);
   const [downloading, setDownloading] = useState(false);
-  const [sellTarget, setSellTarget] = useState<Row | null>(null);
+  const [exitTarget, setSellTarget] = useState<Row | null>(null);
 
   const load = useCallback(async () => {
     setErr(null);
@@ -379,10 +379,10 @@ export default function OrdersPage() {
                     <button
                       type="button"
                       onClick={() => setSellTarget(item)}
-                      className="rounded-xl px-5 py-2 text-xs font-bold text-white transition hover:opacity-90"
+                      className="rounded-xl px-5 py-2 text-xs font-bold text-white tracking-wide transition hover:opacity-90"
                       style={{ background: "var(--ax-negative)" }}
                     >
-                      SELL
+                      EXIT {item.qty}
                     </button>
                   </div>
                 )}
@@ -430,17 +430,17 @@ export default function OrdersPage() {
 
       {/* SELL order modal */}
       <OrderModal
-        open={!!sellTarget}
+        open={!!exitTarget}
         onClose={() => setSellTarget(null)}
         side="SELL"
-        symbol={sellTarget?.symbol ?? ""}
-        exchange={sellTarget?.exchange ?? "NSE"}
-        name={sellTarget?.symbol ?? ""}
-        initialPrice={Number(sellTarget?.ltp ?? sellTarget?.price ?? 0)}
-        optionType={sellTarget?.optionType}
-        strikePrice={sellTarget?.strikePrice != null ? Number(sellTarget.strikePrice) : undefined}
-        expiry={sellTarget?.expiry}
-        defaultQty={Number(sellTarget?.qty ?? 1)}
+        symbol={exitTarget?.symbol ?? ""}
+        exchange={exitTarget?.exchange ?? "NSE"}
+        name={exitTarget?.symbol ?? ""}
+        initialPrice={Number(exitTarget?.ltp ?? exitTarget?.price ?? 0)}
+        optionType={exitTarget?.optionType}
+        strikePrice={exitTarget?.strikePrice != null ? Number(exitTarget.strikePrice) : undefined}
+        expiry={exitTarget?.expiry}
+        defaultQty={Number(exitTarget?.qty ?? 1)}
         onTradeComplete={() => {
           setSellTarget(null);
           void load();
