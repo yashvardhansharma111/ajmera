@@ -721,11 +721,10 @@ export async function getHoldings(userId: string) {
   });
 
   const adminRows = await loadAdminRowsForUser(userId);
+  // Filter by segmentKey (same strategy as getPositions) to prevent a row from
+  // appearing in both positions and holdings and doubling the P&L total.
   const adminHoldings = adminRows
-    .filter(
-      (r) =>
-        r.side === "BUY" && mapAdminProductType(r.productType) === "CNC",
-    )
+    .filter((r) => r.segmentKey === "holdings")
     .map(mapAdminRowToPositionView);
 
   console.log(
@@ -735,16 +734,6 @@ export async function getHoldings(userId: string) {
       realCount: real.length,
       adminTotal: adminRows.length,
       adminHoldingsCount: adminHoldings.length,
-      excludedReasons: adminRows
-        .filter(
-          (r) =>
-            !(r.side === "BUY" && mapAdminProductType(r.productType) === "CNC"),
-        )
-        .map((r) => ({
-          id: r.id,
-          side: r.side,
-          productType: r.productType,
-        })),
     }),
   );
   return [...real, ...adminHoldings];
