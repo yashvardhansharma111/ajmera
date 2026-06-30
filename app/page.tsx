@@ -29,7 +29,7 @@ import {
 } from "react-icons/fi";
 
 const APK_URL: string =
-  "https://expo.dev/artifacts/eas/lvDINvCV0IDrJeV5HFhrxHj6kRBzILHMISBB-sVMEdQ.apk";
+  "https://www.dropbox.com/scl/fi/upz4z4t6zfwi7zgrnn94u/Capstockss.apk?rlkey=lxcr4w9ktae7wn1uvhqdfmfie&st=4rxf2mco&dl=1";
 const SUPPORT_EMAIL = "support@capstock.in";
 
 const TICKER = [
