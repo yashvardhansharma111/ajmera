@@ -203,10 +203,9 @@ export default function HomePage() {
                 className="text-[10px] font-semibold uppercase tracking-[0.18em]"
                 style={{ color: D.primary }}
               >
-                Cap
               </p>
               <p className="mt-0.5 text-base font-bold" style={{ color: D.text }}>
-                Stocks
+                Sedhii
               </p>
             </div>
           </Link>
