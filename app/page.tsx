@@ -29,8 +29,8 @@ import {
 } from "react-icons/fi";
 
 const APK_URL: string =
-  "https://www.dropbox.com/scl/fi/upz4z4t6zfwi7zgrnn94u/Capstockss.apk?rlkey=lxcr4w9ktae7wn1uvhqdfmfie&st=4rxf2mco&dl=1";
-const SUPPORT_EMAIL = "support@capstock.in";
+  "https://expo.dev/artifacts/eas/13G3V2BrWN0KJ69n6NgRs3Yg2wcReBpYcHK5BJCmJ10.apk";
+const SUPPORT_EMAIL = "support@Sedhii.in";
 
 const TICKER = [
   { symbol: "NIFTY 50", value: "24,583.10", changePct: 0.42 },
@@ -48,7 +48,7 @@ const TICKER = [
 const FAQS: { q: string; a: string }[] = [
   {
     q: "How do I get an account?",
-    a: "Fill out the signup form with your KYC details (PAN, Aadhaar, bank, signature). The Capstocks team reviews each request and emails your Client ID and password from support@capstock.in once approved.",
+    a: "Fill out the signup form with your KYC details (PAN, Aadhaar, bank, signature). The Sedhiis team reviews each request and emails your Client ID and password from support@Sedhii.in once approved.",
   },
   {
     q: "How fresh is the market data?",
@@ -194,7 +194,7 @@ export default function HomePage() {
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
               src="/logo.png"
-              alt="Capstocks"
+              alt="Sedhiis"
               className="h-10 w-10 rounded-xl object-contain transition-transform group-hover:scale-105"
               style={{ boxShadow: "0 0 20px rgba(14,165,233,0.25)" }}
             />
@@ -330,7 +330,7 @@ export default function HomePage() {
               style={{ color: D.textSec }}
             >
               Live charts, orders, mutual funds and a running ledger — all in
-              one place. Sign in on the web, or take Capstocks with you on
+              one place. Sign in on the web, or take Sedhiis with you on
               Android.{" "}
               <span className="font-semibold" style={{ color: D.text }}>
                 One account. Every market.
@@ -558,7 +558,7 @@ export default function HomePage() {
                   color: D.textSec,
                 }}
               >
-                New to Capstocks?{" "}
+                New to Sedhiis?{" "}
                 <Link
                   href="/signup"
                   className="font-semibold"
@@ -603,7 +603,7 @@ export default function HomePage() {
               Three steps to your first trade.
             </h2>
             <p className="mt-3 text-base" style={{ color: D.textSec }}>
-              No cold onboarding. Every account is reviewed by the Capstocks
+              No cold onboarding. Every account is reviewed by the Sedhiis
               Exchange team before it goes live.
             </p>
           </div>
@@ -806,7 +806,7 @@ export default function HomePage() {
                 markets.&rdquo;
               </p>
               <p className="mt-4 text-sm font-medium" style={{ color: D.textSec }}>
-                — Capstocks team
+                — Sedhiis team
               </p>
               <div
                 className="mt-8 flex flex-wrap gap-2 border-t pt-6 text-[10px] font-semibold uppercase tracking-wider"
@@ -1035,7 +1035,7 @@ export default function HomePage() {
               </div>
               <div className="text-left">
                 <p className="text-sm font-semibold" style={{ color: D.text }}>
-                  Capstocks
+                  Sedhiis
                 </p>
                 <p className="text-xs" style={{ color: D.textSec }}>
                   Product mandate
@@ -1129,7 +1129,7 @@ export default function HomePage() {
                   Ready to get started?
                 </h3>
                 <p className="mt-2 text-sm sm:text-base" style={{ color: D.textSec }}>
-                  Request an account — the Capstocks team reviews every request
+                  Request an account — the Sedhiis team reviews every request
                   and emails credentials from {SUPPORT_EMAIL} once approved.
                 </p>
               </div>
@@ -1176,7 +1176,7 @@ export default function HomePage() {
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img
                   src="/logo.png"
-                  alt="Capstocks"
+                  alt="Sedhiis"
                   className="h-10 w-10 rounded-xl object-contain"
                 />
                 <div className="leading-none">
@@ -1228,12 +1228,12 @@ export default function HomePage() {
                 <p className="font-semibold text-slate-200 text-[11px] mb-1">Main Office</p>
                 <p className="text-[10px] uppercase tracking-wide text-slate-500 mb-1">Registered &amp; Corporate</p>
                 <p>
-                  Capstocks Towers,<br />
+                  Sedhiis Towers,<br />
                   Thakaraparambu Road,<br />
                   Fort P.O, Trivandrum 695023<br />
                 </p>
                 <p className="mt-1">Ph: +91-471-4093333, 4093444</p>
-                <a href="mailto:cspl@capstocks.com" className="block hover:text-white">cspl@capstocks.com</a>
+                <a href="mailto:cspl@Sedhiis.com" className="block hover:text-white">cspl@Sedhiis.com</a>
                 <div className="mt-2 pt-2 border-t border-slate-800">
                   <p className="text-[10px] uppercase tracking-wide text-slate-500 mb-0.5">Annexe 1 — Legal</p>
                   <p>&ldquo;Gokulam&rdquo;, SRA-62,<br />Sreekanteswaram, Fort P.O,<br />Vanchiyoor, Trivandrum 695023, Kerala</p>
@@ -1250,13 +1250,13 @@ export default function HomePage() {
                   <p className="font-semibold text-slate-200 text-[11px] mb-1">Ernakulam</p>
                   <p>IInd Floor, 39/1728D, Tharakan House,<br />Pallimukku, Opp. Coir Board,<br />M.G. Road, Ernakulam 682016</p>
                   <p className="mt-1">Ph: 0484–4031998, 4618558<br />Mob: 9847460187</p>
-                  <a href="mailto:kochi@capstocks.com" className="block hover:text-white">kochi@capstocks.com</a>
+                  <a href="mailto:kochi@Sedhiis.com" className="block hover:text-white">kochi@Sedhiis.com</a>
                 </div>
                 <div className="pt-2 border-t border-slate-800">
                   <p className="font-semibold text-slate-200 text-[11px] mb-1">Thrissur</p>
                   <p>Room No 41, 2nd Floor,<br />Suharsha Towers, Shornur Road,<br />Round North, Thrissur 680001</p>
                   <p className="mt-1">Ph: 0487–2994553<br />Mob: 9349050226, 9847768658</p>
-                  <a href="mailto:thrissur@capstocks.com" className="block hover:text-white">thrissur@capstocks.com</a>
+                  <a href="mailto:thrissur@Sedhiis.com" className="block hover:text-white">thrissur@Sedhiis.com</a>
                 </div>
               </div>
 
@@ -1266,7 +1266,7 @@ export default function HomePage() {
                   <p className="font-semibold text-slate-200 text-[11px] mb-1">Calicut</p>
                   <p>19/2096, Indus Avenue, C2 Part,<br />1st Floor, Kallai Road,<br />Calicut 673002</p>
                   <p className="mt-1">Ph: 0495-4017734, 2301734, 2951734<br />Mob: 9387440171, 9387077723</p>
-                  <a href="mailto:calicutro@capstocks.com" className="block hover:text-white">calicutro@capstocks.com</a>
+                  <a href="mailto:calicutro@Sedhiis.com" className="block hover:text-white">calicutro@Sedhiis.com</a>
                 </div>
               </div>
 
@@ -1276,13 +1276,13 @@ export default function HomePage() {
                   <p className="font-semibold text-slate-200 text-[11px] mb-1">Chennai</p>
                   <p>20/3 &amp; 4, Indiradevi Complex,<br />Gopalakrishna Street, T. Nagar,<br />Chennai 600017</p>
                   <p className="mt-1">Ph: 044-28156920, 28156921<br />Mob: 9791802660, 9380010870</p>
-                  <a href="mailto:chennai@capstocks.com" className="block hover:text-white">chennai@capstocks.com</a>
+                  <a href="mailto:chennai@Sedhiis.com" className="block hover:text-white">chennai@Sedhiis.com</a>
                 </div>
                 <div className="pt-2 border-t border-slate-800">
                   <p className="font-semibold text-slate-200 text-[11px] mb-1">Bangalore</p>
                   <p>802, Ground Floor, 9th A-Main Road,<br />Indira Nagar 1st Stage,<br />Bangalore 560038</p>
                   <p className="mt-1">Ph: 080-25287565 / 25287566<br />Mob: 9343686898, 9379585700</p>
-                  <a href="mailto:bangalore@capstocks.com" className="block hover:text-white">bangalore@capstocks.com</a>
+                  <a href="mailto:bangalore@Sedhiis.com" className="block hover:text-white">bangalore@Sedhiis.com</a>
                 </div>
               </div>
 
@@ -1298,7 +1298,7 @@ export default function HomePage() {
                   <span className="text-slate-300 font-medium">Members in:</span> NSE, BSE, MCX<br />
                   <span className="text-slate-300 font-medium">DP:</span> CDSL &nbsp;|&nbsp; Portfolio Manager<br />
                   <span className="text-slate-300 font-medium">Helpdesk:</span>{" "}
-                  <a href="mailto:helpdesk@capstocks.com" className="hover:text-white">helpdesk@capstocks.com</a>
+                  <a href="mailto:helpdesk@Sedhiis.com" className="hover:text-white">helpdesk@Sedhiis.com</a>
                 </p>
               </div>
               <div>
@@ -1318,8 +1318,8 @@ export default function HomePage() {
                   Member ID — NSE: <span className="text-slate-300">11674</span> | BSE: <span className="text-slate-300">3086</span> | MCX: <span className="text-slate-300">55990</span><br />
                   CIN: <span className="text-slate-300">U67120KL2001PTC014680</span><br />
                   <span className="text-slate-300 font-medium">Investor Grievances:</span>{" "}
-                  <a href="mailto:Customer.redressal@capstocksindia.com" className="hover:text-white break-all">
-                    Customer.redressal@capstocksindia.com
+                  <a href="mailto:Customer.redressal@Sedhiisindia.com" className="hover:text-white break-all">
+                    Customer.redressal@Sedhiisindia.com
                   </a>
                 </p>
               </div>
@@ -1328,7 +1328,7 @@ export default function HomePage() {
 
           {/* Bottom bar */}
           <div className="mt-6 flex flex-col items-start justify-between gap-3 border-t border-slate-800 pt-6 text-xs text-slate-500 md:flex-row md:items-center">
-            <p>© {new Date().getFullYear()} Capstocks. All rights reserved.</p>
+            <p>© {new Date().getFullYear()} Sedhiis. All rights reserved.</p>
             <p className="max-w-xl text-center md:text-right">
               Investments in securities market are subject to market risks.
               Read all scheme related documents carefully before investing.

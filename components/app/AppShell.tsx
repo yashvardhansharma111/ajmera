@@ -174,7 +174,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
                 className="text-sm font-bold"
                 style={{ color: "var(--ax-text-primary)" }}
               >
-                Capstocks
+                Sedhiis
               </span>
             </Link>
             <div className="hidden md:block">
@@ -185,7 +185,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
                 {NAV.find(
                   (n) =>
                     pathname === n.href || pathname.startsWith(n.href + "/"),
-                )?.label || "Capstocks"}
+                )?.label || "Sedhiis"}
               </h1>
             </div>
 

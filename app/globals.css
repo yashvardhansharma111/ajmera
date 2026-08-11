@@ -4,7 +4,7 @@
   --background: #f8fafc;
   --foreground: #0f172a;
 
-  /* Capstocks palette â€” mirrors stock-app/constants/theme.js */
+  /* Sedhiis palette â€” mirrors stock-app/constants/theme.js */
   --ax-primary: #0ea5e9;
   --ax-primary-deep: #0284c7;
   --ax-primary-light: #7dd3fc;
@@ -59,7 +59,7 @@ body {
   border-radius: 16px;
 }
 
-/* Capstocks brand utilities */
+/* Sedhiis brand utilities */
 .cs-gradient-text {
   background: linear-gradient(90deg, #0ea5e9 0%, #1d4ed8 50%, #0ea5e9 100%);
   background-size: 200% auto;

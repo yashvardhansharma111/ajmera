@@ -189,7 +189,7 @@ export default function FundsPage() {
     if (!paymentMeta?.upiId || !numericAmount) return null;
     const params = new URLSearchParams({
       pa: paymentMeta.upiId,
-      pn: paymentMeta.accountHolder ?? "Capstocks",
+      pn: paymentMeta.accountHolder ?? "Sedhiis",
       am: String(numericAmount),
       cu: "INR",
       tn: note || `Fund deposit for ${user?.clientId ?? user?.email ?? "user"}`,
